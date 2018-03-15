@@ -1,3 +1,17 @@
+# Getting started
+## To install
+- Executer les commandes
+```bash
+composer update
+composer install
+```
+- Configurer le fichier .env
+- Lancer la commande suivante pour faire les migrations
+```bash
+php artisan migrate
+```
+
+
 # Lumen PHP Framework
 
 [![Build Status](https://travis-ci.org/laravel/lumen-framework.svg)](https://travis-ci.org/laravel/lumen-framework)
