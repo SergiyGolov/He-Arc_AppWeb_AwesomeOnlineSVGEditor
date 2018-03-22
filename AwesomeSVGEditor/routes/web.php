@@ -12,6 +12,6 @@
 */
 
 $router->get('/', function () use ($router) {
-    //return $router->app->version();
-    return view('home', ['name' => 'Lukas']);
+    return view()->file('..\resources\views\home.blade.php', ['name' => 'Lukas']);
+    //return view('home.blade.php', ['name' => 'Lukas']);
 });
