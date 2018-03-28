@@ -2,6 +2,8 @@
 window._ = require('lodash');
 window.Popper = require('popper.js').default;
 
+let SVG = require('svg.js');
+
 /**
  * We'll load jQuery and the Bootstrap jQuery plugin which provides support
  * for JavaScript based Bootstrap features such as modals and tabs. This
@@ -21,7 +23,6 @@ try {
  */
 
 window.axios = require('axios');
-
 window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 
 /**
