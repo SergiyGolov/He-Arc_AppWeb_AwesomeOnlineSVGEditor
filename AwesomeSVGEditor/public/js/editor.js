@@ -17,14 +17,13 @@ class Canvas
     this.shape = undefined;
 
     this.fillColor='#000';
-    this.strokeColor='#000'
-    this.strokeWidth=1;;
+    this.strokeColor='#000';
+    this.strokeWidth=1;
 
     /* TODO Remove those lines */
     this.isMoving=false;
-    this.movingShape=null;
+    this.movingShape=null; // rename in shape
     this.isDynAdding=false;
-    this.dynAddingShape="";
     this.erase=false;
 
     this.mouseX=0;
@@ -53,11 +52,11 @@ class Canvas
 
   mouseUp(e)
   {
-    if(this.isMoving && !this.isDynAdding)
+    if(this.mode == 0)
     {
       this.isMoving=false;
       this.movingShape=null;
-    }else if(this.isDynAdding){
+    }else if(this.mode > 1){
       this.isDynAdding=false;
       this.movingShape=null;
     }
@@ -65,59 +64,50 @@ class Canvas
 
   mouseMove(e)
   {
-    if(this.isMoving && !this.isDynAdding)
+    if(this.isMoving)
     {
       this.movingShape.move(e.offsetX-this.movingShape.width()/2,e.offsetY-this.movingShape.height()/2);
       this.movingShape.front();
-    }else if(this.isDynAdding){
-      if(this.movingShape!=null)
-      {
-        switch(this.dynAddingShape)
-        {
-          case "rectangle":
-            this.movingShape.width(this.movingShape.width()+e.movementX);
-            this.movingShape.height(this.movingShape.height()+e.movementY);
-          break;
-          case "line":
-            let x2=this.movingShape.node.x2.baseVal.value;
-            let y2=this.movingShape.node.y2.baseVal.value;
-            this.movingShape.plot(this.mouseX,  this.mouseY,x2+e.movementX,y2+e.movementY);
-          break;
-          case "circle":
-            let r=this.movingShape.node.r.baseVal.value;
-            this.movingShape.radius(r+Math.max(e.movementX,e.movementY));
-          break;
-        }
-
-      }else {
-        this.mouseX=e.offsetX;
-        this.mouseY=e.offsetY;
+    }
+    else if(this.movingShape!=null)
+    {
+      switch(this.mode) {
+        case 4: //rectangle
+          this.movingShape.width(this.movingShape.width()+e.movementX);
+          this.movingShape.height(this.movingShape.height()+e.movementY);
+        break;
+        case 3: //line
+          let x2=this.movingShape.node.x2.baseVal.value;
+          let y2=this.movingShape.node.y2.baseVal.value;
+          this.movingShape.plot(this.mouseX,  this.mouseY,x2+e.movementX,y2+e.movementY);
+        break;
+        case 5: //circle
+          let r=this.movingShape.node.r.baseVal.value;
+          this.movingShape.radius(r+Math.max(e.movementX,e.movementY));
+        break;
       }
 
+    }else {
+      this.mouseX=e.offsetX;
+      this.mouseY=e.offsetY;
     }
   }
 
   mouseDown()
   {
-    if(this.isDynAdding)
+    switch(this.mode)
     {
-      switch(this.dynAddingShape)
-      {
-        case "rectangle":
-          this.movingShape=this.addRectangle(this.mouseX, this.mouseY, 1, 1);
-        break;
-        case "line":
-          this.movingShape=this.addLine(this.mouseX, this.mouseY, this.mouseX+1, this.mouseY+1);
-        break;
-        case "circle":
-          this.movingShape=this.addCircle(this.mouseX, this.mouseY, 1);
-        break;
-      }
-
+      case 4: //rectangle
+        this.movingShape=this.addRectangle(this.mouseX, this.mouseY, 1, 1);
+      break;
+      case 3: //line
+        this.movingShape=this.addLine(this.mouseX, this.mouseY, this.mouseX+1, this.mouseY+1);
+      break;
+      case 5: //circle
+        this.movingShape=this.addCircle(this.mouseX, this.mouseY, 1);
+      break;
     }
   }
-
-
 
   addRectangle(posX,posY,width,height)
   {
@@ -180,7 +170,7 @@ class Canvas
     this.fillColor=color;
   }
 
-  setstrokeColor(color) //color format: string: '#RGB' R,G and B from '0' to 'F'
+  setStrokeColor(color) //color format: string: '#RGB' R,G and B from '0' to 'F'
   {
     this.strokeColor=color;
   }
@@ -191,6 +181,7 @@ class Canvas
   }
 }
 
+//Class to connect the interface with our canvas object
 class EventManager
 {
   constructor(canvas)
@@ -203,32 +194,31 @@ class EventManager
     let canvas = this.canvas;
     $('#line').on('click',function(){
       canvas.dynAddLine();
-    })
+    });
     $('#rectangle').on('click',function(){
       canvas.dynAddRectangle();
-    })
+    });
     $('#ellipse').on('click',function(){
       canvas.dynAddCircle();
-    })
+    });
     $('#erase').on('click',function(){
       canvas.startErase();
+    });
+    $('#fillColor').on('change',function(){
+      canvas.setFillColor($('#fillColor')[0].value);
+    });
+    $('#strokeColor').on('change',function(){
+      canvas.setStrokeColor($('#strokeColor')[0].value);
     })
+    $('#strokeWidth').on('change',function(){
+      canvas.setStrokeWidth($('#strokeWidth')[0].value);
+    })
+
+    //Loadd preconfigure colors and width
+    $('#fillColor').trigger('change');
+    $('#strokeColor').trigger('change');
+    $('#strokeWidth').trigger('change');
   }
-
-}
-
-//TODO add html button, add connections in Eventmanager and finally remove those lines
-function updateFillColor()
-{
-  canvas.setFillColor($('#fillColor')["0"].value);
-}
-function updatestrokeColor()
-{
-  canvas.setstrokeColor($('#strokeColor')["0"].value);
-}
-function updateStrokeWidth()
-{
-  canvas.setStrokeWidth($('#strokeWidth')["0"].value);
 }
 
 $(document).ready(function(){

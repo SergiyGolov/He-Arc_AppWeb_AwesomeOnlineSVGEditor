@@ -189,10 +189,10 @@
                   <ellipse class="fill" fill="none" stroke="none" cx="256" cy="150" rx="256" ry="150"></ellipse>
                 </svg>
               </a>
-              <input type="button" value="Erase" onclick="erase();">
-              <input type="color" id="fillColor" onchange="updateFillColor();">
-              <input type="color" id="contourColor" onchange="updateContourColor();">
-              <input type="number" min=1 value=1 id="strokeWidth" onchange="updateStrokeWidth();">
+              <input type="button" value="Erase">
+              <input type="color" id="fillColor">
+              <input type="color" id="strokeColor">
+              <input type="number" id="strokeWidth" min=0 value=1>
               </ul>
             </div>
             <div id="canvas">
