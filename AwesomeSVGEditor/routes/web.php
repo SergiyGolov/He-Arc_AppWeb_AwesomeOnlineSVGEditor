@@ -17,6 +17,14 @@ Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
 
-Route::get('/test', function(){
-  return view('test');
-});
+Route::get('/profile', 'HomeController@show')->middleware('auth.basic'); // Nécessite une authentification
+
+/*
+Route::get('/svg', 'SVGController@index');
+Route::get('/svg/{id}', 'SVGController@show');
+Route::put('/new', 'SVGController@new');
+Route::post('/save', 'SVGController@save');
+Route::delete('/delete/{id}', 'SVGController@delete');
+*/
+
+Route::resource('canvas', 'CanvasController');//->middleware('auth.basic');
