@@ -2,6 +2,7 @@ class Canvas
 {
   constructor(divId,width,height)
   {
+    self=this;
     this.draw = SVG(divId).size(width,height);
     this.shapes=[];
 
@@ -36,17 +37,17 @@ class Canvas
 
   elementClick(e)
   {
-    if(this.mode == 1)
+    if(self.mode == 1)
     { // Erase
-      this.shapes.splice(this.shapes.indexOf(e.srcElement.instance),1);
+      self.shapes.splice(self.shapes.indexOf(e.srcElement.instance),1);
       e.srcElement.instance.remove();
-      this.erase=false;
+      self.erase=false;
     }
-    else if(!this.isDynAdding) //TODO update this second part
+    else if(self.mode == 0) //TODO update self second part
     {
-      this.isMoving=true;
-      this.movingShape=e.srcElement.instance;
-      this.shape=e.srcElement.instance;
+      self.isMoving=true;
+      self.movingShape=e.srcElement.instance;
+      self.shape=e.srcElement.instance;
     }
   }
 
@@ -145,6 +146,11 @@ class Canvas
     return circle;
   }
 
+  startMoving()
+  {
+    this.mode = 0;
+  }
+
   dynAddRectangle()
   {
     this.mode = 4;
@@ -192,6 +198,9 @@ class EventManager
 
   _connect(){
     let canvas = this.canvas;
+    $('#pointer').on('click',function(){
+      canvas.startMoving();
+    });
     $('#line').on('click',function(){
       canvas.dynAddLine();
     });
@@ -214,7 +223,7 @@ class EventManager
       canvas.setStrokeWidth($('#strokeWidth')[0].value);
     })
 
-    //Loadd preconfigure colors and width
+    //Load preconfigure colors and width
     $('#fillColor').trigger('change');
     $('#strokeColor').trigger('change');
     $('#strokeWidth').trigger('change');

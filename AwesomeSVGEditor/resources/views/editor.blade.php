@@ -189,7 +189,7 @@
                   <ellipse class="fill" fill="none" stroke="none" cx="256" cy="150" rx="256" ry="150"></ellipse>
                 </svg>
               </a>
-              <input type="button" value="Erase">
+              <input type="button" value="Erase" id="erase">
               <input type="color" id="fillColor">
               <input type="color" id="strokeColor">
               <input type="number" id="strokeWidth" min=0 value=1>

@@ -8,6 +8,11 @@ php artisan migrate
 npm run prod
 ```
 
+Pour lancer le serveur:
+```
+php artisan serve
+```
+
 ## Old content
 <p align="center"><img src="https://laravel.com/assets/img/components/logo-laravel.svg"></p>
 
