@@ -2,7 +2,6 @@ class Canvas
 {
   constructor(divId,width,height)
   {
-    self=this;
     this.draw = SVG(divId).size(width,height);
     this.shapes=[];
 
@@ -15,7 +14,7 @@ class Canvas
     // 5: circle
     this.mode = 0;
 
-    this.shape = undefined;
+    this.shape = null;
 
     this.fillColor='#000';
     this.strokeColor='#000';
@@ -23,7 +22,6 @@ class Canvas
 
     /* TODO Remove those lines */
     this.isMoving=false;
-    this.movingShape=null; // rename in shape
     this.isDynAdding=false;
     this.erase=false;
 
@@ -37,17 +35,17 @@ class Canvas
 
   elementClick(e)
   {
-    if(self.mode == 1)
+    let event = e.target || e.srcElement;
+    if(this.mode == 1)
     { // Erase
-      self.shapes.splice(self.shapes.indexOf(e.srcElement.instance),1);
-      e.srcElement.instance.remove();
-      self.erase=false;
+      this.shapes.splice(this.shapes.indexOf(event.instance),1);
+      event.instance.remove();
+      this.erase=false;
     }
-    else if(self.mode == 0) //TODO update self second part
+    else if(this.mode == 0) //TODO update self second part
     {
-      self.isMoving=true;
-      self.movingShape=e.srcElement.instance;
-      self.shape=e.srcElement.instance;
+      this.isMoving=true;
+      this.shape=event.instance;
     }
   }
 
@@ -56,10 +54,10 @@ class Canvas
     if(this.mode == 0)
     {
       this.isMoving=false;
-      this.movingShape=null;
+      this.shape=null;
     }else if(this.mode > 1){
       this.isDynAdding=false;
-      this.movingShape=null;
+      this.shape=null;
     }
   }
 
@@ -67,24 +65,24 @@ class Canvas
   {
     if(this.isMoving)
     {
-      this.movingShape.move(e.offsetX-this.movingShape.width()/2,e.offsetY-this.movingShape.height()/2);
-      this.movingShape.front();
+      this.shape.move(e.offsetX-this.shape.width()/2,e.offsetY-this.shape.height()/2);
+      this.shape.front();
     }
-    else if(this.movingShape!=null)
+    else if(this.shape!=null)
     {
       switch(this.mode) {
         case 4: //rectangle
-          this.movingShape.width(this.movingShape.width()+e.movementX);
-          this.movingShape.height(this.movingShape.height()+e.movementY);
+          this.shape.width(this.shape.width()+e.movementX);
+          this.shape.height(this.shape.height()+e.movementY);
         break;
         case 3: //line
-          let x2=this.movingShape.node.x2.baseVal.value;
-          let y2=this.movingShape.node.y2.baseVal.value;
-          this.movingShape.plot(this.mouseX,  this.mouseY,x2+e.movementX,y2+e.movementY);
+          let x2=this.shape.node.x2.baseVal.value;
+          let y2=this.shape.node.y2.baseVal.value;
+          this.shape.plot(this.mouseX,  this.mouseY,x2+e.movementX,y2+e.movementY);
         break;
         case 5: //circle
-          let r=this.movingShape.node.r.baseVal.value;
-          this.movingShape.radius(r+Math.max(e.movementX,e.movementY));
+          let r=this.shape.node.r.baseVal.value;
+          this.shape.radius(r+Math.max(e.movementX,e.movementY));
         break;
       }
 
@@ -99,13 +97,13 @@ class Canvas
     switch(this.mode)
     {
       case 4: //rectangle
-        this.movingShape=this.addRectangle(this.mouseX, this.mouseY, 1, 1);
+        this.shape=this.addRectangle(this.mouseX, this.mouseY, 1, 1);
       break;
       case 3: //line
-        this.movingShape=this.addLine(this.mouseX, this.mouseY, this.mouseX+1, this.mouseY+1);
+        this.shape=this.addLine(this.mouseX, this.mouseY, this.mouseX+1, this.mouseY+1);
       break;
       case 5: //circle
-        this.movingShape=this.addCircle(this.mouseX, this.mouseY, 1);
+        this.shape=this.addCircle(this.mouseX, this.mouseY, 1);
       break;
     }
   }
@@ -117,7 +115,7 @@ class Canvas
     rect.move(posX,posY);
     rect.fill(this.fillColor);
     rect.stroke(this.strokeColor);
-    rect.mousedown(this.elementClick);
+    rect.mousedown(this.elementClick.bind(this));
 
     this.shapes.push(rect);
 
@@ -128,7 +126,7 @@ class Canvas
   {
     let line=this.draw.line(posX, posY,posX2,posY2).stroke({ width: this.strokeWidth });
     line.stroke(this.strokeColor);
-    line.mousedown(this.elementClick);
+    line.mousedown(this.elementClick.bind(this));
     this.shapes.push(line);
 
     return line;
@@ -140,7 +138,7 @@ class Canvas
     circle.move(posX,posY);
     circle.stroke(this.strokeColor);
     circle.fill(this.fillColor);
-    circle.mousedown(this.elementClick);
+    circle.mousedown(this.elementClick.bind(this));
     this.shapes.push(circle);
 
     return circle;
