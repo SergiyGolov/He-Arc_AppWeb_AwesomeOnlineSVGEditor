@@ -227,6 +227,43 @@ class EventManager
     $('#fillColor').trigger('change');
     $('#strokeColor').trigger('change');
     $('#strokeWidth').trigger('change');
+
+
+    $('#save').on('click',function(e){
+      e.preventDefault();
+
+      let name = $('#name').val();
+      let code = $('#code').val();
+      let id = $('#id').val();
+
+      //new Canvas:
+      {
+          $.ajax({
+             type: "POST",
+             url: '/canvas',
+             data: {name:name, code:code, id:id},
+             success: function(msg) {
+               console.log(msg);
+             },
+             error: function(msg){
+               console.log(msg)
+             }
+          });
+      }
+      {
+          $.ajax({
+             type: "PUT",
+             url: '/canvas/{id}',
+             data: {name:name, code:code, id:id},
+             success: function(msg) {
+               console.log(msg);
+             },
+             error: function(msg){
+               console.log(msg)
+             }
+          });
+      }
+    });
   }
 }
 

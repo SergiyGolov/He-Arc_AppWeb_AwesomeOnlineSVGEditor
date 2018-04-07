@@ -3,10 +3,21 @@
 namespace App\Http\Controllers;
 
 use App\Canvas;
-use Illuminate\Http\Request;
+use Request;
+use Response;
+use Auth;
+use Illuminate\Support\Facades\View;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Input;
 
 class CanvasController extends Controller
 {
+
+    public function __construct()
+    {
+        //$this->middleware('auth.basic');
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -15,6 +26,9 @@ class CanvasController extends Controller
     public function index()
     {
         // List canvas
+        $canvas = Canvas::all();
+
+        return View::make('canvas')->with('canvas', $canvas);
     }
 
     /**
@@ -24,8 +38,8 @@ class CanvasController extends Controller
      */
     public function create()
     {
-        // TODO editor to create a new canvas
-        return view('editor', ['canvas' => Null]);
+        // Open the editor with an empty canvas
+        return View::make('editor');
     }
 
     /**
@@ -36,7 +50,45 @@ class CanvasController extends Controller
      */
     public function store(Request $request)
     {
-        // TODO create a new canvas
+        // validate
+        // read more on validation at http://laravel.com/docs/validation
+        if(Request::ajax()){
+            $rules = array(
+                'name'       => 'required'
+            );
+            $validator = Validator::make(Input::all(), $rules);
+
+            // process the login
+            if ($validator->fails()) {
+                return Redirect::to('canvas/create')
+                    ->withErrors($validator)
+                    ->withInput();
+            } else {
+                // store
+                $canvas = new Canvas;
+
+                $canvas->name       = Input::get('name');
+                $canvas->code       = Input::get('code');
+                $canvas->user_id    = Auth::id();
+                $canvas->visibility = 1;
+
+                $canvas->save();
+
+                // redirect
+                $response = array(
+                    'status' => 'success',
+                    'msg' => 'Canvas created successfully',
+                    'id' => $canvas->id,
+                );
+                return Response::json($response);
+            }
+        }else{
+            $response = array(
+                'status' => 'Invalid use',
+                'msg' => 'Error',
+            );
+            return Response::json($response);
+        }
     }
 
     /**
@@ -58,10 +110,14 @@ class CanvasController extends Controller
      * @param  \App\Canvas  $canvas
      * @return \Illuminate\Http\Response
      */
-    public function edit(Canvas $canvas)
+    public function edit(int $id)
     {
-        //
-        return view('editor', ['canvas' => Canvas::findOrFail($id)]);
+        $canvas = Canvas::find($id);
+        if($canvas->user_id != Auth::id()){
+          return redirect('/');
+        }
+
+        return view('editor', ['canvas' => $canvas]);
     }
 
     /**
@@ -71,11 +127,35 @@ class CanvasController extends Controller
      * @param  \App\Canvas  $canvas
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Canvas $canvas)
+    public function update(Request $request, Canvas $id)
     {
         // TODO Update canvas
 
-        return view('editor', ['canvas' => Canvas::findOrFail($id)]);
+        //check if its our form
+        if(Request::ajax()){
+
+            $canvas =  Canvas::findOrFail($id);
+
+            $canvas->name       = Input::get('name');
+            $canvas->code       = Input::get('code');
+            $canvas->visibility = 1;
+
+            $canvas->save();
+
+            $response = array(
+                'status' => 'success',
+                'msg' => 'Setting created successfully',
+            );
+            return Response::json($response);
+        }else{
+            $response = array(
+                'status' => 'Invalid use',
+                'msg' => 'Error',
+            );
+            return Response::json($response);
+        }
+
+        //return view('editor', ['canvas' => Canvas::findOrFail($id)]);
     }
 
     /**

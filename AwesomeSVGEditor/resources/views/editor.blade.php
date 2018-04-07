@@ -89,6 +89,11 @@
           width:50px;
         }
 
+        .hidden-data {
+          /*display: none;
+          visibility: hidden;*/
+        }
+
     </style>
 </head>
 <body class="expand">
@@ -199,6 +204,20 @@
               <div id="svgEditor"></div>
             </div>
             <div id="options">
+              <a id="save" href="#" class="btn btn-lg btn-outline-danger">Save</a>
+            </div>
+            <div class="hidden-data"></div>
+            <div class="hidden-data">
+                <!-- to create in db the first time : /photos -->
+                <!-- to save in db any other time : /photos/{id}/edit -->
+                {{ Form::open(array('url' => '/canvas')) }}
+
+                {{ Form::text('name', Input::old('name'), array('class' => 'form-control')) }}
+                {{ Form::textarea('code', Input::old('code'), array('class' => 'form-control')) }}
+                {{ Form::hidden('id', Input::old('id')) }}
+
+                {{ Form::submit('test') }}
+                {{ Form::close() }}
 
             </div>
           </div>
