@@ -233,30 +233,35 @@ class EventManager
       let name = $('#name').val();
       let code = $('#code').val();
       let id = $('#id').val();
+      let _token = $('input[name=_token]').val();
 
       //new Canvas:
-      {
+      if(!id || id<=0){
           $.ajax({
              type: "POST",
              url: '/canvas',
-             data: {name:name, code:code, id:id},
+             data: {name:name, code:code, id:id, _token:_token},
              success: function(msg) {
+               console.log("Creation ok");
                console.log(msg);
+               $('#id').val(msg.id);
              },
              error: function(msg){
-               console.log(msg)
+               console.log(msg);
+               console.log("Error creation");
              }
           });
-      }
-      {
+      }else{
           $.ajax({
              type: "PUT",
-             url: '/canvas/{id}',
-             data: {name:name, code:code, id:id},
+             url: '/canvas/'+id,
+             data: {name:name, code:code, id:parseInt(id), _token:_token},
              success: function(msg) {
+               console.log("Update ok");
                console.log(msg);
              },
              error: function(msg){
+               console.log("error update");
                console.log(msg)
              }
           });
@@ -268,11 +273,4 @@ class EventManager
 $(document).ready(function(){
   let canvas = new Canvas('svgEditor',$('#svgEditor').width(),$('#svgEditor').height());
   let eventmanager = new EventManager(canvas);
-
-  // for(let i=0;i<5;i++)
-  // {
-  //   canvas.setFillColor('#F'+i+i*2);
-  //   canvas.setstrokeColor('#'+i+i*2+i);
-  //   canvas.addRectangle(50*i,50*i,25,25);
-  // }
 });

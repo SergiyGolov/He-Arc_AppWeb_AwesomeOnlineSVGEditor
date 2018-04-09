@@ -212,9 +212,9 @@
                 <!-- to save in db any other time : /photos/{id}/edit -->
                 {{ Form::open(array('url' => '/canvas')) }}
 
-                {{ Form::text('name', Input::old('name'), array('class' => 'form-control')) }}
-                {{ Form::textarea('code', Input::old('code'), array('class' => 'form-control')) }}
-                {{ Form::hidden('id', Input::old('id')) }}
+                {{ Form::text('name', Input::old('name'), array('id' => 'name', 'class' => 'form-control')) }}
+                {{ Form::textarea('code', Input::old('code'), array('id' => 'code', 'class' => 'form-control')) }}
+                {{ Form::hidden('id', Input::old('id'), array('id' => 'id')) }}
 
                 {{ Form::submit('test') }}
                 {{ Form::close() }}

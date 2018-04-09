@@ -60,9 +60,11 @@ class CanvasController extends Controller
 
             // process the login
             if ($validator->fails()) {
-                return Redirect::to('canvas/create')
-                    ->withErrors($validator)
-                    ->withInput();
+                $response = array(
+                    'status' => 'KO',
+                    'msg' => 'Canvas failed tests',
+                );
+                return Response::json($response);
             } else {
                 // store
                 $canvas = new Canvas;
@@ -127,7 +129,7 @@ class CanvasController extends Controller
      * @param  \App\Canvas  $canvas
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Canvas $id)
+    public function update(Request $request,int $id)
     {
         // TODO Update canvas
 
@@ -144,7 +146,7 @@ class CanvasController extends Controller
 
             $response = array(
                 'status' => 'success',
-                'msg' => 'Setting created successfully',
+                'msg' => 'Canvas updated successfully',
             );
             return Response::json($response);
         }else{

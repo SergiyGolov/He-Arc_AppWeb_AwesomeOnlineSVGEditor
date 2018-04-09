@@ -14,6 +14,7 @@
             {{ Html::link('/canvas', 'Let\'s explore', array('class' => 'btn btn-outline-primary btn-lg')) }}
         </div>
     </div>
+    <!--
     <div class="row justify-content-center">
         <div class="col-md-8">
             <div class="card">
@@ -31,5 +32,6 @@
             </div>
         </div>
     </div>
+  -->
 </div>
 @endsection
