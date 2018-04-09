@@ -137,6 +137,9 @@ class CanvasController extends Controller
         if(Request::ajax()){
 
             $canvas =  Canvas::findOrFail($id);
+            if($canvas->user_id != Auth::id()){
+              abort(403, 'Unauthorized action.');
+            }
 
             $canvas->name       = Input::get('name');
             $canvas->code       = Input::get('code');

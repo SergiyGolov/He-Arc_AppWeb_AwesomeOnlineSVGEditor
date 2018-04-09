@@ -229,6 +229,7 @@ class EventManager
 
     $('#save').on('click',function(e){
       e.preventDefault();
+      $('#code').val($('#svgEditor').html()); // TODO ne pas passer par l'élément DOM
 
       let name = $('#name').val();
       let code = $('#code').val();
@@ -273,4 +274,5 @@ class EventManager
 $(document).ready(function(){
   let canvas = new Canvas('svgEditor',$('#svgEditor').width(),$('#svgEditor').height());
   let eventmanager = new EventManager(canvas);
+  $('#svgEditor').html($('#code').val());
 });
