@@ -255,7 +255,7 @@ class EventManager
           $.ajax({
              type: "PUT",
              url: '/canvas/'+id,
-             data: {name:name, code:code, id:parseInt(id), _token:_token},
+             data: {name:name, code:code, id:id, _token:_token},
              success: function(msg) {
                console.log("Update ok");
                console.log(msg);
