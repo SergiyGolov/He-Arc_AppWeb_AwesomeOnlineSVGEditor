@@ -72,6 +72,7 @@ class Canvas
     {
       switch(this.mode) {
         case 4: //rectangle
+          console.log();
           this.shape.width(this.shape.width()+e.movementX);
           this.shape.height(this.shape.height()+e.movementY);
         break;
@@ -221,6 +222,11 @@ class EventManager
       canvas.setStrokeWidth($('#strokeWidth')[0].value);
     })
 
+    $('#save-modal').on('click',function(){
+      $('#name').val($('#name-modal').val());
+      $('#modal-title').modal('toggle');
+    })
+
     //Load preconfigure colors and width
     $('#fillColor').trigger('change');
     $('#strokeColor').trigger('change');
@@ -236,6 +242,14 @@ class EventManager
       let id = $('#id').val();
       let _token = $('input[name=_token]').val();
 
+      if(!name){
+        $('#modal-title').modal('toggle');
+        name = $('#name').val();
+        if(!name){
+          return;
+        }
+      }
+
       //new Canvas:
       if(!id || id<=0){
           $.ajax({
@@ -243,13 +257,11 @@ class EventManager
              url: '/canvas',
              data: {name:name, code:code, id:id, _token:_token},
              success: function(msg) {
-               console.log("Creation ok");
-               console.log(msg);
+               toastr.success('Canvas saved successfully!');
                $('#id').val(msg.id);
              },
              error: function(msg){
-               console.log(msg);
-               console.log("Error creation");
+               toastr.error('Canvas error while saving');
              }
           });
       }else{
@@ -258,12 +270,11 @@ class EventManager
              url: '/canvas/'+id,
              data: {name:name, code:code, id:id, _token:_token},
              success: function(msg) {
-               console.log("Update ok");
+               toastr.success('Canvas saved successfully!');
                console.log(msg);
              },
              error: function(msg){
-               console.log("error update");
-               console.log(msg)
+               toastr.error('Canvas error while updating');
              }
           });
       }
@@ -272,7 +283,16 @@ class EventManager
 }
 
 $(document).ready(function(){
-  let canvas = new Canvas('svgEditor',$('#svgEditor').width(),$('#svgEditor').height());
-  let eventmanager = new EventManager(canvas);
+  toastr.options.positionClass = "toast-top-center";
+
   $('#svgEditor').html($('#code').val());
+  let existingSVG = $('#svgEditor svg');
+  let id = existingSVG.attr('id') || 'svgEditor';
+  let canvas = new Canvas(id,$('#svgEditor').width(),$('#svgEditor').height());
+  let eventmanager = new EventManager(canvas);
+
+  let name = $('#name').val();
+  if(!name){
+    $('#modal-title').modal('toggle');
+  }
 });

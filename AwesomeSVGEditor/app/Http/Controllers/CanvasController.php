@@ -114,9 +114,9 @@ class CanvasController extends Controller
      */
     public function edit(int $id)
     {
-        $canvas = Canvas::find($id);
+        $canvas = Canvas::findOrFail($id);
         if($canvas->user_id != Auth::id()){
-          return redirect('/');
+          abort(403, 'Unauthorized action.');
         }
 
         return view('editor', ['canvas' => $canvas]);
@@ -143,7 +143,7 @@ class CanvasController extends Controller
 
             $canvas->name       = Input::get('name');
             $canvas->code       = Input::get('code');
-            $canvas->visibility = 1;
+            $canvas->visibility = 1; //TODO Update this part
 
             $canvas->save();
 

@@ -90,8 +90,8 @@
         }
 
         .hidden-data {
-          /*display: none;
-          visibility: hidden;*/
+          display: none;
+          visibility: hidden;
         }
 
     </style>
@@ -219,6 +219,29 @@
                 {{ Form::submit('test') }}
                 {{ Form::close() }}
 
+            </div>
+          </div>
+
+          <button type="button" class="btn btn-primary" data-toggle="modal" data-target=".bd-example-modal-sm">Change the name</button>
+
+          <!-- Small modal -->
+          <div id="modal-title" class="modal fade bd-example-modal-sm" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-sm">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title">Nom de votre image</h5>
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+                </div>
+                <div class="modal-body">
+                  <input id="name-modal" class="form-control" type="text" placeholder="Default input">
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                  <button id="save-modal" type="button" class="btn btn-primary">Save changes</button>
+                </div>
+              </div>
             </div>
           </div>
         </main>

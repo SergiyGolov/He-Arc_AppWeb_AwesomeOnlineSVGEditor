@@ -1,6 +1,7 @@
 
 window._ = require('lodash');
 window.Popper = require('popper.js').default;
+window.toastr = require('toastr');
 
 let SVG = require('svg.js');
 
