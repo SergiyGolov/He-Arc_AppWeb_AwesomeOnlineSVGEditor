@@ -37,18 +37,16 @@ class Canvas
 
     let self = this; // Plus propre car variable local qui est ensuite bind avec la fonction, On ne peut pas binf this car le this effectif est nécessair
     let importFunction=function(){
-       if(this.type!="defs")
-       {
-         console.log(this);
-           this.mousedown(self.elementClick.bind(self));
-           self.shapes.push(this);
-       }
-    }.bind(self);
+      if(self.type!="defs")
+      {
+        console.log(this);
+        this.mousedown(self.elementClick.bind(self));
+        self.shapes.push(this);
+      }
+    };
 
     this.draw.each(importFunction);
   }
-
-
 
   elementClick(e)
   {
