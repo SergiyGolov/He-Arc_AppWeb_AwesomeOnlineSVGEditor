@@ -3,6 +3,7 @@ class Canvas
   constructor(divId,width,height)
   {
     this.draw = SVG(divId).size(width,height);
+    this.draw.svg($('#code').val()); //import
     this.shapes=[];
 
     //Available modes:
@@ -31,6 +32,18 @@ class Canvas
     this.draw.mouseup(this.mouseUp.bind(this)); //bind(this) -> necessary to access this
     this.draw.mousemove(this.mouseMove.bind(this));
     this.draw.mousedown(this.mouseDown.bind(this));
+
+
+    var self=this; //désolé poir ça ^^
+    this.draw.last().each(function(i, children) {
+      if(this.type!="defs")
+      {
+        this.mousedown(self.elementClick.bind(self));
+
+        self.shapes.push(this);
+      }
+
+    })
   }
 
   elementClick(e)
@@ -72,18 +85,18 @@ class Canvas
     {
       switch(this.mode) {
         case 4: //rectangle
-          console.log();
-          this.shape.width(this.shape.width()+e.movementX);
-          this.shape.height(this.shape.height()+e.movementY);
+        console.log();
+        this.shape.width(this.shape.width()+e.movementX);
+        this.shape.height(this.shape.height()+e.movementY);
         break;
         case 3: //line
-          let x2=this.shape.node.x2.baseVal.value;
-          let y2=this.shape.node.y2.baseVal.value;
-          this.shape.plot(this.mouseX,  this.mouseY,x2+e.movementX,y2+e.movementY);
+        let x2=this.shape.node.x2.baseVal.value;
+        let y2=this.shape.node.y2.baseVal.value;
+        this.shape.plot(this.mouseX,  this.mouseY,x2+e.movementX,y2+e.movementY);
         break;
         case 5: //circle
-          let r=this.shape.node.r.baseVal.value;
-          this.shape.radius(r+Math.max(e.movementX,e.movementY));
+        let r=this.shape.node.r.baseVal.value;
+        this.shape.radius(r+Math.max(e.movementX,e.movementY));
         break;
       }
 
@@ -98,13 +111,13 @@ class Canvas
     switch(this.mode)
     {
       case 4: //rectangle
-        this.shape=this.addRectangle(this.mouseX, this.mouseY, 1, 1);
+      this.shape=this.addRectangle(this.mouseX, this.mouseY, 1, 1);
       break;
       case 3: //line
-        this.shape=this.addLine(this.mouseX, this.mouseY, this.mouseX+1, this.mouseY+1);
+      this.shape=this.addLine(this.mouseX, this.mouseY, this.mouseX+1, this.mouseY+1);
       break;
       case 5: //circle
-        this.shape=this.addCircle(this.mouseX, this.mouseY, 1);
+      this.shape=this.addCircle(this.mouseX, this.mouseY, 1);
       break;
     }
   }
@@ -252,31 +265,31 @@ class EventManager
 
       //new Canvas:
       if(!id || id<=0){
-          $.ajax({
-             type: "POST",
-             url: '/canvas',
-             data: {name:name, code:code, id:id, _token:_token},
-             success: function(msg) {
-               toastr.success('Canvas saved successfully!');
-               $('#id').val(msg.id);
-             },
-             error: function(msg){
-               toastr.error('Canvas error while saving');
-             }
-          });
+        $.ajax({
+          type: "POST",
+          url: '/canvas',
+          data: {name:name, code:code, id:id, _token:_token},
+          success: function(msg) {
+            toastr.success('Canvas saved successfully!');
+            $('#id').val(msg.id);
+          },
+          error: function(msg){
+            toastr.error('Canvas error while saving');
+          }
+        });
       }else{
-          $.ajax({
-             type: "PUT",
-             url: '/canvas/'+id,
-             data: {name:name, code:code, id:id, _token:_token},
-             success: function(msg) {
-               toastr.success('Canvas saved successfully!');
-               console.log(msg);
-             },
-             error: function(msg){
-               toastr.error('Canvas error while updating');
-             }
-          });
+        $.ajax({
+          type: "PUT",
+          url: '/canvas/'+id,
+          data: {name:name, code:code, id:id, _token:_token},
+          success: function(msg) {
+            toastr.success('Canvas saved successfully!');
+            console.log(msg);
+          },
+          error: function(msg){
+            toastr.error('Canvas error while updating');
+          }
+        });
       }
     });
   }
@@ -285,7 +298,7 @@ class EventManager
 $(document).ready(function(){
   toastr.options.positionClass = "toast-top-center";
 
-  $('#svgEditor').html($('#code').val());
+  //$('#svgEditor').html($('#code').val());
   let existingSVG = $('#svgEditor svg');
   let id = existingSVG.attr('id') || 'svgEditor';
   let canvas = new Canvas(id,$('#svgEditor').width(),$('#svgEditor').height());
