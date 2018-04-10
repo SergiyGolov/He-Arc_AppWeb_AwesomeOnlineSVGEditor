@@ -76,9 +76,14 @@
         }
 
         #svgEditor{
-          width:90%;
-          height:500px;
+          width:100%;
+          height:100%;
+          display: flex;
+        }
+
+        #svgEditor svg{
           background-color: white;
+          margin: auto;
         }
 
         #toolbox{
@@ -125,6 +130,9 @@
                         </li>
                     </ul>
 
+                    <ul class="navbar-nav mx-auto">
+                      {{ isset($canvas)?$canvas->name:'' }}
+                    </ul>
                     <!-- Right Side Of Navbar -->
                     <ul class="navbar-nav ml-auto">
                         <!-- Authentication Links -->
@@ -221,8 +229,6 @@
 
             </div>
           </div>
-
-          <button type="button" class="btn btn-primary" data-toggle="modal" data-target=".bd-example-modal-sm">Change the name</button>
 
           <!-- Small modal -->
           <div id="modal-title" class="modal fade bd-example-modal-sm" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">

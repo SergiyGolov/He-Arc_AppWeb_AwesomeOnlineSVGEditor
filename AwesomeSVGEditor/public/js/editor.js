@@ -5,7 +5,7 @@ class Canvas
   constructor(divId,width,height)
   {
     this.draw = SVG(divId).size(width,height);
-    this.draw.svg($('#code').val()); //import
+    //this.draw.svg($('#code').val()); //import
     this.shapes=[];
     console.log($('#code').val());
     //Available modes:
@@ -35,21 +35,15 @@ class Canvas
     this.draw.mousemove(this.mouseMove.bind(this));
     this.draw.mousedown(this.mouseDown.bind(this));
 
-
-    var self=this; //désolé poir ça ^^
-
-    let importFunction=function()
-    {
-      {
+    let self = this; // Plus propre car variable local qui est ensuite bind avec la fonction, On ne peut pas binf this car le this effectif est nécessair
+    let importFunction=function(){
        if(this.type!="defs")
        {
          console.log(this);
            this.mousedown(self.elementClick.bind(self));
-
            self.shapes.push(this);
        }
-     }
-    }
+    }.bind(self);
 
     this.draw.each(importFunction);
   }
@@ -259,7 +253,7 @@ class EventManager
     $('#save').on('click',function(e){
       e.preventDefault();
       canvas.draw.defs().remove();
-      $('#code').val($('#svgEditor > ').html()); // TODO ne pas passer par l'élément DOM
+      $('#code').val($('#svgEditor').html()); // TODO ne pas passer par l'élément DOM
 
       let name = $('#name').val();
       let code = $('#code').val();
@@ -309,10 +303,12 @@ class EventManager
 $(document).ready(function(){
   toastr.options.positionClass = "toast-top-center";
 
-  //$('#svgEditor').html($('#code').val());
+  $('#svgEditor').html($('#code').val());
   let existingSVG = $('#svgEditor svg');
   let id = existingSVG.attr('id') || 'svgEditor';
-  let canvas = new Canvas(id,$('#svgEditor').width(),$('#svgEditor').height());
+
+  //Paramètres de taille par défault:
+  let canvas = new Canvas(id,1000,600);
   let eventmanager = new EventManager(canvas);
 
   let name = $('#name').val();
