@@ -1,11 +1,13 @@
 class Canvas
 {
+
+
   constructor(divId,width,height)
   {
     this.draw = SVG(divId).size(width,height);
     this.draw.svg($('#code').val()); //import
     this.shapes=[];
-
+    console.log($('#code').val());
     //Available modes:
     // 0: pointer
     // 1: erase
@@ -35,16 +37,24 @@ class Canvas
 
 
     var self=this; //désolé poir ça ^^
-    this.draw.last().each(function(i, children) {
-      if(this.type!="defs")
+
+    let importFunction=function()
+    {
       {
-        this.mousedown(self.elementClick.bind(self));
+       if(this.type!="defs")
+       {
+         console.log(this);
+           this.mousedown(self.elementClick.bind(self));
 
-        self.shapes.push(this);
-      }
+           self.shapes.push(this);
+       }
+     }
+    }
 
-    })
+    this.draw.each(importFunction);
   }
+
+
 
   elementClick(e)
   {
@@ -248,7 +258,8 @@ class EventManager
 
     $('#save').on('click',function(e){
       e.preventDefault();
-      $('#code').val($('#svgEditor').html()); // TODO ne pas passer par l'élément DOM
+      canvas.draw.defs().remove();
+      $('#code').val($('#svgEditor > ').html()); // TODO ne pas passer par l'élément DOM
 
       let name = $('#name').val();
       let code = $('#code').val();
