@@ -238,7 +238,14 @@ class EventManager
     })
 
     $('#save-modal').on('click',function(){
-      $('#name').val($('#name-modal').val());
+      let title = $('#name-modal').val();
+      $('#name').val(title);
+      $('#navbar-title').html(title);
+      $('#modal-title').modal('toggle');
+    })
+
+    $('#title-edit').on('click', function(){
+      console.log("Test")
       $('#modal-title').modal('toggle');
     })
 

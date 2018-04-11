@@ -131,8 +131,14 @@
                     </ul>
 
                     <ul class="navbar-nav mx-auto">
-                      {{ isset($canvas)?$canvas->name:'' }}
+                      <div id="navbar-title">
+                        {{ isset($canvas)?$canvas->name:'' }}
+                      </div>
+                      <button id="title-edit" class="btn btn-sm">
+                        <span>Edit</span>
+                      </button>
                     </ul>
+
                     <!-- Right Side Of Navbar -->
                     <ul class="navbar-nav ml-auto">
                         <!-- Authentication Links -->
