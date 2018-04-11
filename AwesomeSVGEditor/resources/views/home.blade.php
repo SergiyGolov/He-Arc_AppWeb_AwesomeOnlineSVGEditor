@@ -5,12 +5,12 @@
     <div class="row">
         <div class="col-md-6 col-sm-12 centered">
             <h2>Create your own SVG</h2>
-            <img src="img/editor.png" alt="Amazing SVG Editor"/>
+            <img src="{{ URL::to('/') }}/img/editor.PNG" alt="Amazing SVG Editor"/>
             {{ Html::link('/canvas/create', 'Start right now', array('class' => 'btn btn-outline-primary btn-lg')) }}
         </div>
         <div class="col-md-6 col-sm-12 centered">
             <h2>Explore existing SVG</h2>
-            <img src="img/gallery.png" alt="Amazing gallery"/>
+            <img src="{{ URL::to('/') }}/img/gallery.PNG" alt="Amazing gallery"/>
             {{ Html::link('/canvas', 'Let\'s explore', array('class' => 'btn btn-outline-primary btn-lg')) }}
         </div>
     </div>

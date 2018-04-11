@@ -103,6 +103,7 @@ class CanvasController extends Controller
     {
         // TODO return view
 
+        abort(402, 'Not implemented yet.');
         //return view('user.profile', ['user' => Canvas::findOrFail($id)]);
     }
 

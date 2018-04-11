@@ -23,7 +23,11 @@
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
     <link href="{{ asset('css/editor.css') }}" rel="stylesheet">
     <style type="text/css">
-      /* TODO coller ce code dans editor.scss à définir */
+        /*
+         * TODO coller ce code dans editor.scss à définir
+         * Balise de css pour le développement, à déplacer lors de la mise en production
+         * Si on le met directement dans le scss, nécessite de lancer npm run prod après chaque modif pour regénérer le css à partir du scss
+         */
         .expand {
           height: 100%;
         }
@@ -84,10 +88,6 @@
         #svgEditor svg{
           background-color: white;
           margin: auto;
-        }
-
-        #toolbox{
-          float:left;
         }
 
         #strokeWidth{
