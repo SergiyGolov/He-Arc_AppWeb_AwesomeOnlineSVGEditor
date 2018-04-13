@@ -2,16 +2,29 @@
 
 /*
 |--------------------------------------------------------------------------
-| Application Routes
+| Web Routes
 |--------------------------------------------------------------------------
 |
-| Here is where you can register all of the routes for an application.
-| It is a breeze. Simply tell Lumen the URIs it should respond to
-| and give it the Closure to call when that URI is requested.
+| Here is where you can register web routes for your application. These
+| routes are loaded by the RouteServiceProvider within a group which
+| contains the "web" middleware group. Now create something great!
 |
 */
 
-$router->get('/', function () use ($router) {
-    return view()->file('..\resources\views\home.blade.php', ['name' => 'Lukas']);
-    //return view('home.blade.php', ['name' => 'Lukas']);
-});
+Route::get('/', 'HomeController@index');
+
+Auth::routes();
+
+Route::get('/home', 'HomeController@index')->name('home');
+
+Route::get('/profile', 'HomeController@show')->middleware('auth.basic'); // Nécessite une authentification
+
+/*
+Route::get('/svg', 'SVGController@index');
+Route::get('/svg/{id}', 'SVGController@show');
+Route::put('/new', 'SVGController@new');
+Route::post('/save', 'SVGController@save');
+Route::delete('/delete/{id}', 'SVGController@delete');
+*/
+
+Route::resource('canvas', 'CanvasController');//->middleware('auth.basic');

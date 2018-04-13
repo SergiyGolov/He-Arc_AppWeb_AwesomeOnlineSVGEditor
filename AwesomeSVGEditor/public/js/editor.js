@@ -1,0 +1,334 @@
+class Canvas
+{
+
+
+  constructor(divId,width,height)
+  {
+    this.draw = SVG(divId).size(width,height);
+    //this.draw.svg($('#code').val()); //import
+    this.shapes=[];
+    console.log($('#code').val());
+    //Available modes:
+    // 0: pointer
+    // 1: erase
+    // 2: pen
+    // 3: line
+    // 4: rectangle
+    // 5: circle
+    this.mode = 0;
+
+    this.shape = null;
+
+    this.fillColor='#000';
+    this.strokeColor='#000';
+    this.strokeWidth=1;
+
+    /* TODO Remove those lines */
+    this.isMoving=false;
+    this.isDynAdding=false;
+    this.erase=false;
+
+    this.mouseX=0;
+    this.mouseY=0;
+
+    this.draw.mouseup(this.mouseUp.bind(this)); //bind(this) -> necessary to access this
+    this.draw.mousemove(this.mouseMove.bind(this));
+    this.draw.mousedown(this.mouseDown.bind(this));
+
+    let self = this; // Plus propre car variable local qui est ensuite bind avec la fonction, On ne peut pas binf this car le this effectif est nécessair
+    let importFunction=function(){
+      if(self.type!="defs")
+      {
+        console.log(this);
+        this.mousedown(self.elementClick.bind(self));
+        self.shapes.push(this);
+      }
+    };
+
+    this.draw.each(importFunction);
+  }
+
+  elementClick(e)
+  {
+    let event = e.target || e.srcElement;
+    if(this.mode == 1)
+    { // Erase
+      this.shapes.splice(this.shapes.indexOf(event.instance),1);
+      event.instance.remove();
+      this.erase=false;
+    }
+    else if(this.mode == 0) //TODO update self second part
+    {
+      this.isMoving=true;
+      this.shape=event.instance;
+    }
+  }
+
+  mouseUp(e)
+  {
+    if(this.mode == 0)
+    {
+      this.isMoving=false;
+      this.shape=null;
+    }else if(this.mode > 1){
+      this.isDynAdding=false;
+      this.shape=null;
+    }
+  }
+
+  mouseMove(e)
+  {
+    if(this.isMoving)
+    {
+      this.shape.move(e.offsetX-this.shape.width()/2,e.offsetY-this.shape.height()/2);
+      this.shape.front();
+    }
+    else if(this.shape!=null)
+    {
+      switch(this.mode) {
+        case 4: //rectangle
+        console.log();
+        this.shape.width(this.shape.width()+e.movementX);
+        this.shape.height(this.shape.height()+e.movementY);
+        break;
+        case 3: //line
+        let x2=this.shape.node.x2.baseVal.value;
+        let y2=this.shape.node.y2.baseVal.value;
+        this.shape.plot(this.mouseX,  this.mouseY,x2+e.movementX,y2+e.movementY);
+        break;
+        case 5: //circle
+        let r=this.shape.node.r.baseVal.value;
+        this.shape.radius(r+Math.max(e.movementX,e.movementY));
+        break;
+      }
+
+    }else {
+      this.mouseX=e.offsetX;
+      this.mouseY=e.offsetY;
+    }
+  }
+
+  mouseDown()
+  {
+    switch(this.mode)
+    {
+      case 4: //rectangle
+      this.shape=this.addRectangle(this.mouseX, this.mouseY, 1, 1);
+      break;
+      case 3: //line
+      this.shape=this.addLine(this.mouseX, this.mouseY, this.mouseX+1, this.mouseY+1);
+      break;
+      case 5: //circle
+      this.shape=this.addCircle(this.mouseX, this.mouseY, 1);
+      break;
+    }
+  }
+
+  addRectangle(posX,posY,width,height)
+  {
+    let rect=this.draw.rect(width, height).stroke({ width: this.strokeWidth });
+
+    rect.move(posX,posY);
+    rect.fill(this.fillColor);
+    rect.stroke(this.strokeColor);
+    rect.mousedown(this.elementClick.bind(this));
+
+    this.shapes.push(rect);
+
+    return rect;
+  }
+
+  addLine(posX,posY,posX2,posY2)
+  {
+    let line=this.draw.line(posX, posY,posX2,posY2).stroke({ width: this.strokeWidth });
+    line.stroke(this.strokeColor);
+    line.mousedown(this.elementClick.bind(this));
+    this.shapes.push(line);
+
+    return line;
+  }
+
+  addCircle(posX,posY,d)
+  {
+    let circle=this.draw.circle(d).stroke({ width: this.strokeWidth });
+    circle.move(posX,posY);
+    circle.stroke(this.strokeColor);
+    circle.fill(this.fillColor);
+    circle.mousedown(this.elementClick.bind(this));
+    this.shapes.push(circle);
+
+    return circle;
+  }
+
+  startMoving()
+  {
+    this.mode = 0;
+  }
+
+  dynAddRectangle()
+  {
+    this.mode = 4;
+  }
+
+  dynAddLine()
+  {
+    this.mode = 3;
+  }
+
+  dynAddCircle()
+  {
+    this.mode = 5;
+  }
+
+  startErase()
+  {
+    this.mode = 1;
+  }
+
+  setFillColor(color) //color format: string: '#RGB' R,G and B from '0' to 'F'
+  {
+    this.fillColor=color;
+  }
+
+  setStrokeColor(color) //color format: string: '#RGB' R,G and B from '0' to 'F'
+  {
+    this.strokeColor=color;
+  }
+
+  setStrokeWidth(width)
+  {
+    this.strokeWidth=width;
+  }
+}
+
+//Class to connect the interface with our canvas object
+class EventManager
+{
+  constructor(canvas)
+  {
+    this.canvas = canvas;
+    this._connect();
+  }
+
+  _connect(){
+    let canvas = this.canvas;
+    $('#pointer').on('click',function(){
+      canvas.startMoving();
+    });
+    $('#line').on('click',function(){
+      canvas.dynAddLine();
+    });
+    $('#rectangle').on('click',function(){
+      canvas.dynAddRectangle();
+    });
+    $('#ellipse').on('click',function(){
+      canvas.dynAddCircle();
+    });
+    $('#erase').on('click',function(){
+      canvas.startErase();
+    });
+    $('#fillColor').on('change',function(){
+      canvas.setFillColor($('#fillColor')[0].value);
+    });
+    $('#strokeColor').on('change',function(){
+      canvas.setStrokeColor($('#strokeColor')[0].value);
+    })
+    $('#strokeWidth').on('change',function(){
+      canvas.setStrokeWidth($('#strokeWidth')[0].value);
+    })
+
+    $('#save-modal').on('click',function(){
+      let title = $('#name-modal').val();
+      $('#name').val(title);
+      $('#navbar-title').html(title);
+      $('#modal-title').modal('toggle');
+    })
+
+    $('#title-edit').on('click', function(){
+      console.log("Test")
+      $('#modal-title').modal('toggle');
+    })
+
+    //Load preconfigure colors and width
+    $('#fillColor').trigger('change');
+    $('#strokeColor').trigger('change');
+    $('#strokeWidth').trigger('change');
+
+
+    $('#save').on('click',function(e){
+      e.preventDefault();
+      canvas.draw.defs().remove();
+      $('#svgEditor svg').removeAttr('xmlns:svgjs'); //Suppression d'un attribut qui est dupliqué<
+      $('#code').val($('#svgEditor').html()); // TODO ne pas passer par l'élément DOM
+
+      let name = $('#name').val();
+      let code = $('#code').val();
+      let id = $('#id').val();
+      let _token = $('input[name=_token]').val();
+
+      if(!name){
+        $('#modal-title').modal('toggle');
+        name = $('#name').val();
+        if(!name){
+          return;
+        }
+      }
+
+      //new Canvas:
+      if(!id || id<=0){
+        $.ajax({
+          type: "POST",
+          url: '/canvas',
+          data: {name:name, code:code, id:id, _token:_token},
+          success: function(msg) {
+            if(msg.status == 'success'){
+              toastr.success('Canvas saved successfully!');
+              console.log(msg);
+              $('#id').val(msg.id);
+            }else{
+              toastr.error('Canvas error while saving');
+            }
+          },
+          error: function(msg){
+            toastr.error('Canvas error while saving');
+          }
+        });
+      }else{
+        $.ajax({
+          type: "PUT",
+          url: '/canvas/'+id,
+          data: {name:name, code:code, id:id, _token:_token},
+          success: function(msg) {
+            if(msg.status == 'success'){
+              toastr.success('Canvas updated successfully!');
+              console.log(msg);
+              $('#id').val(msg.id);
+            }else{
+              toastr.error('Canvas error while updating');
+            }
+          },
+          error: function(msg){
+            toastr.error('Canvas error while updating');
+          }
+        });
+      }
+    });
+  }
+}
+
+$(document).ready(function(){
+  toastr.options.positionClass = "toast-top-center";
+
+  $('#svgEditor').html($('#code').val());
+  let existingSVG = $('#svgEditor svg');
+  let id = existingSVG.attr('id') || 'svgEditor';
+
+  //Paramètres de taille par défault:
+  let canvas = new Canvas(id,1000,600);
+  let eventmanager = new EventManager(canvas);
+
+  let name = $('#name').val();
+  if(!name){
+    $('#modal-title').modal('toggle');
+  }
+});
