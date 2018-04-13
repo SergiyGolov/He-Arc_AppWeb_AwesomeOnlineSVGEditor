@@ -247,7 +247,7 @@
                   </button>
                 </div>
                 <div class="modal-body">
-                  <input id="name-modal" class="form-control" type="text" placeholder="Default input">
+                  <input id="name-modal" class="form-control" type="text" placeholder="Default input" value="{{ isset($canvas)?$canvas->name:'' }}">
                 </div>
                 <div class="modal-footer">
                   <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>

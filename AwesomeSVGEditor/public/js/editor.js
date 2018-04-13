@@ -258,6 +258,7 @@ class EventManager
     $('#save').on('click',function(e){
       e.preventDefault();
       canvas.draw.defs().remove();
+      $('#svgEditor svg').removeAttr('xmlns:svgjs'); //Suppression d'un attribut qui est dupliqué<
       $('#code').val($('#svgEditor').html()); // TODO ne pas passer par l'élément DOM
 
       let name = $('#name').val();
@@ -280,8 +281,13 @@ class EventManager
           url: '/canvas',
           data: {name:name, code:code, id:id, _token:_token},
           success: function(msg) {
-            toastr.success('Canvas saved successfully!');
-            $('#id').val(msg.id);
+            if(msg.status == 'success'){
+              toastr.success('Canvas saved successfully!');
+              console.log(msg);
+              $('#id').val(msg.id);
+            }else{
+              toastr.error('Canvas error while saving');
+            }
           },
           error: function(msg){
             toastr.error('Canvas error while saving');
@@ -293,8 +299,13 @@ class EventManager
           url: '/canvas/'+id,
           data: {name:name, code:code, id:id, _token:_token},
           success: function(msg) {
-            toastr.success('Canvas saved successfully!');
-            console.log(msg);
+            if(msg.status == 'success'){
+              toastr.success('Canvas updated successfully!');
+              console.log(msg);
+              $('#id').val(msg.id);
+            }else{
+              toastr.error('Canvas error while updating');
+            }
           },
           error: function(msg){
             toastr.error('Canvas error while updating');
