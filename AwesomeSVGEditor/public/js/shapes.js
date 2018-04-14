@@ -8,13 +8,84 @@ class Rectangle {
     this.rect.stroke(this.canvas.strokeColor);
     this.rect.mousedown(this.canvas.elementClick.bind(this.canvas));
     this.canvas.shapes.push(this);
+
+    this.initialX=posX;
+    this.initialY=posY;
   }
 
 
   mouseMove(e)
   {
-    this.rect.width(this.rect.width()+e.movementX);
-    this.rect.height(this.rect.height()+e.movementY);
+
+    if(this.initialX<e.offsetX && this.initialY<e.offsetY) //cadran "bas-droite"
+    {
+      this.rect.width(this.rect.width()+e.movementX);
+      this.rect.height(this.rect.height()+e.movementY);
+    }
+    else if (this.initialX>e.offsetX && this.initialY>e.offsetY ) //cadran "haut-gauche"
+    {
+      this.rect.move(this.rect.x()+e.movementX,this.rect.y()+e.movementY);
+
+      if(e.movementX>0)
+      {
+        this.rect.width(this.rect.width()-Math.abs(e.movementX));
+      }
+      else
+      {
+        this.rect.width(this.rect.width()+Math.abs(e.movementX));
+      }
+
+      if(e.movementY>0)
+      {
+        this.rect.height(this.rect.height()-Math.abs(e.movementY));
+      }else
+      {
+        this.rect.height(this.rect.height()+Math.abs(e.movementY));
+      }
+
+    }
+    else if(this.initialX>e.offsetX && this.initialY<e.offsetY) // cadran "bas-gauche"
+    {
+      this.rect.move(this.rect.x()+e.movementX,this.rect.y());
+      if(e.movementX>0)
+      {
+        this.rect.width(this.rect.width()-Math.abs(e.movementX));
+      }
+      else
+      {
+        this.rect.width(this.rect.width()+Math.abs(e.movementX));
+      }
+
+      if(e.movementY>0)
+      {
+        this.rect.height(this.rect.height()+Math.abs(e.movementY));
+      }else
+      {
+        this.rect.height(this.rect.height()-Math.abs(e.movementY));
+      }
+
+    }
+    else if(this.initialX<e.offsetX && this.initialY>e.offsetY) // cadran "haut-droite"
+    {
+      this.rect.move(this.rect.x(),this.rect.y()+e.movementY);
+      if(e.movementX>0)
+      {
+        this.rect.width(this.rect.width()+Math.abs(e.movementX));
+      }
+      else
+      {
+        this.rect.width(this.rect.width()-Math.abs(e.movementX));
+      }
+
+      if(e.movementY>0)
+      {
+        this.rect.height(this.rect.height()-Math.abs(e.movementY));
+      }else
+      {
+        this.rect.height(this.rect.height()+Math.abs(e.movementY));
+      }
+    }
+
   }
 
 
