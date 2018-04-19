@@ -179,15 +179,15 @@
         <main class="expand">
           <div id="editor" class="expand">
             <div id="tools">
-              <a id="pointer"> <!-- TODO mode souris -->
-                <svg version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
-                	 viewBox="0 0 512 512" style="enable-background:new 0 0 512 512;" xml:space="preserve">
+              <a id="pointer">
+                <svg version="1.1" id="svg-pointer" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+                	 viewBox="0 0 512 512" xml:space="preserve">
                 <polygon class="fill" points="429.742,319.31 82.489,0 82.258,471.744 187.633,370.918 249.523,512 346.083,469.642 284.193,328.56"/>
                 </svg>
               </a>
               <a id="pen"> <!-- TODO mode pinceau -->
-                <svg version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
-                	 viewBox="0 0 493.638 493.638" style="enable-background:new 0 0 493.638 493.638;" xml:space="preserve">
+                <svg version="1.1" id="svg-pen" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+                	 viewBox="0 0 493.638 493.638" xml:space="preserve">
                   <g>
                   	<polygon class="fill" fill="#020202" points="427.092,118.538 99.89,445.738 90.239,436.086 417.439,108.885 358.708,50.154
                   		31.376,377.481 116.022,462.13 443.351,134.798 			"/>
@@ -197,26 +197,26 @@
                   </g>
                 </svg>
               </a>
-              <a id="line"> <!-- TODO mode line -->
-                <svg version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
-                	 viewBox="0 0 511.998 511.998" style="enable-background:new 0 0 511.998 511.998;" xml:space="preserve">
+              <a id="line">
+                <svg version="1.1" id="svg-line" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+                	 viewBox="0 0 511.998 511.998" xml:space="preserve">
                    <line class="stroke" fill="none" stroke="#000" stroke-width="70" stroke-opacity="null" fill-opacity="null" x1="0" y1="0"
                    x2="511.998" y2="511.998" stroke-linejoin="null" stroke-linecap="null" stroke-dasharray="none"></line>
                 </svg>
               </a>
-              <a id="rectangle"> <!-- TODO mode square -->
-                <svg version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
-                	 viewBox="0 0 64 48" style="enable-background:new 0 0 64 64;" xml:space="preserve">
+              <a id="rectangle">
+                <svg version="1.1" id="svg-rectangle" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+                	 viewBox="0 0 64 48" xml:space="preserve">
                 	<rect class="fill" width="64" height="48"/>
                 </svg>
               </a>
               <a id="ellipse">
-                <svg version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
-                	 viewBox="0 0 512 300" style="enable-background:new 0 0 512 300;" xml:space="preserve">
+                <svg version="1.1" id="svg-ellipse" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+                	 viewBox="0 0 512 300" xml:space="preserve">
                   <ellipse class="fill" fill="none" stroke="none" cx="256" cy="150" rx="256" ry="150"></ellipse>
                 </svg>
               </a>
-              <input type="button" value="Erase" id="erase">
+              <input type="button" id="erase" value="Erase">
               <input type="color" id="fillColor">
               <input type="color" id="strokeColor">
               <input type="number" id="strokeWidth" min=0 value=1>
@@ -249,7 +249,7 @@
             <div class="modal-dialog modal-sm">
               <div class="modal-content">
                 <div class="modal-header">
-                  <h5 class="modal-title">Nom de votre image</h5>
+                  <h5 class="modal-title">Name of your image</h5>
                   <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                   </button>
