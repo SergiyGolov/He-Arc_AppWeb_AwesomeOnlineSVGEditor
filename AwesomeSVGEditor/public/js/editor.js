@@ -4,17 +4,16 @@ class Canvas
   constructor(divId,width,height)
   {
     this.draw = SVG(divId).size(width,height);
-
     this.shapes=[];
 
     this.modesEnum=Object.freeze({
-                                  "pointer":0,
-                                  "erase":1,
-                                  "pen":2,
-                                  "line":3,
-                                  "rectangle":4,
-                                  "circle":5
-                                });
+      "pointer":0,
+      "erase":1,
+      "pen":2,
+      "line":3,
+      "rectangle":4,
+      "circle":5
+    });
 
     this.isMoving=false;
 
@@ -33,12 +32,19 @@ class Canvas
     this.draw.mousemove(this.mouseMove.bind(this));
     this.draw.mousedown(this.mouseDown.bind(this));
 
-    let self = this; // Plus propre car variable local qui est ensuite bind avec la fonction, On ne peut pas binf this car le this effectif est nécessair
+    let selfCanvas = this; //désolé de nouveau, mais fallait que j'y accéde depuis un callback du eventManager
     let importFunction=function(){
-      if(self.type!="defs")
+      if(this.type!="defs")
       {
-        this.mousedown(self.elementClick.bind(self));
-        self.shapes.push(this);
+        if(this.type=="svg")
+        {
+          this.each(importFunction);
+        }
+        else
+        {
+          this.mousedown(selfCanvas.elementClick.bind(selfCanvas));
+          selfCanvas.shapes.push(this);
+        }
       }
     };
 
@@ -93,16 +99,16 @@ class Canvas
     switch(this.mode)
     {
       case this.modesEnum.rectangle:
-        //this.shape=this.addRectangle(this.mouseX, this.mouseY, 1, 1);
-        this.shape=new Rectangle(this,this.mouseX, this.mouseY, 1, 1);
+      //this.shape=this.addRectangle(this.mouseX, this.mouseY, 1, 1);
+      this.shape=new Rectangle(this,this.mouseX, this.mouseY, 1, 1);
       break;
       case this.modesEnum.line:
-        //this.shape=this.addLine(this.mouseX, this.mouseY, this.mouseX+1, this.mouseY+1);
-        this.shape=new Line(this,this.mouseX, this.mouseY, this.mouseX+1, this.mouseY+1);
+      //this.shape=this.addLine(this.mouseX, this.mouseY, this.mouseX+1, this.mouseY+1);
+      this.shape=new Line(this,this.mouseX, this.mouseY, this.mouseX+1, this.mouseY+1);
       break;
       case this.modesEnum.circle:
-        //this.shape=this.addCircle(this.mouseX, this.mouseY, 1);
-        this.shape=new Circle(this,this.mouseX, this.mouseY, 1);
+      //this.shape=this.addCircle(this.mouseX, this.mouseY, 1);
+      this.shape=new Circle(this,this.mouseX, this.mouseY, 1);
       break;
     }
   }
@@ -184,6 +190,37 @@ class EventManager
       canvas.setStrokeWidth($('#strokeWidth')[0].value);
     })
 
+    $("#import").click(function(e){
+      e.preventDefault();
+      $("#fileinput").trigger('click');
+    });
+
+    $("#fileinput").change(function (e){
+      //source: https://stackoverflow.com/questions/32490959/filereader-on-input-change-jquery
+      var f = e.target.files[0];
+      if (f){
+        var r = new FileReader();
+        r.readAsText(f);
+        r.onload = function(e){
+          var importedSvg=e.target.result;
+
+          $('#svgEditor').html(importedSvg);
+
+          let existingSVG = $('#svgEditor svg');
+          let id = existingSVG.attr('id') || 'svgEditor';
+
+          $('#editor').find("*").addBack().off(); //magouille pour deconnecter tous les événements
+
+          window.canvas = new Canvas(id,1000,600);
+
+          window.eventmanager = new EventManager(window.canvas);
+        };
+      } else
+      {
+        console.log("failed");
+      }
+    });
+
     $('#save-modal').on('click',function(){
       let title = $('#name-modal').val();
       $('#name').val(title);
@@ -210,6 +247,7 @@ class EventManager
       let name = $('#name').val();
       let code = $('#code').val();
       let id = $('#id').val();
+      console.log(id);
       let _token = $('input[name=_token]').val();
 
       if(!name){
@@ -253,6 +291,7 @@ class EventManager
 }
 
 $(document).ready(function(){
+
   toastr.options.positionClass = "toast-top-center";
 
   $('#svgEditor').html($('#code').val());
@@ -260,8 +299,8 @@ $(document).ready(function(){
   let id = existingSVG.attr('id') || 'svgEditor';
 
   //Paramètres de taille par défault:
-  let canvas = new Canvas(id,1000,600);
-  let eventmanager = new EventManager(canvas);
+  window.canvas = new Canvas(id,1000,600);
+  window.eventmanager = new EventManager(window.canvas);
 
   let name = $('#name').val();
   if(!name){
