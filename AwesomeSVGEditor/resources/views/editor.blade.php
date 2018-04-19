@@ -99,6 +99,10 @@
           visibility: hidden;
         }
 
+        #fileinput{
+          display:none;
+        }
+
     </style>
 </head>
 <body class="expand">
@@ -123,6 +127,10 @@
                                 <a class="dropdown-item" href="{{ route('logout') }}">
                                     Export as
                                 </a>
+                                <a class="dropdown-item" href="" id="import">
+                                    Import .svg
+                                </a>
+                                <input type='file' id='fileinput'>
                                 <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
                                     @csrf
                                 </form>

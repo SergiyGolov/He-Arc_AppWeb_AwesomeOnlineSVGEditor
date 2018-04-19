@@ -1,32 +1,29 @@
 class Canvas
 {
 
-
   constructor(divId,width,height)
   {
     this.draw = SVG(divId).size(width,height);
-    //this.draw.svg($('#code').val()); //import
     this.shapes=[];
-    console.log($('#code').val());
-    //Available modes:
-    // 0: pointer
-    // 1: erase
-    // 2: pen
-    // 3: line
-    // 4: rectangle
-    // 5: circle
-    this.mode = 0;
+
+    this.modesEnum=Object.freeze({
+      "pointer":0,
+      "erase":1,
+      "pen":2,
+      "line":3,
+      "rectangle":4,
+      "circle":5
+    });
+
+    this.isMoving=false;
+
+    this.mode = this.modesEnum.pointer;
 
     this.shape = null;
 
     this.fillColor='#000';
     this.strokeColor='#000';
     this.strokeWidth=1;
-
-    /* TODO Remove those lines */
-    this.isMoving=false;
-    this.isDynAdding=false;
-    this.erase=false;
 
     this.mouseX=0;
     this.mouseY=0;
@@ -35,13 +32,19 @@ class Canvas
     this.draw.mousemove(this.mouseMove.bind(this));
     this.draw.mousedown(this.mouseDown.bind(this));
 
-    let self = this; // Plus propre car variable local qui est ensuite bind avec la fonction, On ne peut pas binf this car le this effectif est nécessair
+    let selfCanvas = this; //désolé de nouveau, mais fallait que j'y accéde depuis un callback du eventManager
     let importFunction=function(){
-      if(self.type!="defs")
+      if(this.type!="defs")
       {
-        console.log(this);
-        this.mousedown(self.elementClick.bind(self));
-        self.shapes.push(this);
+        if(this.type=="svg")
+        {
+          this.each(importFunction);
+        }
+        else
+        {
+          this.mousedown(selfCanvas.elementClick.bind(selfCanvas));
+          selfCanvas.shapes.push(this);
+        }
       }
     };
 
@@ -51,13 +54,13 @@ class Canvas
   elementClick(e)
   {
     let event = e.target || e.srcElement;
-    if(this.mode == 1)
-    { // Erase
+    if(this.mode == this.modesEnum.erase)
+    {
       this.shapes.splice(this.shapes.indexOf(event.instance),1);
       event.instance.remove();
       this.erase=false;
     }
-    else if(this.mode == 0) //TODO update self second part
+    else if(this.mode == this.modesEnum.pointer)
     {
       this.isMoving=true;
       this.shape=event.instance;
@@ -66,11 +69,11 @@ class Canvas
 
   mouseUp(e)
   {
-    if(this.mode == 0)
+    if(this.mode == this.modesEnum.pointer)
     {
       this.isMoving=false;
       this.shape=null;
-    }else if(this.mode > 1){
+    }else if(this.mode > this.modesEnum.erase){
       this.isDynAdding=false;
       this.shape=null;
     }
@@ -81,27 +84,10 @@ class Canvas
     if(this.isMoving)
     {
       this.shape.move(e.offsetX-this.shape.width()/2,e.offsetY-this.shape.height()/2);
-      this.shape.front();
     }
     else if(this.shape!=null)
     {
-      switch(this.mode) {
-        case 4: //rectangle
-        console.log();
-        this.shape.width(this.shape.width()+e.movementX);
-        this.shape.height(this.shape.height()+e.movementY);
-        break;
-        case 3: //line
-        let x2=this.shape.node.x2.baseVal.value;
-        let y2=this.shape.node.y2.baseVal.value;
-        this.shape.plot(this.mouseX,  this.mouseY,x2+e.movementX,y2+e.movementY);
-        break;
-        case 5: //circle
-        let r=this.shape.node.r.baseVal.value;
-        this.shape.radius(r+Math.max(e.movementX,e.movementY));
-        break;
-      }
-
+      this.shape.mouseMove(e);
     }else {
       this.mouseX=e.offsetX;
       this.mouseY=e.offsetY;
@@ -112,77 +98,44 @@ class Canvas
   {
     switch(this.mode)
     {
-      case 4: //rectangle
-      this.shape=this.addRectangle(this.mouseX, this.mouseY, 1, 1);
+      case this.modesEnum.rectangle:
+      //this.shape=this.addRectangle(this.mouseX, this.mouseY, 1, 1);
+      this.shape=new Rectangle(this,this.mouseX, this.mouseY, 1, 1);
       break;
-      case 3: //line
-      this.shape=this.addLine(this.mouseX, this.mouseY, this.mouseX+1, this.mouseY+1);
+      case this.modesEnum.line:
+      //this.shape=this.addLine(this.mouseX, this.mouseY, this.mouseX+1, this.mouseY+1);
+      this.shape=new Line(this,this.mouseX, this.mouseY, this.mouseX+1, this.mouseY+1);
       break;
-      case 5: //circle
-      this.shape=this.addCircle(this.mouseX, this.mouseY, 1);
+      case this.modesEnum.circle:
+      //this.shape=this.addCircle(this.mouseX, this.mouseY, 1);
+      this.shape=new Circle(this,this.mouseX, this.mouseY, 1);
       break;
     }
   }
 
-  addRectangle(posX,posY,width,height)
-  {
-    let rect=this.draw.rect(width, height).stroke({ width: this.strokeWidth });
-
-    rect.move(posX,posY);
-    rect.fill(this.fillColor);
-    rect.stroke(this.strokeColor);
-    rect.mousedown(this.elementClick.bind(this));
-
-    this.shapes.push(rect);
-
-    return rect;
-  }
-
-  addLine(posX,posY,posX2,posY2)
-  {
-    let line=this.draw.line(posX, posY,posX2,posY2).stroke({ width: this.strokeWidth });
-    line.stroke(this.strokeColor);
-    line.mousedown(this.elementClick.bind(this));
-    this.shapes.push(line);
-
-    return line;
-  }
-
-  addCircle(posX,posY,d)
-  {
-    let circle=this.draw.circle(d).stroke({ width: this.strokeWidth });
-    circle.move(posX,posY);
-    circle.stroke(this.strokeColor);
-    circle.fill(this.fillColor);
-    circle.mousedown(this.elementClick.bind(this));
-    this.shapes.push(circle);
-
-    return circle;
-  }
-
   startMoving()
   {
-    this.mode = 0;
+    this.mode = this.modesEnum.pointer;
   }
 
   dynAddRectangle()
   {
-    this.mode = 4;
+    this.mode = this.modesEnum.rectangle;
   }
 
   dynAddLine()
   {
-    this.mode = 3;
+    this.mode = this.modesEnum.line;
   }
 
   dynAddCircle()
   {
-    this.mode = 5;
+    this.mode = this.modesEnum.circle;
   }
 
   startErase()
   {
-    this.mode = 1;
+    this.mode = this.modesEnum.erase;
   }
 
   setFillColor(color) //color format: string: '#RGB' R,G and B from '0' to 'F'
@@ -237,6 +190,37 @@ class EventManager
       canvas.setStrokeWidth($('#strokeWidth')[0].value);
     })
 
+    $("#import").click(function(e){
+      e.preventDefault();
+      $("#fileinput").trigger('click');
+    });
+
+    $("#fileinput").change(function (e){
+      //source: https://stackoverflow.com/questions/32490959/filereader-on-input-change-jquery
+      var f = e.target.files[0];
+      if (f){
+        var r = new FileReader();
+        r.readAsText(f);
+        r.onload = function(e){
+          var importedSvg=e.target.result;
+
+          $('#svgEditor').html(importedSvg);
+
+          let existingSVG = $('#svgEditor svg');
+          let id = existingSVG.attr('id') || 'svgEditor';
+
+          $('#editor').find("*").addBack().off(); //magouille pour deconnecter tous les événements
+
+          window.canvas = new Canvas(id,1000,600);
+
+          window.eventmanager = new EventManager(window.canvas);
+        };
+      } else
+      {
+        console.log("failed");
+      }
+    });
+
     $('#save-modal').on('click',function(){
       let title = $('#name-modal').val();
       $('#name').val(title);
@@ -264,6 +248,7 @@ class EventManager
       let name = $('#name').val();
       let code = $('#code').val();
       let id = $('#id').val();
+      console.log(id);
       let _token = $('input[name=_token]').val();
 
       if(!name){
@@ -317,6 +302,7 @@ class EventManager
 }
 
 $(document).ready(function(){
+
   toastr.options.positionClass = "toast-top-center";
 
   $('#svgEditor').html($('#code').val());
@@ -324,8 +310,8 @@ $(document).ready(function(){
   let id = existingSVG.attr('id') || 'svgEditor';
 
   //Paramètres de taille par défault:
-  let canvas = new Canvas(id,1000,600);
-  let eventmanager = new EventManager(canvas);
+  window.canvas = new Canvas(id,1000,600);
+  window.eventmanager = new EventManager(window.canvas);
 
   let name = $('#name').val();
   if(!name){
