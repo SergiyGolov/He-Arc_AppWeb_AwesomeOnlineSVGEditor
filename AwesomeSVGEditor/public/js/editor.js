@@ -166,18 +166,34 @@ class EventManager
   _connect(){
     let canvas = this.canvas;
     $('#pointer').on('click',function(){
+      $('#tools a').removeClass("active");
+      $(this).addClass("active");
+      console.log($(this));
       canvas.startMoving();
     });
     $('#line').on('click',function(){
+      $('#tools a').removeClass("active");
+      $(this).addClass("active");
       canvas.dynAddLine();
     });
+    $('#pen').on('click',function(){
+      $('#tools a').removeClass("active");
+      $(this).addClass("active");
+      //canvas.dynAddLine();
+    });
     $('#rectangle').on('click',function(){
+      $('#tools a').removeClass("active");
+      $(this).addClass("active");
       canvas.dynAddRectangle();
     });
     $('#ellipse').on('click',function(){
+      $('#tools a').removeClass("active");
+      $(this).addClass("active");
       canvas.dynAddCircle();
     });
     $('#erase').on('click',function(){
+      $('#tools a').removeClass("active");
+      $(this).addClass("active");
       canvas.startErase();
     });
     $('#fillColor').on('change',function(){

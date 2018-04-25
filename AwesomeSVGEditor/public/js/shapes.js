@@ -13,10 +13,8 @@ class Rectangle {
     this.initialY=posY;
   }
 
-
   mouseMove(e)
   {
-
     if(this.initialX<e.offsetX && this.initialY<e.offsetY) //cadran "bas-droite"
     {
       this.rect.width(this.rect.width()+e.movementX);
@@ -85,10 +83,7 @@ class Rectangle {
         this.rect.height(this.rect.height()+Math.abs(e.movementY));
       }
     }
-
   }
-
-
 }
 
 class Circle {
@@ -102,19 +97,14 @@ class Circle {
     this.circle.mousedown(this.canvas.elementClick.bind(this.canvas));
     this.canvas.shapes.push(this.circle);
   }
-
-
   mouseMove(e)
   {
     let r=this.circle.node.r.baseVal.value;
     this.circle.radius(r+Math.max(e.movementX,e.movementY));
   }
-
-
 }
 
 class Line {
-
   constructor(canvas,posX,posY,posX2,posY2){
     this.canvas = canvas;
     this.line=this.canvas.draw.line(posX, posY,posX2,posY2).stroke({ width: this.canvas.strokeWidth });
@@ -129,9 +119,6 @@ class Line {
     let y2=this.line.node.y2.baseVal.value;
     this.line.plot(this.canvas.mouseX,  this.canvas.mouseY,x2+e.movementX,y2+e.movementY);
   }
-
-
-
 }
 
 class Pen {
