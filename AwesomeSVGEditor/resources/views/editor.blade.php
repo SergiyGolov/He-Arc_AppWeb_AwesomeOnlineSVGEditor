@@ -111,6 +111,11 @@
           display:none;
         }
 
+        #tools #color-picker{
+          margin: 0 -10px;
+          height: 75px;
+        }
+
     </style>
 </head>
 <body class="expand">
@@ -187,7 +192,7 @@
         <main class="expand">
           <div id="editor" class="expand">
             <div id="tools">
-              <a id="pointer">
+              <a id="pointer" class="active">
                 <svg version="1.1" id="svg-pointer" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
                 	 viewBox="0 0 512 512" xml:space="preserve">
                 <polygon class="fill" points="429.742,319.31 82.489,0 82.258,471.744 187.633,370.918 249.523,512 346.083,469.642 284.193,328.56"/>
@@ -222,10 +227,23 @@
                   <ellipse class="fill" fill="none" stroke="none" cx="256" cy="150" rx="256" ry="150"></ellipse>
                 </svg>
               </a>
+              <a id="color-picker">
+                <svg version="1.1" id="svg-rectangle" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+                	 viewBox="0 0 96 96" xml:space="preserve">
+                	<rect id="fill-color" class="fill-color" fill="#f00" width="64" height="64"/>
+                  <g id="stroke-color">
+                    <rect class="stroke-color" fill="#0f0" x="32" y="32" width="64" height="64"/>
+                    <rect fill="#000" x="52" y="52" width="24" height="24"/>
+                  </g>
+                  <use id="color-mode" xlink:href="#fill-color"/>
+                </svg>
+              </a>
               <input type="button" id="erase" value="Erase">
-              <input type="color" id="fillColor">
-              <input type="color" id="strokeColor">
               <input type="number" id="strokeWidth" min=0 value=1>
+
+              <!-- Hidden color picker -->
+              <input type="color" id="fillColor" class="invisible">
+              <input type="color" id="strokeColor" class="invisible">
               </ul>
             </div>
             <div id="canvas">

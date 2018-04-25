@@ -165,6 +165,8 @@ class EventManager
 
   _connect(){
     let canvas = this.canvas;
+
+    //Paint mode
     $('#pointer').on('click',function(){
       $('#tools a').removeClass("active");
       $(this).addClass("active");
@@ -179,7 +181,7 @@ class EventManager
     $('#pen').on('click',function(){
       $('#tools a').removeClass("active");
       $(this).addClass("active");
-      //canvas.dynAddLine();
+      //TODO connect to the right element
     });
     $('#rectangle').on('click',function(){
       $('#tools a').removeClass("active");
@@ -191,17 +193,44 @@ class EventManager
       $(this).addClass("active");
       canvas.dynAddCircle();
     });
+
+    //Color picker
+    $('#fill-color, #color-mode').on('click',function(){
+      $('#color-mode').attr("xlink:href","#fill-color");
+    });
+    $('#stroke-color').on('click',function(){
+      $('#color-mode').attr("xlink:href","#");
+    });
+    $('#fill-color, #color-mode').on("dblclick",function(){
+      //TODO Show color picker
+      $('#fillColor').trigger("click");
+    });
+    $('#stroke-color').on("dblclick",function(){
+      //TODO Show color picker
+      $('#strokeColor').trigger("click");
+    });
+
+    $('#fillColor').on('change',function(){
+      let color = $('#fillColor')[0].value;
+      console.log(color)
+      $('.fill-color').attr("fill",color);
+      canvas.setFillColor(color);
+    });
+    $('#strokeColor').on('change',function(){
+      let color = $('#strokeColor')[0].value;
+      console.log(color)
+      $('.stroke-color').attr("fill",color);
+      canvas.setStrokeColor(color);
+    })
+
+    //Eraser
     $('#erase').on('click',function(){
       $('#tools a').removeClass("active");
       $(this).addClass("active");
       canvas.startErase();
     });
-    $('#fillColor').on('change',function(){
-      canvas.setFillColor($('#fillColor')[0].value);
-    });
-    $('#strokeColor').on('change',function(){
-      canvas.setStrokeColor($('#strokeColor')[0].value);
-    })
+
+    //Left side
     $('#strokeWidth').on('change',function(){
       canvas.setStrokeWidth($('#strokeWidth')[0].value);
     })
