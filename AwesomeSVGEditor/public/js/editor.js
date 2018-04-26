@@ -33,7 +33,7 @@ class Canvas
     this.draw.mousedown(this.mouseDown.bind(this));
 
     let selfCanvas = this; //désolé de nouveau, mais fallait que j'y accéde depuis un callback du eventManager
-    let importFunction=function(){
+    let importFunction=function(){ //à revoir pour les groupes svg
       if(this.type!="defs")
       {
         if(this.type=="svg")
@@ -53,6 +53,7 @@ class Canvas
 
   elementClick(e)
   {
+    e.preventDefault();
     let event = e.target || e.srcElement;
     if(this.mode == this.modesEnum.erase)
     {
@@ -69,6 +70,7 @@ class Canvas
 
   mouseUp(e)
   {
+    e.preventDefault();
     if(this.mode == this.modesEnum.pointer)
     {
       this.isMoving=false;
@@ -81,11 +83,12 @@ class Canvas
 
   mouseMove(e)
   {
-    if(this.isMoving)
+    e.preventDefault();
+    if(this.isMoving) //if clicked on element
     {
       this.shape.move(e.offsetX-this.shape.width()/2,e.offsetY-this.shape.height()/2);
     }
-    else if(this.shape!=null)
+    else if(this.shape!=null) //dyn Adding
     {
       this.shape.mouseMove(e);
     }else {
@@ -99,16 +102,13 @@ class Canvas
     switch(this.mode)
     {
       case this.modesEnum.rectangle:
-      //this.shape=this.addRectangle(this.mouseX, this.mouseY, 1, 1);
-      this.shape=new Rectangle(this,this.mouseX, this.mouseY, 1, 1);
+        this.shape=new Rectangle(this,this.mouseX, this.mouseY, 1, 1);
       break;
       case this.modesEnum.line:
-      //this.shape=this.addLine(this.mouseX, this.mouseY, this.mouseX+1, this.mouseY+1);
-      this.shape=new Line(this,this.mouseX, this.mouseY, this.mouseX+1, this.mouseY+1);
+        this.shape=new Line(this,this.mouseX, this.mouseY, this.mouseX+1, this.mouseY+1);
       break;
       case this.modesEnum.circle:
-      //this.shape=this.addCircle(this.mouseX, this.mouseY, 1);
-      this.shape=new Circle(this,this.mouseX, this.mouseY, 1);
+        this.shape=new Circle(this,this.mouseX, this.mouseY, 1);
       break;
     }
   }
@@ -209,11 +209,12 @@ class EventManager
           let existingSVG = $('#svgEditor svg');
           let id = existingSVG.attr('id') || 'svgEditor';
 
-          $('#editor').find("*").addBack().off(); //magouille pour deconnecter tous les événements
+          $('#app').find("*").addBack().off(); //magouille pour deconnecter tous les événements
 
           window.canvas = new Canvas(id,1000,600);
 
           window.eventmanager = new EventManager(window.canvas);
+          $("#fileinput").val("");
         };
       } else
       {
@@ -229,7 +230,6 @@ class EventManager
     })
 
     $('#title-edit').on('click', function(){
-      console.log("Test")
       $('#modal-title').modal('toggle');
     })
 
@@ -247,7 +247,7 @@ class EventManager
       let name = $('#name').val();
       let code = $('#code').val();
       let id = $('#id').val();
-      console.log(id);
+
       let _token = $('input[name=_token]').val();
 
       if(!name){
