@@ -84,16 +84,18 @@ class Canvas
   mouseMove(e)
   {
     e.preventDefault();
-    if(this.isMoving) //if clicked on element
+    let relativePosX=e.pageX-$('#svgEditor').children().first().offset().left;
+    let relativePosY=e.pageY-$('#svgEditor').children().first().offset().top;
+    if(this.isMoving) //if clicked on element (move mode)
     {
-      this.shape.move(e.offsetX-this.shape.width()/2,e.offsetY-this.shape.height()/2);
+      this.shape.move(relativePosX-this.shape.width()/2,relativePosY-this.shape.height()/2);
     }
     else if(this.shape!=null) //dyn Adding
     {
       this.shape.mouseMove(e);
     }else {
-      this.mouseX=e.offsetX;
-      this.mouseY=e.offsetY;
+      this.mouseX=relativePosX;
+      this.mouseY=relativePosY;
     }
   }
 
@@ -232,7 +234,13 @@ class EventManager
 
     //Left side
     $('#strokeWidth').on('change',function(){
-      canvas.setStrokeWidth($('#strokeWidth')[0].value);
+      let width=$('#strokeWidth')[0].value;
+      if(width<0)
+      {
+        width=0;
+        $('#strokeWidth')[0].value(0);
+      }
+      canvas.setStrokeWidth(width);
     })
 
     $("#import").click(function(e){

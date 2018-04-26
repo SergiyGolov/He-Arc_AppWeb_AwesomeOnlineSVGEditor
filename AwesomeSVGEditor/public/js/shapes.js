@@ -15,12 +15,14 @@ class Rectangle {
 
   mouseMove(e)
   {
-    if(this.initialX<e.offsetX && this.initialY<e.offsetY) //cadran "bas-droite"
+    let relativePosX=e.pageX-$('#svgEditor').children().first().offset().left;
+    let relativePosY=e.pageY-$('#svgEditor').children().first().offset().top;
+    if(this.initialX<relativePosX && this.initialY<relativePosY) //cadran "bas-droite"
     {
       this.rect.width(this.rect.width()+e.movementX);
       this.rect.height(this.rect.height()+e.movementY);
     }
-    else if (this.initialX>e.offsetX && this.initialY>e.offsetY ) //cadran "haut-gauche"
+    else if (this.initialX>relativePosX && this.initialY>relativePosY ) //cadran "haut-gauche"
     {
       this.rect.move(this.rect.x()+e.movementX,this.rect.y()+e.movementY);
 
@@ -42,7 +44,7 @@ class Rectangle {
       }
 
     }
-    else if(this.initialX>e.offsetX && this.initialY<e.offsetY) // cadran "bas-gauche"
+    else if(this.initialX>relativePosX && this.initialY<relativePosY) // cadran "bas-gauche"
     {
       this.rect.move(this.rect.x()+e.movementX,this.rect.y());
       if(e.movementX>0)
@@ -63,7 +65,7 @@ class Rectangle {
       }
 
     }
-    else if(this.initialX<e.offsetX && this.initialY>e.offsetY) // cadran "haut-droite"
+    else if(this.initialX<relativePosX && this.initialY>relativePosY) // cadran "haut-droite"
     {
       this.rect.move(this.rect.x(),this.rect.y()+e.movementY);
       if(e.movementX>0)
