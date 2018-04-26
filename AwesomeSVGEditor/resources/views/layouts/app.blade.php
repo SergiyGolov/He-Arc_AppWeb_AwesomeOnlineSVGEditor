@@ -35,6 +35,10 @@
         margin: 1.3em;
       }
 
+      #app {
+        overflow: hidden;
+      }
+
     </style>
 </head>
 <body>

@@ -270,7 +270,7 @@ class EventManager
     $('#save-modal').on('click',function(){
       let title = $('#name-modal').val();
       $('#name').val(title);
-      $('#navbar-title').html(title);
+      $('#navbar-title').text(title);
       $('#modal-title').modal('toggle');
     })
 
