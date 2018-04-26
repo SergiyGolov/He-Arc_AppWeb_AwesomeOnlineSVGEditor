@@ -165,27 +165,72 @@ class EventManager
 
   _connect(){
     let canvas = this.canvas;
+
+    //Paint mode
     $('#pointer').on('click',function(){
+      $('#tools a').removeClass("active");
+      $(this).addClass("active");
+      console.log($(this));
       canvas.startMoving();
     });
     $('#line').on('click',function(){
+      $('#tools a').removeClass("active");
+      $(this).addClass("active");
       canvas.dynAddLine();
     });
+    $('#pen').on('click',function(){
+      $('#tools a').removeClass("active");
+      $(this).addClass("active");
+      //TODO connect to the right element
+    });
     $('#rectangle').on('click',function(){
+      $('#tools a').removeClass("active");
+      $(this).addClass("active");
       canvas.dynAddRectangle();
     });
     $('#ellipse').on('click',function(){
+      $('#tools a').removeClass("active");
+      $(this).addClass("active");
       canvas.dynAddCircle();
     });
-    $('#erase').on('click',function(){
-      canvas.startErase();
+
+    //Color picker
+    $('#fill-color, #color-mode').on('click',function(){
+      $('#color-mode').attr("xlink:href","#fill-color");
     });
+    $('#stroke-color').on('click',function(){
+      $('#color-mode').attr("xlink:href","#");
+    });
+    $('#fill-color, #color-mode').on("dblclick",function(){
+      //TODO Show color picker
+      $('#fillColor').trigger("click");
+    });
+    $('#stroke-color').on("dblclick",function(){
+      //TODO Show color picker
+      $('#strokeColor').trigger("click");
+    });
+
     $('#fillColor').on('change',function(){
-      canvas.setFillColor($('#fillColor')[0].value);
+      let color = $('#fillColor')[0].value;
+      console.log(color)
+      $('.fill-color').attr("fill",color);
+      canvas.setFillColor(color);
     });
     $('#strokeColor').on('change',function(){
-      canvas.setStrokeColor($('#strokeColor')[0].value);
+      let color = $('#strokeColor')[0].value;
+      console.log(color)
+      $('.stroke-color').attr("fill",color);
+      canvas.setStrokeColor(color);
     })
+
+    //Eraser
+    $('#erase').on('click',function(){
+      $('#tools a').removeClass("active");
+      $(this).addClass("active");
+      canvas.startErase();
+    });
+
+    //Left side
     $('#strokeWidth').on('change',function(){
       canvas.setStrokeWidth($('#strokeWidth')[0].value);
     })
@@ -242,6 +287,7 @@ class EventManager
     $('#save').on('click',function(e){
       e.preventDefault();
       canvas.draw.defs().remove();
+      $('#svgEditor svg').removeAttr('xmlns:svgjs'); //Suppression d'un attribut qui est dupliqué<
       $('#code').val($('#svgEditor').html()); // TODO ne pas passer par l'élément DOM
 
       let name = $('#name').val();
@@ -265,8 +311,13 @@ class EventManager
           url: '/canvas',
           data: {name:name, code:code, id:id, _token:_token},
           success: function(msg) {
-            toastr.success('Canvas saved successfully!');
-            $('#id').val(msg.id);
+            if(msg.status == 'success'){
+              toastr.success('Canvas saved successfully!');
+              console.log(msg);
+              $('#id').val(msg.id);
+            }else{
+              toastr.error('Canvas error while saving');
+            }
           },
           error: function(msg){
             toastr.error('Canvas error while saving');
@@ -278,8 +329,13 @@ class EventManager
           url: '/canvas/'+id,
           data: {name:name, code:code, id:id, _token:_token},
           success: function(msg) {
-            toastr.success('Canvas saved successfully!');
-            console.log(msg);
+            if(msg.status == 'success'){
+              toastr.success('Canvas updated successfully!');
+              console.log(msg);
+              $('#id').val(msg.id);
+            }else{
+              toastr.error('Canvas error while updating');
+            }
           },
           error: function(msg){
             toastr.error('Canvas error while updating');
