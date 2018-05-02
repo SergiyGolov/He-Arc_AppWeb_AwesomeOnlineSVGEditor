@@ -17,72 +17,133 @@ class Rectangle {
   {
     let relativePosX=e.pageX-$('#svgEditor').children().first().offset().left;
     let relativePosY=e.pageY-$('#svgEditor').children().first().offset().top;
+
+    let deltaX=e.movementX;
+    let deltaY=e.movementY;
+
+    let maxDeltaX=relativePosX-this.initialX;
+    let maxDeltaY=relativePosY-this.initialY;
+    let needToMove=true;
+
     if(this.initialX<relativePosX && this.initialY<relativePosY) //cadran "bas-droite"
     {
-      this.rect.width(this.rect.width()+e.movementX);
-      this.rect.height(this.rect.height()+e.movementY);
+      if(deltaX > 0 && deltaX>maxDeltaX)
+      {
+        deltaX=maxDeltaX;
+        //console.log("too much bas-droite X");
+        this.rect.move(this.initialX,this.rect.y());
+      }
+      if(deltaY > 0 && deltaY >maxDeltaY)
+      {
+        deltaY=maxDeltaY;
+        //console.log("too much bas-droite Y");
+        this.rect.move(this.rect.x(),this.initialY);
+      }
+
+      this.rect.width(Math.abs(this.rect.width()+deltaX));
+      this.rect.height(Math.abs(this.rect.height()+deltaY));
     }
     else if (this.initialX>relativePosX && this.initialY>relativePosY ) //cadran "haut-gauche"
     {
-      this.rect.move(this.rect.x()+e.movementX,this.rect.y()+e.movementY);
-
-      if(e.movementX>0)
+      if(deltaX < 0 && deltaX<maxDeltaX)
       {
-        this.rect.width(this.rect.width()-Math.abs(e.movementX));
+        needToMove=false;
+        deltaX=maxDeltaX;
+        //console.log("too much haut-gauche X");
+        this.rect.width(Math.abs(deltaX));
+        this.rect.move(this.initialX+deltaX,this.rect.y());
       }
       else
       {
-        this.rect.width(this.rect.width()+Math.abs(e.movementX));
+        this.rect.width(Math.abs(this.rect.width()-Math.sign(deltaX)*Math.abs(deltaX)));
       }
 
-      if(e.movementY>0)
+      if(deltaY < 0 && deltaY<maxDeltaY)
       {
-        this.rect.height(this.rect.height()-Math.abs(e.movementY));
-      }else
+        needToMove=false;
+        deltaY=maxDeltaY;
+        //console.log("too much haut-gauche Y");
+        this.rect.height(Math.abs(deltaY));
+        this.rect.move(this.rect.x(),this.initialY+deltaY);
+      }
+      else
       {
-        this.rect.height(this.rect.height()+Math.abs(e.movementY));
+        this.rect.height(Math.abs(this.rect.height()-Math.sign(deltaY)*Math.abs(deltaY)));
+      }
+
+      if(needToMove)
+      {
+        this.rect.move(this.rect.x()+deltaX,this.rect.y()+deltaY);
       }
 
     }
     else if(this.initialX>relativePosX && this.initialY<relativePosY) // cadran "bas-gauche"
     {
-      this.rect.move(this.rect.x()+e.movementX,this.rect.y());
-      if(e.movementX>0)
+      if(deltaX < 0 && deltaX < maxDeltaX)
       {
-        this.rect.width(this.rect.width()-Math.abs(e.movementX));
+        needToMove=false;
+        deltaX=maxDeltaX;
+        //console.log("too much bas-gauche X");
+        this.rect.width(Math.abs(deltaX));
+        this.rect.move(this.initialX+deltaX,this.rect.y());
       }
       else
       {
-        this.rect.width(this.rect.width()+Math.abs(e.movementX));
+        this.rect.width(this.rect.width()-Math.sign(deltaX)*Math.abs(deltaX));
       }
 
-      if(e.movementY>0)
+      if(deltaY > 0 && deltaY > maxDeltaY)
       {
-        this.rect.height(this.rect.height()+Math.abs(e.movementY));
-      }else
-      {
-        this.rect.height(this.rect.height()-Math.abs(e.movementY));
+        needToMove=false;
+        deltaY=maxDeltaY;
+        //console.log("too much bas-gauche Y");
+        this.rect.height(Math.abs(deltaY));
+        this.rect.move(this.rect.x(),this.initialY+deltaY);
       }
+      else
+      {
+        this.rect.height(Math.abs(this.rect.height()+Math.sign(deltaY)*Math.abs(deltaY)));
+      }
+
+      if(needToMove)
+      {
+        this.rect.move(this.rect.x()+deltaX,this.rect.y());
+      }
+
 
     }
     else if(this.initialX<relativePosX && this.initialY>relativePosY) // cadran "haut-droite"
     {
-      this.rect.move(this.rect.x(),this.rect.y()+e.movementY);
-      if(e.movementX>0)
+      if(deltaX > 0 && deltaX>maxDeltaX)
       {
-        this.rect.width(this.rect.width()+Math.abs(e.movementX));
+        needToMove=false;
+        deltaX=maxDeltaX;
+        //console.log("too much haut-droite X");
+        this.rect.width(Math.abs(deltaX));
+        this.rect.move(this.initialX+deltaX,this.rect.y());
       }
       else
       {
-        this.rect.width(this.rect.width()-Math.abs(e.movementX));
+        this.rect.width(Math.abs(this.rect.width()+Math.sign(deltaX)*Math.abs(deltaX)));
       }
 
-      if(e.movementY>0)
+      if(deltaY < 0 && deltaY<maxDeltaY)
       {
-        this.rect.height(this.rect.height()-Math.abs(e.movementY));
-      }else
+        needToMove=false;
+        deltaY=maxDeltaY;
+        //console.log("too much haut-droite Y");
+        this.rect.height(Math.abs(deltaY));
+        this.rect.move(this.rect.x(),this.initialY+deltaY);
+      }
+      else
       {
-        this.rect.height(this.rect.height()+Math.abs(e.movementY));
+        this.rect.height(Math.abs(this.rect.height()-Math.sign(deltaY)*Math.abs(deltaY)));
+      }
+
+      if(needToMove)
+      {
+        this.rect.move(this.rect.x(),this.rect.y()+deltaY);
+
       }
     }
   }
