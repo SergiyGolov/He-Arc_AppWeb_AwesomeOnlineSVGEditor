@@ -104,13 +104,13 @@ class Canvas
     switch(this.mode)
     {
       case this.modesEnum.rectangle:
-        this.shape=new Rectangle(this,this.mouseX, this.mouseY, 1, 1);
+      this.shape=new Rectangle(this,this.mouseX, this.mouseY, 1, 1);
       break;
       case this.modesEnum.line:
-        this.shape=new Line(this,this.mouseX, this.mouseY, this.mouseX+1, this.mouseY+1);
+      this.shape=new Line(this,this.mouseX, this.mouseY, this.mouseX+1, this.mouseY+1);
       break;
       case this.modesEnum.circle:
-        this.shape=new Circle(this,this.mouseX, this.mouseY, 1);
+      this.shape=new Circle(this,this.mouseX, this.mouseY, 1);
       break;
     }
   }
@@ -162,8 +162,99 @@ class EventManager
   constructor(canvas)
   {
     this.canvas = canvas;
+    this.save=function(){
+      canvas.draw.defs().remove();
+      $('#svgEditor svg').removeAttr('xmlns:svgjs'); //Suppression d'un attribut qui est dupliqué
+      $('#code').val($('#svgEditor').html()); // TODO ne pas passer par l'élément DOM
+
+      let name = $('#name').val();
+      let code = $('#code').val();
+      let id = $('#id').val();
+
+      let _token = $('input[name=_token]').val();
+
+      if(!name){
+        $('#modal-title').modal('toggle');
+        name = $('#name').val();
+        if(!name){
+          return;
+        }
+      }
+      //new Canvas:
+      if(!id || id<=0 ){
+        $('#id').val(0);
+        $.ajax({
+          type: "POST",
+          url: '/canvas',
+          data: {name:name, code:code, id:id, _token:_token},
+          success: function(msg) {
+            if(msg.status == 'success'){
+              toastr.success('Canvas saved successfully!');
+              console.log(msg);
+              if($('#id').val()==0)$('#id').val(msg.id);
+            }else{
+
+              toastr.error('Canvas error while saving');
+            }
+          },
+          error: function(msg){
+            console.log(msg);
+            toastr.error('Canvas error while saving');
+          }
+        });
+      }else{
+        $.ajax({
+          type: "PUT",
+          url: '/canvas/'+id,
+          data: {name:name, code:code, id:id, _token:_token},
+          success: function(msg) {
+            if(msg.status == 'success'){
+              toastr.success('Canvas updated successfully!');
+              console.log(msg);
+              //$('#id').val(msg.id); //avant, quand on cliquait sur save une fois sur deux, ça créait un nouveau canvas dans la bd
+            }else{
+              toastr.error('Canvas error while updating');
+            }
+          },
+          error: function(msg){
+            toastr.error('Canvas error while updating');
+          }
+        });
+      }
+    }
+    this.saveNewTab=function(code){
+
+      let name = "locally imported Canvas";
+      let id=0;
+
+      let _token = $('input[name=_token]').val();
+
+      //new Canvas:
+      $.ajax({
+        type: "POST",
+        url: '/canvas',
+        data: {name:name, code:code, id:id, _token:_token},
+        success: function(msg) {
+          if(msg.status == 'success'){
+            toastr.success('Canvas imported successfully!');
+            window.newTab.location.href ="./"+msg.id+"/edit";
+
+          }else{
+
+            toastr.error('Canvas error while importing');
+          }
+        },
+        error: function(msg){
+          console.log(msg);
+          toastr.error('Canvas error while importing');
+        }
+      });
+    }
+
     this._connect();
   }
+
+
 
   _connect(){
     let canvas = this.canvas;
@@ -245,29 +336,78 @@ class EventManager
 
     $("#import").click(function(e){
       e.preventDefault();
+      $('#modal-import').modal('toggle');
+      //$("#fileinput").trigger('click');
+    });
+
+    $("#import-new").click(function(e){
+      $('#modal-import').modal('toggle');
+      window.eventmanager.import="new";
+      $("#fileinput").trigger('click');
+      window.newTab = window.open('', '_blank');
+      window.newTab.document.write('Loading preview...');
+    });
+
+    $("#import-saveopen").click(function(e){
+      $('#modal-import').modal('toggle');
+      window.eventmanager.import="saveopen";
       $("#fileinput").trigger('click');
     });
 
+    $("#import-discardopen").click(function(e){
+      $('#modal-import').modal('toggle');
+      window.eventmanager.import="discardopen";
+      $("#fileinput").trigger('click');
+    });
+
+
     $("#fileinput").change(function (e){
+
+
       //source: https://stackoverflow.com/questions/32490959/filereader-on-input-change-jquery
       var f = e.target.files[0];
       if (f){
         var r = new FileReader();
         r.readAsText(f);
         r.onload = function(e){
+
           var importedSvg=e.target.result;
-
-          $('#svgEditor').html(importedSvg);
-
           let existingSVG = $('#svgEditor svg');
           let id = existingSVG.attr('id') || 'svgEditor';
 
-          $('#app').find("*").addBack().off(); //magouille pour deconnecter tous les événements
+          switch(window.eventmanager.import)
+          {
+            case "discardopen":
+            $('#svgEditor').html(importedSvg);
 
-          window.canvas = new Canvas(id,1000,600);
+            $('#app').find("*").addBack().off(); //magouille pour deconnecter tous les événements
 
-          window.eventmanager = new EventManager(window.canvas);
-          $("#fileinput").val("");
+            window.canvas = new Canvas(id,1000,600);
+
+            window.eventmanager = new EventManager(window.canvas);
+            $("#fileinput").val("");
+            break;
+
+            case "saveopen":
+            window.eventmanager.save();
+            $('#name').val($('#name').val()+"v2");
+            $('#navbar-title').text($('#name').val());
+            $('#id').val(-1);
+
+            $('#svgEditor').html(importedSvg);
+
+            $('#app').find("*").addBack().off(); //magouille pour deconnecter tous les événements
+
+            window.canvas = new Canvas(id,1000,600);
+
+            window.eventmanager = new EventManager(window.canvas);
+            $("#fileinput").val("");
+            break;
+
+            case "new":
+            window.eventmanager.saveNewTab(importedSvg);
+            break;
+          }
         };
       } else
       {
@@ -292,65 +432,7 @@ class EventManager
     $('#strokeWidth').trigger('change');
 
 
-    $('#save').on('click',function(e){
-      e.preventDefault();
-      canvas.draw.defs().remove();
-      $('#svgEditor svg').removeAttr('xmlns:svgjs'); //Suppression d'un attribut qui est dupliqué<
-      $('#code').val($('#svgEditor').html()); // TODO ne pas passer par l'élément DOM
-
-      let name = $('#name').val();
-      let code = $('#code').val();
-      let id = $('#id').val();
-
-      let _token = $('input[name=_token]').val();
-
-      if(!name){
-        $('#modal-title').modal('toggle');
-        name = $('#name').val();
-        if(!name){
-          return;
-        }
-      }
-
-      //new Canvas:
-      if(!id || id<=0){
-        $.ajax({
-          type: "POST",
-          url: '/canvas',
-          data: {name:name, code:code, id:id, _token:_token},
-          success: function(msg) {
-            if(msg.status == 'success'){
-              toastr.success('Canvas saved successfully!');
-              console.log(msg);
-              $('#id').val(msg.id);
-            }else{
-              toastr.error('Canvas error while saving');
-            }
-          },
-          error: function(msg){
-            toastr.error('Canvas error while saving');
-          }
-        });
-      }else{
-        $.ajax({
-          type: "PUT",
-          url: '/canvas/'+id,
-          data: {name:name, code:code, id:id, _token:_token},
-          success: function(msg) {
-            if(msg.status == 'success'){
-              toastr.success('Canvas updated successfully!');
-              console.log(msg);
-              $('#id').val(msg.id);
-            }else{
-              toastr.error('Canvas error while updating');
-            }
-          },
-          error: function(msg){
-            toastr.error('Canvas error while updating');
-          }
-        });
-      }
-    });
+    $('#save').on('click',this.save);
   }
 }
 
@@ -361,7 +443,6 @@ $(document).ready(function(){
   $('#svgEditor').html($('#code').val());
   let existingSVG = $('#svgEditor svg');
   let id = existingSVG.attr('id') || 'svgEditor';
-
   //Paramètres de taille par défault:
   window.canvas = new Canvas(id,1000,600);
   window.eventmanager = new EventManager(window.canvas);
@@ -370,4 +451,6 @@ $(document).ready(function(){
   if(!name){
     $('#modal-title').modal('toggle');
   }
+
+
 });

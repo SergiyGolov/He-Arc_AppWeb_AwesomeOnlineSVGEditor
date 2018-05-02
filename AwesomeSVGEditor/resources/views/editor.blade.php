@@ -288,6 +288,25 @@
               </div>
             </div>
           </div>
+          <!-- Large modal -->
+          <div id="modal-import" class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-lg">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title">How do you want to import the svg file?</h5>
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+                </div>
+                <div class="modal-footer">
+                  <button id="import-new" type="button" class="btn btn-primary">Open file in new tab</button>
+                  <button id="import-saveopen" type="button" class="btn btn-primary">Save current canvas and open file here</button>
+                  <button id="import-discardopen" type="button" class="btn btn-primary">Discard changes and open file here</button>
+                </div>
+              </div>
+            </div>
+          </div>
+
         </main>
     </div>
 </body>
