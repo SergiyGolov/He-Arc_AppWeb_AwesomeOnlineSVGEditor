@@ -18,133 +18,27 @@ class Rectangle {
     let relativePosX=e.pageX-$('#svgEditor').children().first().offset().left;
     let relativePosY=e.pageY-$('#svgEditor').children().first().offset().top;
 
-    let deltaX=e.movementX;
-    let deltaY=e.movementY;
-
-    let maxDeltaX=relativePosX-this.initialX;
-    let maxDeltaY=relativePosY-this.initialY;
-    let needToMove=true;
-
-    if(this.initialX<relativePosX && this.initialY<relativePosY) //cadran "bas-droite"
+    if (Math.min(this.initialX,relativePosX) == this.initialX )
     {
-      if(deltaX > 0 && deltaX>maxDeltaX)
-      {
-        deltaX=maxDeltaX;
-        //console.log("too much bas-droite X");
-        this.rect.move(this.initialX,this.rect.y());
-      }
-      if(deltaY > 0 && deltaY >maxDeltaY)
-      {
-        deltaY=maxDeltaY;
-        //console.log("too much bas-droite Y");
-        this.rect.move(this.rect.x(),this.initialY);
-      }
-
-      this.rect.width(Math.abs(this.rect.width()+deltaX));
-      this.rect.height(Math.abs(this.rect.height()+deltaY));
+      this.rect.move(this.initialX,this.rect.y());
+      this.rect.width(relativePosX-this.initialX);
     }
-    else if (this.initialX>relativePosX && this.initialY>relativePosY ) //cadran "haut-gauche"
+    else
     {
-      if(deltaX < 0 && deltaX<maxDeltaX)
-      {
-        needToMove=false;
-        deltaX=maxDeltaX;
-        //console.log("too much haut-gauche X");
-        this.rect.width(Math.abs(deltaX));
-        this.rect.move(this.initialX+deltaX,this.rect.y());
-      }
-      else
-      {
-        this.rect.width(Math.abs(this.rect.width()-Math.sign(deltaX)*Math.abs(deltaX)));
-      }
-
-      if(deltaY < 0 && deltaY<maxDeltaY)
-      {
-        needToMove=false;
-        deltaY=maxDeltaY;
-        //console.log("too much haut-gauche Y");
-        this.rect.height(Math.abs(deltaY));
-        this.rect.move(this.rect.x(),this.initialY+deltaY);
-      }
-      else
-      {
-        this.rect.height(Math.abs(this.rect.height()-Math.sign(deltaY)*Math.abs(deltaY)));
-      }
-
-      if(needToMove)
-      {
-        this.rect.move(this.rect.x()+deltaX,this.rect.y()+deltaY);
-      }
+      this.rect.move(relativePosX,this.rect.y());
+      this.rect.width(this.initialX-relativePosX);
 
     }
-    else if(this.initialX>relativePosX && this.initialY<relativePosY) // cadran "bas-gauche"
+
+    if(Math.min(this.initialY,relativePosY) == this.initialY)
     {
-      if(deltaX < 0 && deltaX < maxDeltaX)
-      {
-        needToMove=false;
-        deltaX=maxDeltaX;
-        //console.log("too much bas-gauche X");
-        this.rect.width(Math.abs(deltaX));
-        this.rect.move(this.initialX+deltaX,this.rect.y());
-      }
-      else
-      {
-        this.rect.width(this.rect.width()-Math.sign(deltaX)*Math.abs(deltaX));
-      }
-
-      if(deltaY > 0 && deltaY > maxDeltaY)
-      {
-        needToMove=false;
-        deltaY=maxDeltaY;
-        //console.log("too much bas-gauche Y");
-        this.rect.height(Math.abs(deltaY));
-        this.rect.move(this.rect.x(),this.initialY+deltaY);
-      }
-      else
-      {
-        this.rect.height(Math.abs(this.rect.height()+Math.sign(deltaY)*Math.abs(deltaY)));
-      }
-
-      if(needToMove)
-      {
-        this.rect.move(this.rect.x()+deltaX,this.rect.y());
-      }
-
-
+      this.rect.move(this.rect.x(),this.initialY);
+      this.rect.height(relativePosY-this.initialY);
     }
-    else if(this.initialX<relativePosX && this.initialY>relativePosY) // cadran "haut-droite"
+    else
     {
-      if(deltaX > 0 && deltaX>maxDeltaX)
-      {
-        needToMove=false;
-        deltaX=maxDeltaX;
-        //console.log("too much haut-droite X");
-        this.rect.width(Math.abs(deltaX));
-        this.rect.move(this.initialX+deltaX,this.rect.y());
-      }
-      else
-      {
-        this.rect.width(Math.abs(this.rect.width()+Math.sign(deltaX)*Math.abs(deltaX)));
-      }
-
-      if(deltaY < 0 && deltaY<maxDeltaY)
-      {
-        needToMove=false;
-        deltaY=maxDeltaY;
-        //console.log("too much haut-droite Y");
-        this.rect.height(Math.abs(deltaY));
-        this.rect.move(this.rect.x(),this.initialY+deltaY);
-      }
-      else
-      {
-        this.rect.height(Math.abs(this.rect.height()-Math.sign(deltaY)*Math.abs(deltaY)));
-      }
-
-      if(needToMove)
-      {
-        this.rect.move(this.rect.x(),this.rect.y()+deltaY);
-
-      }
+      this.rect.move(this.rect.x(),relativePosY);
+      this.rect.height(this.initialY-relativePosY);
     }
   }
 }
