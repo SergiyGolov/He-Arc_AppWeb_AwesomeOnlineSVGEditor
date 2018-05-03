@@ -20,6 +20,64 @@ class CanvasController extends Controller
         //$this->middleware('auth.basic');
     }
 
+    private function validateDownloadRights(int $id)
+    {
+      $canvas = Canvas::findOrFail($id);
+      if($canvas->user_id != Auth::id()){
+        return false;
+      }
+      return $canvas;
+    }
+
+    /**
+     * Download le canvas au format png
+     *
+     * @return PNG file
+     */
+    public function downloadPNG(int $id)
+    {
+      $canvas = CanvasController::validateDownloadRights($id);
+      if($canvas != false){
+        $content = "test";
+        return response($content)
+              ->header('Content-Type', 'image/png')
+              ->header('XContent-Disposition', 'attachment')
+              ->header('filename', 'image.png');
+      }else if(Request::ajax()){
+        $response = array(
+            'status' => 'KO',
+            'msg' => 'No rights to download'
+        );
+        return Response::json($response);
+      }else{
+          abort(403, 'Unauthorized action.');
+      }
+    }
+
+    /**
+     * Download le canvas au format svg
+     *
+     * @return SVG file
+     */
+    public function downloadSVG(int $id)
+    {
+      $canvas = CanvasController::validateDownloadRights($id);
+      if($canvas != false){
+        return response($canvas->code)
+              ->header('Content-Type', 'image/svg+xml')
+              ->header('XContent-Disposition', 'attachment')
+              ->header('filename', 'image.svg');
+      }else if(Request::ajax()){
+        $response = array(
+            'status' => 'KO',
+            'msg' => 'No rights to download'
+        );
+        return Response::json($response);
+      }else{
+          abort(403, 'Unauthorized action.');
+      }
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -104,8 +162,8 @@ class CanvasController extends Controller
             }
         }else{
             $response = array(
-                'status' => 'Invalid use',
-                'msg' => 'Error',
+                'status' => 'KO',
+                'msg' => 'Invalid use',
             );
             return Response::json($response);
         }
@@ -190,8 +248,8 @@ class CanvasController extends Controller
             return Response::json($response);
         }else{
             $response = array(
-                'status' => 'Invalid use',
-                'msg' => 'Error',
+                'status' => 'KO',
+                'msg' => 'Invalide use',
             );
             return Response::json($response);
         }

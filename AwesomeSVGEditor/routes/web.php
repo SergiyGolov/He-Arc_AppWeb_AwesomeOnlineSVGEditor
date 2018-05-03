@@ -28,3 +28,6 @@ Route::delete('/delete/{id}', 'SVGController@delete');
 */
 
 Route::resource('canvas', 'CanvasController');//->middleware('auth.basic');
+
+Route::get('/canvas/{id}/png', 'CanvasController@downloadPNG');
+Route::get('/canvas/{id}/svg', 'CanvasController@downloadSVG');
