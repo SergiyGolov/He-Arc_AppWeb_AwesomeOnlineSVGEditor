@@ -211,7 +211,6 @@ class EventManager
             if(msg.status == 'success'){
               toastr.success('Canvas updated successfully!');
               console.log(msg);
-              //$('#id').val(msg.id); //avant, quand on cliquait sur save une fois sur deux, ça créait un nouveau canvas dans la bd
             }else{
               toastr.error('Canvas error while updating');
             }
@@ -237,7 +236,7 @@ class EventManager
         success: function(msg) {
           if(msg.status == 'success'){
             toastr.success('Canvas imported successfully!');
-            window.newTab.location.href ="./"+msg.id+"/edit";
+            window.newTab.location.href ="/canvas/"+msg.id+"/edit";
 
           }else{
 
@@ -344,8 +343,8 @@ class EventManager
       $('#modal-import').modal('toggle');
       window.eventmanager.import="new";
       $("#fileinput").trigger('click');
-      window.newTab = window.open('', '_blank');
-      window.newTab.document.write('Loading preview...');
+      window.newTab = window.open('/canvas/create', '_blank');
+      
     });
 
     $("#import-saveopen").click(function(e){
