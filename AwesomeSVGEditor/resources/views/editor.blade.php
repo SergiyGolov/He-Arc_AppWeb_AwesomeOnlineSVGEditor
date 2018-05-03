@@ -50,6 +50,10 @@
           background-color: #2c3e50;
         }
 
+        #background-color {
+          fill: #2c3e50;
+        }
+
         #tools a {
           padding: 1.2em 1em;
           height: 50px;
@@ -232,8 +236,8 @@
                 	 viewBox="0 0 96 96" xml:space="preserve">
                 	<rect id="fill-color" class="fill-color" fill="#f00" width="64" height="64"/>
                   <g id="stroke-color">
-                    <rect class="stroke-color" fill="#0f0" x="32" y="32" width="64" height="64"/>
-                    <rect fill="#000" x="52" y="52" width="24" height="24"/>
+                    <rect class="stroke-color" stroke="#fff" stroke-width="1" fill="#0f0" x="32" y="32" width="64" height="64"/>
+                    <rect id="background-color" stroke="#fff" stroke-width="1" x="52" y="52" width="24" height="24"/>
                   </g>
                   <use id="color-mode" xlink:href="#fill-color"/>
                 </svg>
