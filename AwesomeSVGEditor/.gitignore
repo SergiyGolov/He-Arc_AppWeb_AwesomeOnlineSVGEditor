@@ -4,8 +4,12 @@
 /storage/*.key
 /vendor
 /.idea
+<<<<<<< HEAD
+/node_modules
+=======
 /.vscode
 /.vagrant
+>>>>>>> deploy
 Homestead.json
 Homestead.yaml
 npm-debug.log

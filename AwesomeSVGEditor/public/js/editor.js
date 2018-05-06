@@ -1,269 +1,18 @@
-class Canvas
-{
-
-
-  constructor(divId,width,height)
-  {
-    this.draw = SVG(divId).size(width,height);
-    //this.draw.svg($('#code').val()); //import
-    this.shapes=[];
-    console.log($('#code').val());
-    //Available modes:
-    // 0: pointer
-    // 1: erase
-    // 2: pen
-    // 3: line
-    // 4: rectangle
-    // 5: circle
-    this.mode = 0;
-
-    this.shape = null;
-
-    this.fillColor='#000';
-    this.strokeColor='#000';
-    this.strokeWidth=1;
-
-    /* TODO Remove those lines */
-    this.isMoving=false;
-    this.isDynAdding=false;
-    this.erase=false;
-
-    this.mouseX=0;
-    this.mouseY=0;
-
-    this.draw.mouseup(this.mouseUp.bind(this)); //bind(this) -> necessary to access this
-    this.draw.mousemove(this.mouseMove.bind(this));
-    this.draw.mousedown(this.mouseDown.bind(this));
-
-    let self = this; // Plus propre car variable local qui est ensuite bind avec la fonction, On ne peut pas binf this car le this effectif est nécessair
-    let importFunction=function(){
-      if(self.type!="defs")
-      {
-        console.log(this);
-        this.mousedown(self.elementClick.bind(self));
-        self.shapes.push(this);
-      }
-    };
-
-    this.draw.each(importFunction);
-  }
-
-  elementClick(e)
-  {
-    let event = e.target || e.srcElement;
-    if(this.mode == 1)
-    { // Erase
-      this.shapes.splice(this.shapes.indexOf(event.instance),1);
-      event.instance.remove();
-      this.erase=false;
-    }
-    else if(this.mode == 0) //TODO update self second part
-    {
-      this.isMoving=true;
-      this.shape=event.instance;
-    }
-  }
-
-  mouseUp(e)
-  {
-    if(this.mode == 0)
-    {
-      this.isMoving=false;
-      this.shape=null;
-    }else if(this.mode > 1){
-      this.isDynAdding=false;
-      this.shape=null;
-    }
-  }
-
-  mouseMove(e)
-  {
-    if(this.isMoving)
-    {
-      this.shape.move(e.offsetX-this.shape.width()/2,e.offsetY-this.shape.height()/2);
-      this.shape.front();
-    }
-    else if(this.shape!=null)
-    {
-      switch(this.mode) {
-        case 4: //rectangle
-        console.log();
-        this.shape.width(this.shape.width()+e.movementX);
-        this.shape.height(this.shape.height()+e.movementY);
-        break;
-        case 3: //line
-        let x2=this.shape.node.x2.baseVal.value;
-        let y2=this.shape.node.y2.baseVal.value;
-        this.shape.plot(this.mouseX,  this.mouseY,x2+e.movementX,y2+e.movementY);
-        break;
-        case 5: //circle
-        let r=this.shape.node.r.baseVal.value;
-        this.shape.radius(r+Math.max(e.movementX,e.movementY));
-        break;
-      }
-
-    }else {
-      this.mouseX=e.offsetX;
-      this.mouseY=e.offsetY;
-    }
-  }
-
-  mouseDown()
-  {
-    switch(this.mode)
-    {
-      case 4: //rectangle
-      this.shape=this.addRectangle(this.mouseX, this.mouseY, 1, 1);
-      break;
-      case 3: //line
-      this.shape=this.addLine(this.mouseX, this.mouseY, this.mouseX+1, this.mouseY+1);
-      break;
-      case 5: //circle
-      this.shape=this.addCircle(this.mouseX, this.mouseY, 1);
-      break;
-    }
-  }
-
-  addRectangle(posX,posY,width,height)
-  {
-    let rect=this.draw.rect(width, height).stroke({ width: this.strokeWidth });
-
-    rect.move(posX,posY);
-    rect.fill(this.fillColor);
-    rect.stroke(this.strokeColor);
-    rect.mousedown(this.elementClick.bind(this));
-
-    this.shapes.push(rect);
-
-    return rect;
-  }
-
-  addLine(posX,posY,posX2,posY2)
-  {
-    let line=this.draw.line(posX, posY,posX2,posY2).stroke({ width: this.strokeWidth });
-    line.stroke(this.strokeColor);
-    line.mousedown(this.elementClick.bind(this));
-    this.shapes.push(line);
-
-    return line;
-  }
-
-  addCircle(posX,posY,d)
-  {
-    let circle=this.draw.circle(d).stroke({ width: this.strokeWidth });
-    circle.move(posX,posY);
-    circle.stroke(this.strokeColor);
-    circle.fill(this.fillColor);
-    circle.mousedown(this.elementClick.bind(this));
-    this.shapes.push(circle);
-
-    return circle;
-  }
-
-  startMoving()
-  {
-    this.mode = 0;
-  }
-
-  dynAddRectangle()
-  {
-    this.mode = 4;
-  }
-
-  dynAddLine()
-  {
-    this.mode = 3;
-  }
-
-  dynAddCircle()
-  {
-    this.mode = 5;
-  }
-
-  startErase()
-  {
-    this.mode = 1;
-  }
-
-  setFillColor(color) //color format: string: '#RGB' R,G and B from '0' to 'F'
-  {
-    this.fillColor=color;
-  }
-
-  setStrokeColor(color) //color format: string: '#RGB' R,G and B from '0' to 'F'
-  {
-    this.strokeColor=color;
-  }
-
-  setStrokeWidth(width)
-  {
-    this.strokeWidth=width;
-  }
-}
-
 //Class to connect the interface with our canvas object
 class EventManager
 {
   constructor(canvas)
   {
     this.canvas = canvas;
-    this._connect();
-  }
-
-  _connect(){
-    let canvas = this.canvas;
-    $('#pointer').on('click',function(){
-      canvas.startMoving();
-    });
-    $('#line').on('click',function(){
-      canvas.dynAddLine();
-    });
-    $('#rectangle').on('click',function(){
-      canvas.dynAddRectangle();
-    });
-    $('#ellipse').on('click',function(){
-      canvas.dynAddCircle();
-    });
-    $('#erase').on('click',function(){
-      canvas.startErase();
-    });
-    $('#fillColor').on('change',function(){
-      canvas.setFillColor($('#fillColor')[0].value);
-    });
-    $('#strokeColor').on('change',function(){
-      canvas.setStrokeColor($('#strokeColor')[0].value);
-    })
-    $('#strokeWidth').on('change',function(){
-      canvas.setStrokeWidth($('#strokeWidth')[0].value);
-    })
-
-    $('#save-modal').on('click',function(){
-      let title = $('#name-modal').val();
-      $('#name').val(title);
-      $('#navbar-title').html(title);
-      $('#modal-title').modal('toggle');
-    })
-
-    $('#title-edit').on('click', function(){
-      console.log("Test")
-      $('#modal-title').modal('toggle');
-    })
-
-    //Load preconfigure colors and width
-    $('#fillColor').trigger('change');
-    $('#strokeColor').trigger('change');
-    $('#strokeWidth').trigger('change');
-
-
-    $('#save').on('click',function(e){
-      e.preventDefault();
+    this.save=function(){
       canvas.draw.defs().remove();
-      $('#svgEditor svg').removeAttr('xmlns:svgjs'); //Suppression d'un attribut qui est dupliqué<
+      $('#svgEditor svg').removeAttr('xmlns:svgjs'); //Suppression d'un attribut qui est dupliqué
       $('#code').val($('#svgEditor').html()); // TODO ne pas passer par l'élément DOM
 
       let name = $('#name').val();
       let code = $('#code').val();
       let id = $('#id').val();
+
       let _token = $('input[name=_token]').val();
 
       if(!name){
@@ -273,9 +22,9 @@ class EventManager
           return;
         }
       }
-
       //new Canvas:
-      if(!id || id<=0){
+      if(!id || id<=0 ){
+        $('#id').val(0);
         $.ajax({
           type: "POST",
           url: '/canvas',
@@ -284,12 +33,18 @@ class EventManager
             if(msg.status == 'success'){
               toastr.success('Canvas saved successfully!');
               console.log(msg);
-              $('#id').val(msg.id);
+              if($('#id').val()==0){
+                $('#id').val(msg.id);
+                $('#svg-link').attr('href','/canvas/'+msg.id+'/svg')
+                $('#png-link').attr('href','/canvas/'+msg.id+'/png')
+              }
+
             }else{
               toastr.error('Canvas error while saving');
             }
           },
           error: function(msg){
+            console.log(msg);
             toastr.error('Canvas error while saving');
           }
         });
@@ -302,7 +57,6 @@ class EventManager
             if(msg.status == 'success'){
               toastr.success('Canvas updated successfully!');
               console.log(msg);
-              $('#id').val(msg.id);
             }else{
               toastr.error('Canvas error while updating');
             }
@@ -312,23 +66,235 @@ class EventManager
           }
         });
       }
+    }
+    this.saveNewTab=function(code){
+      let name = "locally imported Canvas";
+      let id=0;
+
+      let _token = $('input[name=_token]').val();
+
+      //new Canvas:
+      $.ajax({
+        type: "POST",
+        url: '/canvas',
+        data: {name:name, code:code, id:id, _token:_token},
+        success: function(msg) {
+          if(msg.status == 'success'){
+            toastr.success('Canvas imported successfully!');
+            window.newTab.location.href ="/canvas/"+msg.id+"/edit";
+          }else{
+            toastr.error('Canvas error while importing');
+          }
+        },
+        error: function(msg){
+          console.log(msg);
+          toastr.error('Canvas error while importing');
+        }
+      });
+    }
+
+    this._connect();
+  }
+
+
+
+  _connect(){
+    let canvas = this.canvas;
+
+    //Paint mode
+    $('#pointer').on('click',function(){
+      $('#tools a').removeClass("active");
+      $(this).addClass("active");
+      console.log($(this));
+      canvas.startMoving();
     });
+    $('#line').on('click',function(){
+      $('#tools a').removeClass("active");
+      $(this).addClass("active");
+      canvas.dynAddLine();
+    });
+    $('#pen').on('click',function(){
+      $('#tools a').removeClass("active");
+      $(this).addClass("active");
+      //TODO connect to the right element
+    });
+    $('#rectangle').on('click',function(){
+      $('#tools a').removeClass("active");
+      $(this).addClass("active");
+      canvas.dynAddRectangle();
+    });
+    $('#ellipse').on('click',function(){
+      $('#tools a').removeClass("active");
+      $(this).addClass("active");
+      canvas.dynAddCircle();
+    });
+
+    //Color picker
+    $('#fill-color, #color-mode').on('click',function(){
+      $('#color-mode').attr("xlink:href","#fill-color");
+    });
+    $('#stroke-color').on('click',function(){
+      $('#color-mode').attr("xlink:href","#");
+    });
+    $('#fill-color, #color-mode').on("dblclick",function(){
+      //TODO Show color picker
+      $('#fillColor').trigger("click");
+    });
+    $('#stroke-color').on("dblclick",function(){
+      //TODO Show color picker
+      $('#strokeColor').trigger("click");
+    });
+
+    $('#fillColor').on('change',function(){
+      let color = $('#fillColor')[0].value;
+      console.log(color)
+      $('.fill-color').attr("fill",color);
+      canvas.setFillColor(color);
+    });
+    $('#strokeColor').on('change',function(){
+      let color = $('#strokeColor')[0].value;
+      console.log(color)
+      $('.stroke-color').attr("fill",color);
+      canvas.setStrokeColor(color);
+    })
+
+    //Eraser
+    $('#erase').on('click',function(){
+      $('#tools a').removeClass("active");
+      $(this).addClass("active");
+      canvas.startErase();
+    });
+
+    //Left side
+    $('#strokeWidth').on('change',function(){
+      let width=$('#strokeWidth')[0].value;
+      if(width<0)
+      {
+        width=0;
+        $('#strokeWidth')[0].value(0);
+      }
+      canvas.setStrokeWidth(width);
+    })
+
+    //Modals link
+    $("#import").click(function(e){
+      e.preventDefault();
+      $('#modal-import').modal('toggle');
+    });
+
+    $("#export").click(function(e){
+      e.preventDefault();
+      $('#modal-export').modal('toggle');
+    });
+
+    //Modal events
+    $("#import-new").click(function(e){
+      $('#modal-import').modal('toggle');
+      window.eventmanager.import="new";
+      $("#fileinput").trigger('click');
+      window.newTab = window.open('/canvas/create', '_blank');
+    });
+
+    $("#import-saveopen").click(function(e){
+      $('#modal-import').modal('toggle');
+      window.eventmanager.import="saveopen";
+      $("#fileinput").trigger('click');
+    });
+
+    $("#import-discardopen").click(function(e){
+      $('#modal-import').modal('toggle');
+      window.eventmanager.import="discardopen";
+      $("#fileinput").trigger('click');
+    });
+
+    $("#fileinput").change(function (e){
+      //source: https://stackoverflow.com/questions/32490959/filereader-on-input-change-jquery
+      var f = e.target.files[0];
+      if (f){
+        var r = new FileReader();
+        r.readAsText(f);
+        r.onload = function(e){
+
+          var importedSvg=e.target.result;
+          let existingSVG = $('#svgEditor svg');
+          let id = existingSVG.attr('id') || 'svgEditor';
+
+          switch(window.eventmanager.import)
+          {
+            case "discardopen":
+            $('#svgEditor').html(importedSvg);
+
+            $('#app').find("*").addBack().off(); //magouille pour deconnecter tous les événements
+
+            window.canvas = new Canvas(id,1000,600);
+
+            window.eventmanager = new EventManager(window.canvas);
+            $("#fileinput").val("");
+            break;
+
+            case "saveopen":
+            window.eventmanager.save();
+            $('#name').val($('#name').val()+"v2");
+            $('#navbar-title').text($('#name').val());
+            $('#id').val(-1);
+
+            $('#svgEditor').html(importedSvg);
+
+            $('#app').find("*").addBack().off(); //magouille pour deconnecter tous les événements
+
+            window.canvas = new Canvas(id,1000,600);
+
+            window.eventmanager = new EventManager(window.canvas);
+            $("#fileinput").val("");
+            break;
+
+            case "new":
+            window.eventmanager.saveNewTab(importedSvg);
+            break;
+          }
+        };
+      } else
+      {
+        console.log("failed");
+      }
+    });
+
+    $('#save-modal').on('click',function(){
+      let title = $('#name-modal').val();
+      $('#name').val(title);
+      $('#navbar-title').text(title);
+      $('#modal-title').modal('toggle');
+    })
+
+    $('#title-edit').on('click', function(){
+      $('#modal-title').modal('toggle');
+    })
+
+    //Load preconfigure colors and width
+    $('#fillColor').trigger('change');
+    $('#strokeColor').trigger('change');
+    $('#strokeWidth').trigger('change');
+
+
+    $('#save').on('click',this.save);
   }
 }
 
 $(document).ready(function(){
+
   toastr.options.positionClass = "toast-top-center";
 
   $('#svgEditor').html($('#code').val());
   let existingSVG = $('#svgEditor svg');
   let id = existingSVG.attr('id') || 'svgEditor';
-
   //Paramètres de taille par défault:
-  let canvas = new Canvas(id,1000,600);
-  let eventmanager = new EventManager(canvas);
+  window.canvas = new Canvas(id,1000,600);
+  window.eventmanager = new EventManager(window.canvas);
 
   let name = $('#name').val();
   if(!name){
     $('#modal-title').modal('toggle');
   }
+
+
 });

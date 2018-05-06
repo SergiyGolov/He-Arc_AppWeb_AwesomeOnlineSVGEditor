@@ -6,6 +6,8 @@ use App\Canvas;
 use Request;
 use Response;
 use Auth;
+use Imagick;
+use ImagickPixel;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Input;
@@ -18,6 +20,69 @@ class CanvasController extends Controller
     public function __construct()
     {
         //$this->middleware('auth.basic');
+    }
+
+    private function validateDownloadRights(int $id)
+    {
+      $canvas = Canvas::findOrFail($id);
+      if($canvas->user_id != Auth::id()){
+        return false;
+      }
+      return $canvas;
+    }
+
+    /**
+     * Download le canvas au format png
+     *
+     * @return PNG file
+     */
+    public function downloadPNG(int $id)
+    {
+      $canvas = CanvasController::validateDownloadRights($id);
+      if($canvas != false){
+
+        $image = new IMagick();
+        $image->setBackgroundColor(new ImagickPixel('transparent'));
+        $image->readImageBlob('<?xml version="1.1" encoding="UTF-8" standalone="no"?>'.$canvas->code);
+        $image->setImageFormat("png32");
+
+        return response($image->getImageBlob())
+              ->header('Content-Type', 'image/png')
+              ->header('Content-Disposition', 'attachment')
+              ->header('filename', 'image.png');
+      }else if(Request::ajax()){
+        $response = array(
+            'status' => 'KO',
+            'msg' => 'No rights to download'
+        );
+        return Response::json($response);
+      }else{
+          abort(403, 'Unauthorized action.');
+      }
+    }
+
+    /**
+     * Download le canvas au format svg
+     *
+     * @return SVG file
+     */
+    public function downloadSVG(int $id)
+    {
+      $canvas = CanvasController::validateDownloadRights($id);
+      if($canvas != false){
+        return response('<svg version="1.1" xmlns="http://www.w3.org/2000/svg">'.$canvas->code)
+              ->header('Content-Type', 'image/svg+xml')
+              ->header('Content-Disposition', 'attachment')
+              ->header('filename', 'image.svg');
+      }else if(Request::ajax()){
+        $response = array(
+            'status' => 'KO',
+            'msg' => 'No rights to download'
+        );
+        return Response::json($response);
+      }else{
+          abort(403, 'Unauthorized action.');
+      }
     }
 
     /**
@@ -104,8 +169,8 @@ class CanvasController extends Controller
             }
         }else{
             $response = array(
-                'status' => 'Invalid use',
-                'msg' => 'Error',
+                'status' => 'KO',
+                'msg' => 'Invalid use',
             );
             return Response::json($response);
         }
@@ -190,8 +255,8 @@ class CanvasController extends Controller
             return Response::json($response);
         }else{
             $response = array(
-                'status' => 'Invalid use',
-                'msg' => 'Error',
+                'status' => 'KO',
+                'msg' => 'Invalide use',
             );
             return Response::json($response);
         }
