@@ -7,6 +7,7 @@ npm install
 php artisan migrate
 npm run prod
 ```
+<span style="color:red">Attention, nécessite l'installation de <em>IMAGICK</em></span>
 
 Pour lancer le serveur:
 ```
