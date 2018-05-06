@@ -13,6 +13,7 @@
     <!-- Scripts -->
     <script src="{{ asset('js/app.js') }}" defer></script>
     <script src="{{ asset('js/shapes.js') }}" defer></script>
+    <script src="{{ asset('js/canvas.js') }}" defer></script>
     <script src="{{ asset('js/editor.js') }}" defer></script>
 
     <!-- Fonts -->
@@ -28,97 +29,98 @@
          * Balise de css pour le développement, à déplacer lors de la mise en production
          * Si on le met directement dans le scss, nécessite de lancer npm run prod après chaque modif pour regénérer le css à partir du scss
          */
-        .expand {
-          height: 100%;
-        }
 
-        #app {
-            display: grid;
-            grid-template-columns: 1fr;
-            grid-template-rows: min-content 1fr;
-        }
+         .expand {
+           height: 100%;
+         }
 
-        #editor {
-          display: grid;
-          grid-template-columns: 50px 1fr 250px;
-          grid-template-rows: 1fr;
-        }
+         #app {
+             display: grid;
+             grid-template-columns: 1fr;
+             grid-template-rows: min-content 1fr;
+         }
 
-        #tools {
-          display: flex;
-          flex-direction: column;
-          background-color: #2c3e50;
-        }
+         #editor {
+           display: grid;
+           grid-template-columns: 50px 1fr 250px;
+           grid-template-rows: 1fr;
+         }
 
-        #background-color {
-          fill: #2c3e50;
-        }
+         #tools {
+           display: flex;
+           flex-direction: column;
+           background-color: #2c3e50;
+         }
 
-        #tools a {
-          padding: 1.2em 1em;
-          height: 50px;
-        }
+         #background-color {
+           fill: #2c3e50;
+         }
 
-        #canvas {
-          background-color: #ecf0f1;
-        }
+         #tools a {
+           padding: 1.2em 1em;
+           height: 50px;
+         }
 
-        #options {
-          background-color: #2c3e50;
-        }
+         #canvas {
+           background-color: #ecf0f1;
+         }
 
-        a svg .fill{
-          fill: #ecf0f1;
-        }
+         #options {
+           background-color: #2c3e50;
+         }
 
-        a svg:hover .fill{
-          fill: white;
-        }
+         a svg .fill{
+           fill: #ecf0f1;
+         }
 
-        a svg .stroke{
-          stroke: #ecf0f1;
-        }
+         a svg:hover .fill{
+           fill: white;
+         }
 
-        a svg:hover .stroke{
-          stroke: white;
-        }
+         a svg .stroke{
+           stroke: #ecf0f1;
+         }
 
-        a.active svg .fill{
-          fill: #0cf;
-        }
+         a svg:hover .stroke{
+           stroke: white;
+         }
 
-        a.active svg .stroke{
-          stroke: #0cf;
-        }
+         a.active svg .fill{
+           fill: #0cf;
+         }
 
-        #svgEditor{
-          width:100%;
-          height:100%;
-          display: flex;
-        }
+         a.active svg .stroke{
+           stroke: #0cf;
+         }
 
-        #svgEditor svg{
-          background-color: white;
-          margin: auto;
-        }
+         #svgEditor{
+           width:100%;
+           height:100%;
+           display: flex;
+         }
 
-        #strokeWidth{
-          width:50px;
-        }
+         #svgEditor svg{
+           background-color: white;
+           margin: auto;
+         }
 
-        .hidden-data {
-          display: none;
-          visibility: hidden;
-        }
+         #strokeWidth{
+           width:50px;
+         }
 
-        #fileinput{
-          display:none;
-        }
+         .hidden-data {
+           display: none;
+           visibility: hidden;
+         }
 
-        #tools #color-picker{
-          margin: 0 -10px;
-          height: 75px;
-        }
+         #fileinput{
+           display:none;
+         }
+
+         #tools #color-picker{
+           margin: 0 -10px;
+           height: 75px;
+         }
 
     </style>
 </head>
@@ -141,7 +143,7 @@
                                 File <span class="caret"></span>
                             </a>
                             <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                                <a class="dropdown-item" href="{{ route('logout') }}">
+                                <a class="dropdown-item" href="" id="export">
                                     Export as
                                 </a>
                                 <a class="dropdown-item" href="" id="import">
@@ -271,46 +273,9 @@
 
             </div>
           </div>
-
-          <!-- Small modal -->
-          <div id="modal-title" class="modal fade bd-example-modal-sm" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
-            <div class="modal-dialog modal-sm">
-              <div class="modal-content">
-                <div class="modal-header">
-                  <h5 class="modal-title">Name of your image</h5>
-                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                  </button>
-                </div>
-                <div class="modal-body">
-                  <input id="name-modal" class="form-control" type="text" placeholder="Default input" value="{{ isset($canvas)?$canvas->name:'' }}">
-                </div>
-                <div class="modal-footer">
-                  <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                  <button id="save-modal" type="button" class="btn btn-primary">Save changes</button>
-                </div>
-              </div>
-            </div>
-          </div>
-          <!-- Large modal -->
-          <div id="modal-import" class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
-            <div class="modal-dialog modal-lg">
-              <div class="modal-content">
-                <div class="modal-header">
-                  <h5 class="modal-title">How do you want to import the svg file?</h5>
-                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                  </button>
-                </div>
-                <div class="modal-footer">
-                  <button id="import-new" type="button" class="btn btn-primary">Open file in new tab</button>
-                  <button id="import-saveopen" type="button" class="btn btn-primary">Save current canvas and open file here</button>
-                  <button id="import-discardopen" type="button" class="btn btn-primary">Discard changes and open file here</button>
-                </div>
-              </div>
-            </div>
-          </div>
-
+          @component('editor.modal', ['id' => isset($canvas)?$canvas->id:''])
+              You are not allowed to access this resource!
+          @endcomponent
         </main>
     </div>
 </body>

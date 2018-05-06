@@ -6,6 +6,8 @@ use App\Canvas;
 use Request;
 use Response;
 use Auth;
+use Imagick;
+use ImagickPixel;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Input;
@@ -38,10 +40,15 @@ class CanvasController extends Controller
     {
       $canvas = CanvasController::validateDownloadRights($id);
       if($canvas != false){
-        $content = "test";
-        return response($content)
+
+        $image = new IMagick();
+        $image->setBackgroundColor(new ImagickPixel('transparent'));
+        $image->readImageBlob('<?xml version="1.1" encoding="UTF-8" standalone="no"?>'.$canvas->code);
+        $image->setImageFormat("png32");
+
+        return response($image->getImageBlob())
               ->header('Content-Type', 'image/png')
-              ->header('XContent-Disposition', 'attachment')
+              ->header('Content-Disposition', 'attachment')
               ->header('filename', 'image.png');
       }else if(Request::ajax()){
         $response = array(
@@ -63,9 +70,9 @@ class CanvasController extends Controller
     {
       $canvas = CanvasController::validateDownloadRights($id);
       if($canvas != false){
-        return response($canvas->code)
+        return response('<svg version="1.1" xmlns="http://www.w3.org/2000/svg">'.$canvas->code)
               ->header('Content-Type', 'image/svg+xml')
-              ->header('XContent-Disposition', 'attachment')
+              ->header('Content-Disposition', 'attachment')
               ->header('filename', 'image.svg');
       }else if(Request::ajax()){
         $response = array(
