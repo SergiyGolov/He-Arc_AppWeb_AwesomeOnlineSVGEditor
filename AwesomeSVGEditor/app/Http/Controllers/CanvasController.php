@@ -222,11 +222,7 @@ class CanvasController extends Controller
         //check if its our form
         if(Request::ajax()){
 
-            $canvas =  Canvas::findOrFail($id);
-            if($canvas->user_id != Auth::id()){
-              abort(403, 'Unauthorized action.');
-            }
-
+            $canvas =  Canvas::where('user_id',Auth::id())->where('id',$id)->firstOrFail();
             $rules = array(
                 'name'       => 'required',
                 'visibility' => 'boolean'
