@@ -8,6 +8,13 @@ php artisan migrate
 npm run prod
 ```
 <span style="color:red">Attention, nécessite l'installation de <em>IMAGICK</em></span>
+Pour cette installer Imagick:
+'''
+apt-get install php-imagick
+apt-get install imagemagick libmagickwand-dev
+service apache2 restart
+'''
+
 
 Pour lancer le serveur:
 ```
