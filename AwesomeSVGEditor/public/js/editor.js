@@ -12,6 +12,7 @@ class EventManager
       let name = $('#name').val();
       let code = $('#code').val();
       let id = $('#id').val();
+      let visibility = $('#visibility').prop('checked')?1:0; // Convert true/false in integer
 
       let _token = $('input[name=_token]').val();
 
@@ -28,7 +29,7 @@ class EventManager
         $.ajax({
           type: "POST",
           url: '/canvas',
-          data: {name:name, code:code, id:id, _token:_token},
+          data: {name:name, code:code, id:id, _token:_token, visibility:visibility},
           success: function(msg) {
             if(msg.status == 'success'){
               toastr.success('Canvas saved successfully!');
@@ -52,7 +53,7 @@ class EventManager
         $.ajax({
           type: "PUT",
           url: '/canvas/'+id,
-          data: {name:name, code:code, id:id, _token:_token},
+          data: {name:name, code:code, id:id, _token:_token, visibility:visibility},
           success: function(msg) {
             if(msg.status == 'success'){
               toastr.success('Canvas updated successfully!');

@@ -22,12 +22,12 @@ class CanvasController extends Controller
         //$this->middleware('auth.basic');
     }
 
-    private function validateDownloadRights(int $id)
+    private function validateAccessRights(int $id)
     {
-      $canvas = Canvas::findOrFail($id);
-      if($canvas->user_id != Auth::id()){
-        return false;
-      }
+      $canvas = Canvas::where('id',$id)->where(function ($query) {
+          $query->where('visibility',1)
+                ->orWhere('user_id',Auth::id());
+        })->first();
       return $canvas;
     }
 
@@ -38,7 +38,7 @@ class CanvasController extends Controller
      */
     public function downloadPNG(int $id)
     {
-      $canvas = CanvasController::validateDownloadRights($id);
+      $canvas = CanvasController::validateAccessRights($id);
       if($canvas != false){
 
         $image = new IMagick();
@@ -68,7 +68,7 @@ class CanvasController extends Controller
      */
     public function downloadSVG(int $id)
     {
-      $canvas = CanvasController::validateDownloadRights($id);
+      $canvas = CanvasController::validateAccessRights($id);
       if($canvas != false){
         return response('<svg version="1.1" xmlns="http://www.w3.org/2000/svg">'.$canvas->code)
               ->header('Content-Type', 'image/svg+xml')
@@ -93,7 +93,7 @@ class CanvasController extends Controller
     public function index()
     {
         // List canvas
-        $canvas = Canvas::all();
+        $canvas = Canvas::where('visibility',1)->orWhere('user_id',Auth::id())->get();
 
         return View::make('canvas')->with('canvas', $canvas);
     }
@@ -134,7 +134,8 @@ class CanvasController extends Controller
         // read more on validation at http://laravel.com/docs/validation
         if(Request::ajax()){
             $rules = array(
-                'name'       => 'required'
+                'name'       => 'required',
+                'visibility' => 'boolean'
             );
             $validator = Validator::make(Input::all(), $rules);
             $sanitizedSVG = CanvasController::sanityse(Input::get('code'));
@@ -144,6 +145,7 @@ class CanvasController extends Controller
                 $response = array(
                     'status' => 'KO',
                     'msg' => 'Canvas failed tests',
+                    'validator' => $validator->fails(),
                     'svg' => Input::get('code'),
                     'sanityse' => Input::get('code'),
                 );
@@ -155,7 +157,7 @@ class CanvasController extends Controller
                 $canvas->name       = Input::get('name');
                 $canvas->code       = Input::get('code');
                 $canvas->user_id    = Auth::id();
-                $canvas->visibility = 1;
+                $canvas->visibility = Input::get('visibility');
 
                 $canvas->save();
 
@@ -182,10 +184,10 @@ class CanvasController extends Controller
      * @param  \App\Canvas  $canvas
      * @return \Illuminate\Http\Response
      */
-    public function show(Canvas $canvas)
+    public function show(int $id)
     {
         // TODO return view
-
+        $canvas = Canvas::validateAccessRights($id);
         abort(402, 'Not implemented yet.');
         //return view('user.profile', ['user' => Canvas::findOrFail($id)]);
     }
@@ -210,7 +212,7 @@ class CanvasController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Canvas  $canvas
+     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request,int $id)
@@ -226,7 +228,8 @@ class CanvasController extends Controller
             }
 
             $rules = array(
-                'name'       => 'required'
+                'name'       => 'required',
+                'visibility' => 'boolean'
             );
             $validator = Validator::make(Input::all(), $rules);
             $sanitizedSVG = CanvasController::sanityse(Input::get('code'));
@@ -244,7 +247,7 @@ class CanvasController extends Controller
 
             $canvas->name       = Input::get('name');
             $canvas->code       = Input::get('code');
-            $canvas->visibility = 1; //TODO Update this part
+            $canvas->visibility = Input::get('visibility');
 
             $canvas->save();
 

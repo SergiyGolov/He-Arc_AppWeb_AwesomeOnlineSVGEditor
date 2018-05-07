@@ -260,13 +260,12 @@
             </div>
             <div class="hidden-data"></div>
             <div class="hidden-data">
-                <!-- to create in db the first time : /photos -->
-                <!-- to save in db any other time : /photos/{id}/edit -->
                 {{ Form::open(array('url' => '/canvas')) }}
 
                 {{ Form::text('name', isset($canvas)?$canvas->name:'', array('id' => 'name', 'class' => 'form-control')) }}
                 {{ Form::textarea('code', isset($canvas)?$canvas->code:'', array('id' => 'code', 'class' => 'form-control')) }}
                 {{ Form::hidden('id', isset($canvas)?$canvas->id:'', array('id' => 'id')) }}
+                {{ Form::checkbox('visibility',isset($canvas)?$canvas->visibility:1, isset($canvas)?$canvas->visibility?true:false:true, array('id' => 'visibility')) }}
 
                 {{ Form::submit('test') }}
                 {{ Form::close() }}
