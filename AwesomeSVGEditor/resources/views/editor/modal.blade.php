@@ -50,8 +50,8 @@
         </button>
       </div>
       <div class="modal-footer">
-        <a id="svg-link" href="/canvas/{{$id}}/svg" role="button" class="btn btn-primary" download>SVG</a>
-        <a id="png-link" href="/canvas/{{$id}}/png" role="button" class="btn btn-primary" download>PNG</a>
+        <a id="svg-link" href="/canvas/{{ isset($canvas)?$canvas->id:'' }}/svg" role="button" class="btn btn-primary" download>SVG</a>
+        <a id="png-link" href="/canvas/{{ isset($canvas)?$canvas->id:'' }}/png" role="button" class="btn btn-primary" download>PNG</a>
       </div>
     </div>
   </div>

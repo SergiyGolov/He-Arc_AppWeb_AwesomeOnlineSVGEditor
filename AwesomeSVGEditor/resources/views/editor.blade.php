@@ -260,19 +260,18 @@
             </div>
             <div class="hidden-data"></div>
             <div class="hidden-data">
-                {{ Form::open(array('url' => '/canvas')) }}
+                {{ Form::open() }}
 
                 {{ Form::text('name', isset($canvas)?$canvas->name:'', array('id' => 'name', 'class' => 'form-control')) }}
                 {{ Form::textarea('code', isset($canvas)?$canvas->code:'', array('id' => 'code', 'class' => 'form-control')) }}
                 {{ Form::hidden('id', isset($canvas)?$canvas->id:'', array('id' => 'id')) }}
                 {{ Form::checkbox('visibility',isset($canvas)?$canvas->visibility:1, isset($canvas)?$canvas->visibility?true:false:true, array('id' => 'visibility')) }}
 
-                {{ Form::submit('test') }}
                 {{ Form::close() }}
 
             </div>
           </div>
-          @component('editor.modal', ['id' => isset($canvas)?$canvas->id:''])
+          @component('editor.modal', ['canvas' => isset($canvas)?$canvas:null])
               You are not allowed to access this resource!
           @endcomponent
         </main>
