@@ -217,8 +217,6 @@ class CanvasController extends Controller
      */
     public function update(Request $request,int $id)
     {
-        // TODO Update canvas
-
         //check if its our form
         if(Request::ajax()){
 
@@ -259,8 +257,6 @@ class CanvasController extends Controller
             );
             return Response::json($response);
         }
-
-        //return view('editor', ['canvas' => Canvas::findOrFail($id)]);
     }
 
     /**
