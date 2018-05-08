@@ -49,6 +49,19 @@ class Canvas
     };
 
     this.draw.each(importFunction);
+
+    this.shiftKey=false;
+
+    $(document).keydown(function(e) {
+      if(e.which == 16) {
+        selfCanvas.shiftKey=true;
+      }
+    });
+    $(document).keyup(function(e) {
+      if(e.which == 16) {
+        selfCanvas.shiftKey=false;
+      }
+    });
   }
 
   elementClick(e)
