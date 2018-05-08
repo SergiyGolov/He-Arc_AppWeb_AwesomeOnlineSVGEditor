@@ -233,34 +233,34 @@ class EventManager
                 switch(window.eventmanager.import)
                 {
                   case "discardopen":
-                    $('#svgEditor').html(importedSvg);
+                  $('#svgEditor').html(importedSvg);
 
-                    $('#app').find("*").addBack().off(); //magouille pour deconnecter tous les événements
+                  $('#app').find("*").addBack().off(); //magouille pour deconnecter tous les événements
 
-                    window.canvas = new Canvas(id,1000,600);
+                  window.canvas = new Canvas(id,1000,600);
 
-                    window.eventmanager = new EventManager(window.canvas);
-                    $("#fileinput").val("");
+                  window.eventmanager = new EventManager(window.canvas);
+                  $("#fileinput").val("");
                   break;
 
                   case "saveopen":
-                    window.eventmanager.save();
-                    $('#name').val($('#name').val()+"v2");
-                    $('#navbar-title').text($('#name').val());
-                    $('#id').val(-1);
+                  window.eventmanager.save();
+                  $('#name').val($('#name').val()+"v2");
+                  $('#navbar-title').text($('#name').val());
+                  $('#id').val(-1);
 
-                    $('#svgEditor').html(importedSvg);
+                  $('#svgEditor').html(importedSvg);
 
-                    $('#app').find("*").addBack().off(); //magouille pour deconnecter tous les événements
+                  $('#app').find("*").addBack().off(); //magouille pour deconnecter tous les événements
 
-                    window.canvas = new Canvas(id,1000,600);
+                  window.canvas = new Canvas(id,1000,600);
 
-                    window.eventmanager = new EventManager(window.canvas);
-                    $("#fileinput").val("");
+                  window.eventmanager = new EventManager(window.canvas);
+                  $("#fileinput").val("");
                   break;
 
                   case "new":
-                    window.eventmanager.saveNewTab(importedSvg);
+                  window.eventmanager.saveNewTab(importedSvg);
                   break;
                 }
               }
@@ -301,6 +301,54 @@ class EventManager
 
 
     $('#save').on('click',this.save);
+
+    //source: https://www.htmlgoodies.com/html5/javascript/drag-files-into-the-browser-from-the-desktop-using-jquery-event-binding.html
+    $('#svgEditor').on({
+      'dragover dragenter': function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+      },
+      'drop': function(e) {
+        var dataTransfer =  e.originalEvent.dataTransfer;
+        if( dataTransfer && dataTransfer.files.length) {
+          e.preventDefault();
+          e.stopPropagation();
+          
+          if(dataTransfer.files.length==1){
+            window.newTab = window.open('/canvas/create', '_blank');
+            var reader = new FileReader();
+            reader.readAsText(dataTransfer.files[0]);
+            reader.onload = function(e){
+              let importedSvg=e.target.result;
+              let _token = $('input[name=_token]').val();
+
+              $.ajax({
+                type: "POST",
+                url: '/sanitiseAjax',
+                data: {code:importedSvg, _token:_token},
+                success: function(msg) {
+                  if(msg.status == 'success')
+                  {
+                    window.eventmanager.saveNewTab(importedSvg);
+                  }
+                  else
+                  {
+                    toastr.error('Your imported .svg file is not valid');
+                  }
+                },
+                error: function(msg){
+                  console.log(msg);
+                  toastr.error('Your imported .svg file is not valid');
+
+                }
+              });
+            };
+
+          }
+
+        }
+      }
+    });
   }
 }
 
