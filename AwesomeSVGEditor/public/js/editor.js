@@ -71,14 +71,14 @@ class EventManager
     this.saveNewTab=function(code){
       let name = "locally imported Canvas";
       let id=0;
-
+      let visibility = $('#visibility').prop('checked')?1:0; // Convert true/false in integer
       let _token = $('input[name=_token]').val();
 
       //new Canvas:
       $.ajax({
         type: "POST",
         url: '/canvas',
-        data: {name:name, code:code, id:id, _token:_token},
+        data: {name:name, code:code, id:id, _token:_token, visibility:visibility},
         success: function(msg) {
           if(msg.status == 'success'){
             toastr.success('Canvas imported successfully!');
@@ -185,6 +185,7 @@ class EventManager
 
     $("#export").click(function(e){
       e.preventDefault();
+      window.eventmanager.save();
       $('#modal-export').modal('toggle');
     });
 
@@ -216,45 +217,67 @@ class EventManager
         r.readAsText(f);
         r.onload = function(e){
 
-          var importedSvg=e.target.result;
-          let existingSVG = $('#svgEditor svg');
-          let id = existingSVG.attr('id') || 'svgEditor';
+          let importedSvg=e.target.result;
+          let _token = $('input[name=_token]').val();
 
-          switch(window.eventmanager.import)
-          {
-            case "discardopen":
-            $('#svgEditor').html(importedSvg);
+          $.ajax({
+            type: "POST",
+            url: '/sanitiseAjax',
+            data: {code:importedSvg, _token:_token},
+            success: function(msg) {
+              if(msg.status == 'success')
+              {
+                let existingSVG = $('#svgEditor svg');
+                let id = existingSVG.attr('id') || 'svgEditor';
 
-            $('#app').find("*").addBack().off(); //magouille pour deconnecter tous les événements
+                switch(window.eventmanager.import)
+                {
+                  case "discardopen":
+                    $('#svgEditor').html(importedSvg);
 
-            window.canvas = new Canvas(id,1000,600);
+                    $('#app').find("*").addBack().off(); //magouille pour deconnecter tous les événements
 
-            window.eventmanager = new EventManager(window.canvas);
-            $("#fileinput").val("");
-            break;
+                    window.canvas = new Canvas(id,1000,600);
 
-            case "saveopen":
-            window.eventmanager.save();
-            $('#name').val($('#name').val()+"v2");
-            $('#navbar-title').text($('#name').val());
-            $('#id').val(-1);
+                    window.eventmanager = new EventManager(window.canvas);
+                    $("#fileinput").val("");
+                  break;
 
-            $('#svgEditor').html(importedSvg);
+                  case "saveopen":
+                    window.eventmanager.save();
+                    $('#name').val($('#name').val()+"v2");
+                    $('#navbar-title').text($('#name').val());
+                    $('#id').val(-1);
 
-            $('#app').find("*").addBack().off(); //magouille pour deconnecter tous les événements
+                    $('#svgEditor').html(importedSvg);
 
-            window.canvas = new Canvas(id,1000,600);
+                    $('#app').find("*").addBack().off(); //magouille pour deconnecter tous les événements
 
-            window.eventmanager = new EventManager(window.canvas);
-            $("#fileinput").val("");
-            break;
+                    window.canvas = new Canvas(id,1000,600);
 
-            case "new":
-            window.eventmanager.saveNewTab(importedSvg);
-            break;
-          }
+                    window.eventmanager = new EventManager(window.canvas);
+                    $("#fileinput").val("");
+                  break;
+
+                  case "new":
+                    window.eventmanager.saveNewTab(importedSvg);
+                  break;
+                }
+              }
+              else
+              {
+                toastr.error('Your imported .svg file is not valid');
+              }
+            },
+            error: function(msg){
+              console.log(msg);
+              toastr.error('Your imported .svg file is not valid');
+
+            }
+          });
         };
-      } else
+      }
+      else
       {
         console.log("failed");
       }

@@ -114,13 +114,48 @@ class CanvasController extends Controller
      *
      * @return \ a sanitized SVG or FALSE if an error occured
      */
-    private static function sanityse($svg)
+    private static function sanitise($svg)
     {
       // Create a new sanitizer instance
       $sanitizer = new Sanitizer();
       // Pass it to the sanitizer and get it back clean
       return $sanitizer->sanitize($svg);
     }
+
+    /**
+     * Sanitise an SVG for the import
+     *
+     * @return \ a message that indicated if the svg is OK or KO to be imported
+     */
+    public function sanitiseAjax(Request $request)
+    {
+      if(Request::ajax()){
+
+          $sanitizedSVG = CanvasController::sanitise(Input::get('code'));
+
+          // process the login
+          if ($sanitizedSVG == false ){
+              $response = array(
+                  'status' => 'KO',
+                  'msg'=>'The svg code is not valid'
+              );
+              return Response::json($response);
+          } else {
+              $response = array(
+                  'status' => 'success',
+                  'msg' => 'Canvas sanitised successfully',
+              );
+              return Response::json($response);
+          }
+      }else{
+          $response = array(
+              'status' => 'KO',
+              'msg' => 'Invalid use',
+          );
+          return Response::json($response);
+      }
+    }
+
 
     /**
      * Store a newly created resource in storage.
@@ -138,7 +173,7 @@ class CanvasController extends Controller
                 'visibility' => 'boolean'
             );
             $validator = Validator::make(Input::all(), $rules);
-            $sanitizedSVG = CanvasController::sanityse(Input::get('code'));
+            $sanitizedSVG = CanvasController::sanitise(Input::get('code'));
 
             // process the login
             if ($validator->fails() || $sanitizedSVG == false ) {
@@ -226,7 +261,7 @@ class CanvasController extends Controller
                 'visibility' => 'boolean'
             );
             $validator = Validator::make(Input::all(), $rules);
-            $sanitizedSVG = CanvasController::sanityse(Input::get('code'));
+            $sanitizedSVG = CanvasController::sanitise(Input::get('code'));
 
             // process the login
             if ($validator->fails() || $sanitizedSVG == false ) {
