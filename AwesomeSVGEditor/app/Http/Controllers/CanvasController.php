@@ -63,9 +63,13 @@ class CanvasController extends Controller
 
     public function shared(string $code){
       if($code != ""){
-        $query->where('share',$code)->first();
-
+        //TODO Add migration to add share field
+        $canvas = $query->where('share',$code)->first();
+        if($canvas != null){
+          return view('canvas.item', ['canvas' => $canvas]);
+        }
       }
+      abort(403, 'Unauthorized action.');
     }
 
     /**
