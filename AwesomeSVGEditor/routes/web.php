@@ -20,16 +20,17 @@ Route::get('/home', 'HomeController@index')->name('home');
 Route::get('/profile', 'HomeController@show')->middleware('auth.basic'); // Nécessite une authentification
 
 /*
-Route::get('/svg', 'SVGController@index');
-Route::get('/svg/{id}', 'SVGController@show');
-Route::put('/new', 'SVGController@new');
-Route::post('/save', 'SVGController@save');
-Route::delete('/delete/{id}', 'SVGController@delete');
+Route::get('/canvas', 'CanvasController@index');
+Route::get('/canvas/{id}', 'CanvasController@show');
+Route::put('/new', 'CanvasController@new');
+Route::post('/save', 'CanvasController@save');
+Route::delete('/delete/{id}', 'CanvasController@delete');
 */
 
 Route::resource('canvas', 'CanvasController');//->middleware('auth.basic');
 
 Route::get('/canvas/{id}/png', 'CanvasController@downloadPNG');
 Route::get('/canvas/{id}/svg', 'CanvasController@downloadSVG');
+Route::get('/shared/{link}', 'CanvasController@shared');
 
 Route::post('/sanitiseAjax','CanvasController@sanitiseAjax');

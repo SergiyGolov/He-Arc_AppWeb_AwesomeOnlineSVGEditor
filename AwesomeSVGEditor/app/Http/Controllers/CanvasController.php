@@ -61,6 +61,13 @@ class CanvasController extends Controller
       }
     }
 
+    public function shared(string $code){
+      if($code != ""){
+        $query->where('share',$code)->first();
+
+      }
+    }
+
     /**
      * Download le canvas au format svg
      *
@@ -95,7 +102,7 @@ class CanvasController extends Controller
         // List canvas
         $canvas = Canvas::where('visibility',1)->orWhere('user_id',Auth::id())->get();
 
-        return View::make('canvas')->with('canvas', $canvas);
+        return View::make('canvas.index')->with('canvas', $canvas);
     }
 
     /**
@@ -106,7 +113,7 @@ class CanvasController extends Controller
     public function create()
     {
         // Open the editor with an empty canvas
-        return View::make('editor');
+        return View::make('canvas.editor');
     }
 
     /**
@@ -222,9 +229,11 @@ class CanvasController extends Controller
     public function show(int $id)
     {
         // TODO return view
-        $canvas = Canvas::validateAccessRights($id);
-        abort(402, 'Not implemented yet.');
-        //return view('user.profile', ['user' => Canvas::findOrFail($id)]);
+        $canvas = CanvasController::validateAccessRights($id);
+        if($canvas == null){
+          abort(403, 'Unauthorized action.');
+        }
+        return view('canvas.item', ['canvas' => $canvas]);
     }
 
     /**
@@ -240,7 +249,7 @@ class CanvasController extends Controller
           abort(403, 'Unauthorized action.');
         }
 
-        return view('editor', ['canvas' => $canvas]);
+        return view('canvas.editor', ['canvas' => $canvas]);
     }
 
     /**

@@ -271,7 +271,7 @@
 
             </div>
           </div>
-          @component('editor.modal', ['canvas' => isset($canvas)?$canvas:null])
+          @component('canvas.partial.modal', ['canvas' => isset($canvas)?$canvas:null])
               You are not allowed to access this resource!
           @endcomponent
         </main>
