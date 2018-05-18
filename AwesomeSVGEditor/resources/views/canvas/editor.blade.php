@@ -24,12 +24,12 @@
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
     <link href="{{ asset('css/editor.css') }}" rel="stylesheet">
     <style type="text/css">
-        
+
     </style>
 </head>
 <body class="expand">
     <div id="app" class="expand">
-        <nav class="navbar navbar-expand-md navbar-light navbar-laravel">
+        <nav class="navbar navbar-expand-md navbar-laravel">
             <div class="container">
                 <a class="navbar-brand" href="{{ url('/') }}">
                     {{ config('app.name', 'Laravel') }}

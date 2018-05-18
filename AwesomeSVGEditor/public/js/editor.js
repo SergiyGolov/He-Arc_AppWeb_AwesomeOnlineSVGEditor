@@ -185,6 +185,7 @@ class EventManager
 
     $("#export").click(function(e){
       e.preventDefault();
+      //TODO Export sans sauvegarde
       window.eventmanager.save();
       $('#modal-export').modal('toggle');
     });
@@ -313,7 +314,7 @@ class EventManager
         if( dataTransfer && dataTransfer.files.length) {
           e.preventDefault();
           e.stopPropagation();
-          
+
           if(dataTransfer.files.length==1){
             window.newTab = window.open('/canvas/create', '_blank');
             var reader = new FileReader();

@@ -21,29 +21,12 @@
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
     <style type="text/css">
       /* TODO coller ce code dans app.scss */
-      .centered {
-        display: flex;
-        align-items: center;
-        flex-direction: column;
-        background-color: white;
-        padding: 100px 0;
-      }
-
-      .centered img {
-        width: 75%;
-        height: 75%;
-        margin: 1.3em;
-      }
-
-      #app {
-        overflow: hidden;
-      }
 
     </style>
 </head>
 <body>
     <div id="app">
-        <nav class="navbar navbar-expand-md navbar-light navbar-laravel">
+        <nav class="navbar navbar-expand-md navbar-laravel">
             <div class="container">
                 <a class="navbar-brand" href="{{ url('/') }}">
                     {{ config('app.name', 'Laravel') }}

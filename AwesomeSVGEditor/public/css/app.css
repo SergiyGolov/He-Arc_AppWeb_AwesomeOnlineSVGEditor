@@ -10619,8 +10619,12 @@ button.toast-close-button {
   }
 }
 
+.navbar a {
+  color: white;
+}
+
 .navbar-laravel {
-  background-color: #fff;
+  background-color: #2f2f2c;
   -webkit-box-shadow: 0 2px 4px rgba(0, 0, 0, 0.04);
           box-shadow: 0 2px 4px rgba(0, 0, 0, 0.04);
 }
@@ -10629,9 +10633,21 @@ button.toast-close-button {
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
-  -webkit-box-pack: center;
-      -ms-flex-pack: center;
-          justify-content: center;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  background-color: white;
+  padding: 100px 0;
+}
+
+.centered img {
+  width: 75%;
+  height: 75%;
+  margin: 1.3em;
 }
 
 .svg-file {
@@ -10652,5 +10668,9 @@ button.toast-close-button {
   background-repeat: no-repeat;
   background-position: 50%;
   background-size: 85%;
+}
+
+#app {
+  overflow: hidden;
 }
 
