@@ -14,6 +14,24 @@
   color: white;
 }
 
+#navbar-title{
+  color:white;
+}
+
+.dropdown-item{
+  color:white;
+  background-color: $color-bg;
+}
+
+.dropdown-menu{
+  background-color: $color-bg;
+}
+
+.whitetext{
+  color:white;
+}
+
+
 .navbar-laravel {
   background-color: $color-side;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.04);

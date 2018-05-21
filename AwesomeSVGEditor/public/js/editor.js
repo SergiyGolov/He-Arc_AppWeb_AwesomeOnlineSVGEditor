@@ -38,6 +38,8 @@ class EventManager
                 $('#id').val(msg.id);
                 $('#svg-link').attr('href','/canvas/'+msg.id+'/svg')
                 $('#png-link').attr('href','/canvas/'+msg.id+'/png')
+                $('#share').val(msg.share);
+                $('#share').val(window.location.origin+"/shared/"+$('#share').val());
               }
 
             }else{
@@ -210,6 +212,11 @@ class EventManager
       $("#fileinput").trigger('click');
     });
 
+    $("#shareLink").click(function(e){
+      e.preventDefault();
+      $('#modal-share').modal('toggle');
+    });
+
     $("#fileinput").change(function (e){
       //source: https://stackoverflow.com/questions/32490959/filereader-on-input-change-jquery
       var f = e.target.files[0];
@@ -369,5 +376,6 @@ $(document).ready(function(){
     $('#modal-title').modal('toggle');
   }
 
+  if($('#share').val()!="")$('#share').val(window.location.origin+"/shared/"+$('#share').val());
 
 });

@@ -56,15 +56,19 @@
                                 <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
                                     @csrf
                                 </form>
+                                <a class="dropdown-item" href="" id="shareLink">
+                                    Get share link
+                                </a>
                             </div>
                         </li>
-                    </ul>
 
+                    </ul>
+                    <span class="navbar-nav whitetext"><input type="checkbox" id="visibility"><label for="visibility">publicly visible</label></span>
                     <ul class="navbar-nav mx-auto">
                       <div id="navbar-title">
                         {{ isset($canvas)?$canvas->name:'' }}
                       </div>
-                      <button id="title-edit" class="btn btn-sm">
+                      &nbsp;<button id="title-edit" class="btn btn-sm">
                         <span>Edit</span>
                       </button>
                     </ul>

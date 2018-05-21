@@ -64,7 +64,7 @@ class CanvasController extends Controller
     public function shared(string $code){
       if($code != ""){
         //TODO Add migration to add share field
-        $canvas = $query->where('share',$code)->first();
+        $canvas = Canvas::where('share',$code)->first();
         if($canvas != null){
           return view('canvas.item', ['canvas' => $canvas]);
         }
@@ -204,6 +204,7 @@ class CanvasController extends Controller
                 $canvas->code       = Input::get('code');
                 $canvas->user_id    = Auth::id();
                 $canvas->visibility = Input::get('visibility');
+                $canvas->share      = hash('sha256',Input::get('name').Input::get('code').Auth::id());
 
                 $canvas->save();
 
@@ -212,6 +213,7 @@ class CanvasController extends Controller
                     'status' => 'success',
                     'msg' => 'Canvas created successfully',
                     'id' => $canvas->id,
+                    'share' => $canvas->share,
                 );
                 return Response::json($response);
             }

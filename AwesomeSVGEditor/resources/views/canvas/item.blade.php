@@ -4,7 +4,7 @@
 <div class="container-fluid">
     <div class="row">
       <div class="col-md-6 col-sm-12 centered">
-          <a href="canvas/{{ $canvas->id }}/edit"><h2>{{ $canvas->name }}</h2></a>
+          <h2>{{ $canvas->name }}</h2>
           {!! $canvas->code !!}
       </div>
     </div>
