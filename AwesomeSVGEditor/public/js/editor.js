@@ -377,5 +377,5 @@ $(document).ready(function(){
   }
 
   if($('#share').val()!="")$('#share').val(window.location.origin+"/shared/"+$('#share').val());
-
+  $('#strokeWidth').popover({ trigger: 'hover',content: "Stroke width in pixels" })
 });

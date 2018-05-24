@@ -56,12 +56,26 @@ class Canvas
       if(e.which == 16) {
         selfCanvas.shiftKey=true;
       }
+      if(e.keyCode == 90 && e.ctrlKey && e.shiftKey || e.keyCode == 89 && e.ctrlKey )selfCanvas.redo();
+      else if(e.keyCode == 90 && e.ctrlKey)selfCanvas.undo();
+
     });
+
     $(document).keyup(function(e) {
       if(e.which == 16) {
         selfCanvas.shiftKey=false;
       }
     });
+  }
+
+  undo()
+  {
+    alert("undo");
+  }
+
+  redo()
+  {
+    alert("redo");
   }
 
   elementClick(e)
