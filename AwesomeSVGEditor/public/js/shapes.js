@@ -43,8 +43,6 @@ class Rectangle {
           this.rect.width(Math.min(this.initialX-relativePosX,this.initialY-relativePosY));
           this.rect.height(Math.min(this.initialX-relativePosX,this.initialY-relativePosY));
         }
-
-
       }
       else
       {
@@ -123,6 +121,20 @@ class Line {
 }
 
 class Pen {
+  constructor(canvas,posX,posY,posX2,posY2){
+    this.canvas = canvas;
+    this.data = [[posX,posY],[posX2,posY2]];
+    this.polyline=this.canvas.draw.polyline(this.data).fill('none').stroke({ width: this.canvas.strokeWidth });
+    this.polyline.stroke(this.canvas.strokeColor);
+    this.polyline.mousedown(this.canvas.elementClick.bind(this.canvas));
+    this.canvas.shapes.push(this.polyline);
+  }
 
-
+  mouseMove(e)
+  {
+    let relativePosX=e.pageX-$('#svgEditor').children().first().offset().left;
+    let relativePosY=e.pageY-$('#svgEditor').children().first().offset().top;
+    this.data.push([relativePosX,relativePosY]);
+    this.polyline.plot(this.data);
+  }
 }

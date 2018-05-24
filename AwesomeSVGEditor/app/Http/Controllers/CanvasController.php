@@ -81,7 +81,7 @@ class CanvasController extends Controller
     {
       $canvas = CanvasController::validateAccessRights($id);
       if($canvas != false){
-        return response('<svg version="1.1" xmlns="http://www.w3.org/2000/svg">'.$canvas->code)
+        return response($canvas->code)
               ->header('Content-Type', 'image/svg+xml')
               ->header('Content-Disposition', 'attachment')
               ->header('filename', 'image.svg');
@@ -125,7 +125,7 @@ class CanvasController extends Controller
      *
      * @return \ a sanitized SVG or FALSE if an error occured
      */
-    private static function sanitise($svg)
+    public static function sanitise($svg)
     {
       // Create a new sanitizer instance
       $sanitizer = new Sanitizer();

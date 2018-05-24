@@ -119,7 +119,7 @@ class EventManager
     $('#pen').on('click',function(){
       $('#tools a').removeClass("active");
       $(this).addClass("active");
-      //TODO connect to the right element
+      canvas.dynAddPolyLine();
     });
     $('#rectangle').on('click',function(){
       $('#tools a').removeClass("active");

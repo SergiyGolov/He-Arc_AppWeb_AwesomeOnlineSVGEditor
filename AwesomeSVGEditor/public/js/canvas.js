@@ -133,6 +133,9 @@ class Canvas
       case this.modesEnum.rectangle:
       this.shape=new Rectangle(this,this.mouseX, this.mouseY, 1, 1);
       break;
+      case this.modesEnum.pen:
+      this.shape=new Pen(this,this.mouseX, this.mouseY, this.mouseX+1, this.mouseY+1);
+      break;
       case this.modesEnum.line:
       this.shape=new Line(this,this.mouseX, this.mouseY, this.mouseX+1, this.mouseY+1);
       break;
@@ -155,6 +158,11 @@ class Canvas
   dynAddLine()
   {
     this.mode = this.modesEnum.line;
+  }
+
+  dynAddPolyLine()
+  {
+    this.mode = this.modesEnum.pen;
   }
 
   dynAddCircle()
