@@ -140,10 +140,24 @@
                   <ellipse class="fill" fill="none" stroke="none" cx="256" cy="150" rx="256" ry="150"></ellipse>
                 </svg>
               </a>
+              <a id="erase">
+                <svg version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+                	viewBox="0 0 900.5 900.5" style="enable-background:new 0 0 900.5 900.5;" xml:space="preserve"
+                	>
+                <g>
+                	<path class="fill" fill="#020202" d="M176.415,880.5c0,11.046,8.954,20,20,20h507.67c11.046,0,20-8.954,20-20V232.487h-547.67V880.5L176.415,880.5z
+                		 M562.75,342.766h75v436.029h-75V342.766z M412.75,342.766h75v436.029h-75V342.766z M262.75,342.766h75v436.029h-75V342.766z"/>
+                	<path class="fill" fill="#020202" d="M618.825,91.911V20c0-11.046-8.954-20-20-20h-297.15c-11.046,0-20,8.954-20,20v71.911v12.5v12.5H141.874
+                		c-11.046,0-20,8.954-20,20v50.576c0,11.045,8.954,20,20,20h34.541h547.67h34.541c11.046,0,20-8.955,20-20v-50.576
+                		c0-11.046-8.954-20-20-20H618.825v-12.5V91.911z M543.825,112.799h-187.15v-8.389v-12.5V75h187.15v16.911v12.5V112.799z"/>
+                </g>
+                </svg>
+              </a>
+
               <a id="color-picker">
                 <svg version="1.1" id="svg-rectangle" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
-                	 viewBox="0 0 96 96" xml:space="preserve">
-                	<rect id="fill-color" class="fill-color" fill="#f00" width="64" height="64"/>
+                   viewBox="0 0 96 96" xml:space="preserve">
+                  <rect id="fill-color" class="fill-color" fill="#f00" width="64" height="64"/>
                   <g id="stroke-color">
                     <rect class="stroke-color" stroke="#fff" stroke-width="1" fill="#0f0" x="32" y="32" width="64" height="64"/>
                     <rect id="background-color" stroke="#fff" stroke-width="1" x="52" y="52" width="24" height="24"/>
@@ -151,13 +165,12 @@
                   <use id="color-mode" xlink:href="#fill-color"/>
                 </svg>
               </a>
-              <input type="button" id="erase" value="Erase">
+
               <input type="number" id="strokeWidth" min=0 value=1>
 
-              <!-- Hidden color picker -->
+              <!-- Hidden color picker, don't remove those lines -->
               <input type="color" id="fillColor" class="invisible">
               <input type="color" id="strokeColor" class="invisible">
-              </ul>
             </div>
             <div id="canvas">
               <div id="svgEditor"></div>
