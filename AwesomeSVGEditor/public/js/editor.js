@@ -7,7 +7,12 @@ class EventManager
     this.save=function(){
       canvas.draw.defs().remove();
       $('#svgEditor svg').removeAttr('xmlns:svgjs'); //Suppression d'un attribut qui est dupliqué
+
+      let detached=$('#svgEditor').find(':hidden').detach();
+
       $('#code').val($('#svgEditor').html()); // TODO ne pas passer par l'élément DOM
+
+      $('#svgEditor svg').append(detached);
 
       let name = $('#name').val();
       let code = $('#code').val();
@@ -108,7 +113,6 @@ class EventManager
     $('#pointer').on('click',function(){
       $('#tools a').removeClass("active");
       $(this).addClass("active");
-      console.log($(this));
       canvas.startMoving();
     });
     $('#line').on('click',function(){
@@ -150,13 +154,11 @@ class EventManager
 
     $('#fillColor').on('change',function(){
       let color = $('#fillColor')[0].value;
-      console.log(color)
       $('.fill-color').attr("fill",color);
       canvas.setFillColor(color);
     });
     $('#strokeColor').on('change',function(){
       let color = $('#strokeColor')[0].value;
-      console.log(color)
       $('.stroke-color').attr("fill",color);
       canvas.setStrokeColor(color);
     })

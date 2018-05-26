@@ -4,7 +4,9 @@ class Canvas
   constructor(divId,width,height)
   {
     this.draw = SVG(divId).size(width,height);
-    this.shapes=[];
+
+    this.actions=[];
+    this.actionIndex=0;
 
     this.modesEnum=Object.freeze({
       "pointer":0,
@@ -43,7 +45,6 @@ class Canvas
         else
         {
           this.mousedown(selfCanvas.elementClick.bind(selfCanvas));
-          selfCanvas.shapes.push(this);
         }
       }
     };
@@ -70,13 +71,50 @@ class Canvas
 
   undo()
   {
-    alert("undo");
+    if(this.actionIndex>0)
+    {
+      this.actionIndex--;
+      switch(this.actions[this.actionIndex][0])
+      {
+        case this.modesEnum.pointer:
+          this.actions[this.actionIndex][1].move(this.actions[this.actionIndex][2],this.actions[this.actionIndex][3]);
+        break;
+        case this.modesEnum.pen:
+        case this.modesEnum.line:
+        case this.modesEnum.rectangle:
+        case this.modesEnum.circle:
+          this.actions[this.actionIndex][1].shape.hide();
+        break;
+        case this.modesEnum.erase:
+          this.actions[this.actionIndex][1].show();
+        break;
+      }
+    }
   }
 
   redo()
   {
-    alert("redo");
+    if(this.actionIndex<this.actions.length)
+    {
+      switch(this.actions[this.actionIndex][0])
+      {
+        case this.modesEnum.pointer:
+        this.actions[this.actionIndex][1].move(this.actions[this.actionIndex][2],this.actions[this.actionIndex][3]);
+        break;
+        case this.modesEnum.pen:
+        case this.modesEnum.line:
+        case this.modesEnum.rectangle:
+        case this.modesEnum.circle:
+        this.actions[this.actionIndex][1].shape.show()
+        break;
+        case this.modesEnum.erase:
+        this.actions[this.actionIndex][1].hide();
+        break;
+      }
+      this.actionIndex++;
+    }
   }
+
 
   elementClick(e)
   {
@@ -84,16 +122,23 @@ class Canvas
     let event = e.target || e.srcElement;
     if(this.mode == this.modesEnum.erase)
     {
-      this.shapes.splice(this.shapes.indexOf(event.instance),1);
-      event.instance.remove();
+      this.actions[this.actionIndex]=[this.modesEnum.erase,event.instance];
+      event.instance.hide();
       this.erase=false;
+      this.actionIndex++;
+      this.actions.splice(this.actionIndex,this.actions.length-this.actionIndex+1);
     }
     else if(this.mode == this.modesEnum.pointer)
     {
       this.isMoving=true;
       this.shape=event.instance;
+
+      this.actions[this.actionIndex]=[this.modesEnum.pointer,this.shape,this.shape.x(),this.shape.y()];
+      this.actionIndex++;
+      this.actions.splice(this.actionIndex,this.actions.length-this.actionIndex+1);
+      }
     }
-  }
+
 
   mouseUp(e)
   {
@@ -101,8 +146,28 @@ class Canvas
     if(this.mode == this.modesEnum.pointer)
     {
       this.isMoving=false;
+      if(this.shape!=null)this.actions[this.actionIndex]=[this.modesEnum.pointer,this.shape,this.shape.x(),this.shape.y()];
       this.shape=null;
-    }else if(this.mode > this.modesEnum.erase){
+    }
+    else if(this.mode > this.modesEnum.erase)
+    {
+      switch(this.mode)
+      {
+        case this.modesEnum.pen:
+        this.actions[this.actionIndex]=[this.modesEnum.pen,this.shape];
+        break;
+        case this.modesEnum.line:
+        this.actions[this.actionIndex]=[this.modesEnum.line,this.shape];
+        break;
+        case this.modesEnum.rectangle:
+        this.actions[this.actionIndex]=[this.modesEnum.rectangle,this.shape];
+        break;
+        case this.modesEnum.circle:
+        this.actions[this.actionIndex]=[this.modesEnum.circle,this.shape];
+        break;
+      }
+      this.actionIndex++;
+      this.actions.splice(this.actionIndex,this.actions.length-this.actionIndex+1);
       this.isDynAdding=false;
       this.shape=null;
     }
@@ -120,7 +185,8 @@ class Canvas
     else if(this.shape!=null) //dyn Adding
     {
       this.shape.mouseMove(e);
-    }else {
+    }else
+    {
       this.mouseX=relativePosX;
       this.mouseY=relativePosY;
     }
@@ -140,7 +206,7 @@ class Canvas
       this.shape=new Line(this,this.mouseX, this.mouseY, this.mouseX+1, this.mouseY+1);
       break;
       case this.modesEnum.circle:
-      this.shape=new Circle(this,this.mouseX, this.mouseY, 1);
+      this.shape=new Circle(this,this.mouseX, this.mouseY, 1,1);
       break;
     }
   }
