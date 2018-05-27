@@ -12,8 +12,8 @@
 
     <!-- Scripts -->
     <script src="{{ asset('js/app.js') }}" defer></script>
-    <script src="{{ asset('js/shapes.js') }}" defer></script>
-    <script src="{{ asset('js/canvas.js') }}" defer></script>
+    <!--<script src="{{ asset('js/shapes.js') }}" defer></script>
+    <script src="{{ asset('js/canvas.js') }}" defer></script>-->
     <script src="{{ asset('js/editor.js') }}" defer></script>
 
     <!-- Fonts -->

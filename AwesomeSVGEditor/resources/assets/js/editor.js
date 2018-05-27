@@ -1,3 +1,5 @@
+import Canvas from './canvas';
+
 //Class to connect the interface with our canvas object
 class EventManager
 {

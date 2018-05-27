@@ -1,4 +1,6 @@
-class Canvas
+import {Rectangle, Line, Pen, Circle} from './shapes';
+
+export default class Canvas
 {
 
   constructor(divId,width,height)

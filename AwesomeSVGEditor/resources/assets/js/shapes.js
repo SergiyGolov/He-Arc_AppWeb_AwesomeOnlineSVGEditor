@@ -1,4 +1,9 @@
-class Rectangle {
+// import Line from './shapes/line';
+// import Pen from './shapes/pen';
+// import Rectangle from './shapes/rectangle';
+// import Circle from './shapes/circle';
+
+export class Rectangle {
 
   constructor(canvas,posX,posY,width,height){
     this.canvas=canvas;
@@ -70,7 +75,8 @@ class Rectangle {
   }
 }
 
-class Circle {
+
+export class Circle {
 
   constructor(canvas,posX,posY,rx,ry){
     this.canvas=canvas;
@@ -101,7 +107,8 @@ class Circle {
   }
 }
 
-class Line {
+
+export class Line {
   constructor(canvas,posX,posY,posX2,posY2){
     this.canvas = canvas;
     this.shape=this.canvas.draw.line(posX, posY,posX2,posY2).stroke({ width: this.canvas.strokeWidth });
@@ -117,7 +124,7 @@ class Line {
   }
 }
 
-class Pen {
+export class Pen {
   constructor(canvas,posX,posY,posX2,posY2){
     this.canvas = canvas;
     this.data = [[posX,posY],[posX2,posY2]];
