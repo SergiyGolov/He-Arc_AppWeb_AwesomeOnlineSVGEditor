@@ -4,9 +4,11 @@
 <div class="container-fluid">
     <div class="row">
       @foreach($canvas as $key => $value)
-        <div class="col-md-6 col-sm-12 centered">
+        <div class="col-md-6 col-sm-12">
+          <div class="centered card">
             <a href="canvas/{{ $value->id }}/edit"><h2>{{ $value->name }}</h2></a>
             {!! $value->code !!}
+          </div>
         </div>
     @endforeach
     </div>

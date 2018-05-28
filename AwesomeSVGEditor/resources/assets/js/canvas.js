@@ -5,7 +5,8 @@ export default class Canvas
 
   constructor(divId,width,height)
   {
-    this.draw = SVG(divId).size(width,height);
+    //this.draw = SVG(divId).size(width,height);
+    this.draw = SVG(divId).viewbox(0,0,width,height).attr({width:width/2,height:height/2});
 
     this.actions=[];
     this.actionIndex=0;
@@ -20,9 +21,7 @@ export default class Canvas
     });
 
     this.isMoving=false;
-
     this.mode = this.modesEnum.pointer;
-
     this.shape = null;
 
     this.fillColor='#000';
@@ -52,7 +51,6 @@ export default class Canvas
     };
 
     this.draw.each(importFunction);
-
     this.shiftKey=false;
 
     $(document).keydown(function(e) {
@@ -79,16 +77,16 @@ export default class Canvas
       switch(this.actions[this.actionIndex][0])
       {
         case this.modesEnum.pointer:
-          this.actions[this.actionIndex][1].move(this.actions[this.actionIndex][2],this.actions[this.actionIndex][3]);
+        this.actions[this.actionIndex][1].move(this.actions[this.actionIndex][2],this.actions[this.actionIndex][3]);
         break;
         case this.modesEnum.pen:
         case this.modesEnum.line:
         case this.modesEnum.rectangle:
         case this.modesEnum.circle:
-          this.actions[this.actionIndex][1].shape.hide();
+        this.actions[this.actionIndex][1].shape.hide();
         break;
         case this.modesEnum.erase:
-          this.actions[this.actionIndex][1].show();
+        this.actions[this.actionIndex][1].show();
         break;
       }
     }
@@ -138,9 +136,8 @@ export default class Canvas
       this.actions[this.actionIndex]=[this.modesEnum.pointer,this.shape,this.shape.x(),this.shape.y()];
       this.actionIndex++;
       this.actions.splice(this.actionIndex,this.actions.length-this.actionIndex+1);
-      }
     }
-
+  }
 
   mouseUp(e)
   {
@@ -180,9 +177,13 @@ export default class Canvas
     e.preventDefault();
     let relativePosX=e.pageX-$('#svgEditor').children().first().offset().left;
     let relativePosY=e.pageY-$('#svgEditor').children().first().offset().top;
+    let box = this.draw.viewbox();
+    let zoom = box.zoom;
+    relativePosX /= zoom;
+    relativePosY /= zoom;
     if(this.isMoving) //if clicked on element (move mode)
     {
-      this.shape.move(relativePosX-this.shape.width()/2,relativePosY-this.shape.height()/2);
+      this.shape.move(relativePosX-this.shape.width()/2*zoom,relativePosY-this.shape.height()/2*zoom);
     }
     else if(this.shape!=null) //dyn Adding
     {

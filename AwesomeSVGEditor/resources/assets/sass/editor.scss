@@ -49,8 +49,38 @@
    background-color: $color-bg;
  }
 
+ .height-null{
+   height: 0px;
+ }
+
  #options {
-   background-color: $color-side;
+ background-color: $color-side;
+ .height-null {
+     display:flex;
+     flex-flow: row wrap;
+     color: white;
+     input {
+       width: 100%;
+       height: 100%;
+     }
+   }
+ }
+
+ #options .height-null > div{
+   width: 50%;
+   padding-top: 50%;
+   height: 0px;
+   color:red;
+   position: relative;
+ }
+
+ .aspect-ratio {
+   position: absolute;
+   top: 0;
+   left: 0;
+   bottom: 0;
+   right: 0;
+   padding: 10px;
  }
 
  a svg .fill{

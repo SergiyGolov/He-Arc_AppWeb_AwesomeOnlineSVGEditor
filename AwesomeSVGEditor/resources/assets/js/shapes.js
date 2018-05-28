@@ -21,6 +21,10 @@ export class Rectangle {
   {
     let relativePosX=e.pageX-$('#svgEditor').children().first().offset().left;
     let relativePosY=e.pageY-$('#svgEditor').children().first().offset().top;
+    let box = this.canvas.draw.viewbox();
+    let zoom = box.zoom;
+    relativePosX /= zoom;
+    relativePosY /= zoom;
     if(this.canvas.shiftKey)
     {
       if (Math.min(this.initialX,relativePosX) == this.initialX  && Math.min(this.initialY,relativePosY) == this.initialY) // cadran bas droite
@@ -92,6 +96,10 @@ export class Circle {
   {
     let relativePosX=e.pageX-$('#svgEditor').children().first().offset().left;
     let relativePosY=e.pageY-$('#svgEditor').children().first().offset().top;
+    let box = this.canvas.draw.viewbox();
+    let zoom = box.zoom;
+    relativePosX /= zoom;
+    relativePosY /= zoom;
 
     if(this.canvas.shiftKey)
     {
@@ -120,7 +128,9 @@ export class Line {
   {
     let x2=this.shape.node.x2.baseVal.value;
     let y2=this.shape.node.y2.baseVal.value;
-    this.shape.plot(this.canvas.mouseX,  this.canvas.mouseY,x2+e.movementX,y2+e.movementY);
+    let box = this.canvas.draw.viewbox();
+    let zoom = box.zoom;
+    this.shape.plot(this.canvas.mouseX,  this.canvas.mouseY,x2+e.movementX/zoom,y2+e.movementY/zoom);
   }
 }
 
@@ -137,6 +147,10 @@ export class Pen {
   {
     let relativePosX=e.pageX-$('#svgEditor').children().first().offset().left;
     let relativePosY=e.pageY-$('#svgEditor').children().first().offset().top;
+    let box = this.canvas.draw.viewbox();
+    let zoom = box.zoom;
+    relativePosX /= zoom;
+    relativePosY /= zoom;
     this.data.push([relativePosX,relativePosY]);
     this.shape.plot(this.data);
   }

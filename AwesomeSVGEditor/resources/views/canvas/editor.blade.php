@@ -12,8 +12,6 @@
 
     <!-- Scripts -->
     <script src="{{ asset('js/app.js') }}" defer></script>
-    <!--<script src="{{ asset('js/shapes.js') }}" defer></script>
-    <script src="{{ asset('js/canvas.js') }}" defer></script>-->
     <script src="{{ asset('js/editor.js') }}" defer></script>
 
     <!-- Fonts -->
@@ -61,7 +59,6 @@
                                 </a>
                             </div>
                         </li>
-
                     </ul>
                     <span class="navbar-nav whitetext"><input type="checkbox" id="visibility"><label for="visibility">publicly visible</label></span>
                     <ul class="navbar-nav mx-auto">
@@ -176,7 +173,13 @@
               <div id="svgEditor"></div>
             </div>
             <div id="options">
-              <a id="save" href="#" class="btn btn-lg btn-outline-danger">Save</a>
+              <div class="height-null">
+                <div id="width"><div class="aspect-ratio"><input type="number" value="500"/></div></div>
+                <div id="height"><div class="aspect-ratio"><input type="number" value="600"/></div></div>
+                <div id="width"><div class="aspect-ratio"><input type="number" value="200"/></div></div>
+                <div id="width"><div class="aspect-ratio"><input type="number" value="100"/></div></div>
+                <a id="save" href="#" class="btn btn-lg btn-outline-danger">Save</a>
+              <div>
             </div>
             <div class="hidden-data"></div>
             <div class="hidden-data">
