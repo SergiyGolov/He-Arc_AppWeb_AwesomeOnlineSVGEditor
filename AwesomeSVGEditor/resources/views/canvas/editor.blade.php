@@ -68,6 +68,8 @@
                       &nbsp;<button id="title-edit" class="btn btn-sm">
                         <span>Edit</span>
                       </button>
+
+                      <a id="save" href="#" class="btn btn-lg btn-outline-danger">Save</a>
                     </ul>
 
                     <!-- Right Side Of Navbar -->
@@ -174,11 +176,36 @@
             </div>
             <div id="options">
               <div class="height-null">
-                <div id="width"><div class="aspect-ratio"><input type="number" value="500"/></div></div>
-                <div id="height"><div class="aspect-ratio"><input type="number" value="600"/></div></div>
-                <div id="width"><div class="aspect-ratio"><input type="number" value="200"/></div></div>
-                <div id="width"><div class="aspect-ratio"><input type="number" value="100"/></div></div>
-                <a id="save" href="#" class="btn btn-lg btn-outline-danger">Save</a>
+                <div id="width">
+                  <div class="aspect-ratio">
+                    <label>Width</label>
+                    <input type="number" value="500"/>
+                  </div>
+                </div>
+                <div id="height">
+                  <div class="aspect-ratio">
+                    <label>Height</label>
+                    <input type="number" value="500"/>
+                  </div>
+                </div>
+                <div id="x">
+                  <div class="aspect-ratio">
+                    <label>X</label>
+                    <input type="number" value="500"/>
+                  </div>
+                </div>
+                <div id="y">
+                  <div class="aspect-ratio">
+                    <label>Y</label>
+                    <input type="number" value="500"/>
+                  </div>
+                </div>
+                <div id="color">
+                  <div class="aspect-ratio">
+                    <label>Color</label>
+                    <input type="color" value="500"/>
+                  </div>
+                </div>
               <div>
             </div>
             <div class="hidden-data"></div>
