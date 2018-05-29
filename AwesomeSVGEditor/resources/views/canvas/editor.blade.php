@@ -175,6 +175,7 @@
               <div id="svgEditor"></div>
             </div>
             <div id="options">
+              <h5 id="option-select">Canvas</h5>
               <div class="height-null">
                 <div id="width">
                   <div class="aspect-ratio">
@@ -200,6 +201,30 @@
                     <input type="number" value="500"/>
                   </div>
                 </div>
+                <div id="x1">
+                  <div class="aspect-ratio">
+                    <label>X1</label>
+                    <input type="number" value="500"/>
+                  </div>
+                </div>
+                <div id="y1">
+                  <div class="aspect-ratio">
+                    <label>Y1</label>
+                    <input type="number" value="500"/>
+                  </div>
+                </div>
+                <div id="x2">
+                  <div class="aspect-ratio">
+                    <label>X2</label>
+                    <input type="number" value="500"/>
+                  </div>
+                </div>
+                <div id="y2">
+                  <div class="aspect-ratio">
+                    <label>Y2</label>
+                    <input type="number" value="500"/>
+                  </div>
+                </div>
                 <div id="color">
                   <div class="aspect-ratio">
                     <label>Color</label>
@@ -221,10 +246,11 @@
 
             </div>
           </div>
-          @component('canvas.partial.modal', ['canvas' => isset($canvas)?$canvas:null])
-              You are not allowed to access this resource!
-          @endcomponent
-        </main>
+        </div>
+        @component('canvas.partial.modal', ['canvas' => isset($canvas)?$canvas:null])
+            You are not allowed to access this resource!
+        @endcomponent
+      </main>
     </div>
 </body>
 </html>

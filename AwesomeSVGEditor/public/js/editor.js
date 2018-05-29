@@ -470,11 +470,14 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
 
 
+var options = ['x', 'y', 'width', 'height', 'x1', 'y1', 'x2', 'y2', 'color'];
+
 var Canvas = function () {
   function Canvas(divId, width, height) {
     _classCallCheck(this, Canvas);
 
     //this.draw = SVG(divId).size(width,height);
+    this.supportedActions = ['width', 'height'];
     this.draw = SVG(divId).viewbox(0, 0, width, height).attr({ width: width / 2, height: height / 2 });
 
     this.actions = [];
@@ -504,7 +507,7 @@ var Canvas = function () {
     this.draw.mousemove(this.mouseMove.bind(this));
     this.draw.mousedown(this.mouseDown.bind(this));
 
-    var selfCanvas = this; //désolé de nouveau, mais fallait que j'y accéde depuis un callback du eventManager
+    var selfCanvas = this;
     var importFunction = function importFunction() {
       //à revoir pour les groupes svg
       if (this.type != "defs") {
@@ -531,10 +534,27 @@ var Canvas = function () {
         selfCanvas.shiftKey = false;
       }
     });
+
+    //Init des connections
+    for (var option in options) {
+      //$('#'+options[option]).on('change');
+      // TODO Init connect to be able to recover events
+    }
+    this.manageOption(this);
   }
 
   _createClass(Canvas, [{
-    key: "undo",
+    key: 'manageOption',
+    value: function manageOption(object) {
+      for (var option in options) {
+        $('#' + options[option]).hide();
+      }
+      for (var _option in object.supportedActions) {
+        $('#' + object.supportedActions[_option]).show();
+      }
+    }
+  }, {
+    key: 'undo',
     value: function undo() {
       if (this.actionIndex > 0) {
         this.actionIndex--;
@@ -555,7 +575,7 @@ var Canvas = function () {
       }
     }
   }, {
-    key: "redo",
+    key: 'redo',
     value: function redo() {
       if (this.actionIndex < this.actions.length) {
         switch (this.actions[this.actionIndex][0]) {
@@ -576,7 +596,7 @@ var Canvas = function () {
       }
     }
   }, {
-    key: "elementClick",
+    key: 'elementClick',
     value: function elementClick(e) {
       e.preventDefault();
       var event = e.target || e.srcElement;
@@ -589,6 +609,10 @@ var Canvas = function () {
       } else if (this.mode == this.modesEnum.pointer) {
         this.isMoving = true;
         this.shape = event.instance;
+        console.log(this.shape);
+        {
+          this.manageOption(this.shape);
+        }
 
         this.actions[this.actionIndex] = [this.modesEnum.pointer, this.shape, this.shape.x(), this.shape.y()];
         this.actionIndex++;
@@ -596,7 +620,7 @@ var Canvas = function () {
       }
     }
   }, {
-    key: "mouseUp",
+    key: 'mouseUp',
     value: function mouseUp(e) {
       e.preventDefault();
       if (this.mode == this.modesEnum.pointer) {
@@ -625,7 +649,7 @@ var Canvas = function () {
       }
     }
   }, {
-    key: "mouseMove",
+    key: 'mouseMove',
     value: function mouseMove(e) {
       e.preventDefault();
       var relativePosX = e.pageX - $('#svgEditor').children().first().offset().left;
@@ -646,7 +670,7 @@ var Canvas = function () {
       }
     }
   }, {
-    key: "mouseDown",
+    key: 'mouseDown',
     value: function mouseDown() {
       switch (this.mode) {
         case this.modesEnum.rectangle:
@@ -664,49 +688,49 @@ var Canvas = function () {
       }
     }
   }, {
-    key: "startMoving",
+    key: 'startMoving',
     value: function startMoving() {
       this.mode = this.modesEnum.pointer;
     }
   }, {
-    key: "dynAddRectangle",
+    key: 'dynAddRectangle',
     value: function dynAddRectangle() {
       this.mode = this.modesEnum.rectangle;
     }
   }, {
-    key: "dynAddLine",
+    key: 'dynAddLine',
     value: function dynAddLine() {
       this.mode = this.modesEnum.line;
     }
   }, {
-    key: "dynAddPolyLine",
+    key: 'dynAddPolyLine',
     value: function dynAddPolyLine() {
       this.mode = this.modesEnum.pen;
     }
   }, {
-    key: "dynAddCircle",
+    key: 'dynAddCircle',
     value: function dynAddCircle() {
       this.mode = this.modesEnum.circle;
     }
   }, {
-    key: "startErase",
+    key: 'startErase',
     value: function startErase() {
       this.mode = this.modesEnum.erase;
     }
   }, {
-    key: "setFillColor",
+    key: 'setFillColor',
     value: function setFillColor(color) //color format: string: '#RGB' R,G and B from '0' to 'F'
     {
       this.fillColor = color;
     }
   }, {
-    key: "setStrokeColor",
+    key: 'setStrokeColor',
     value: function setStrokeColor(color) //color format: string: '#RGB' R,G and B from '0' to 'F'
     {
       this.strokeColor = color;
     }
   }, {
-    key: "setStrokeWidth",
+    key: 'setStrokeWidth',
     value: function setStrokeWidth(width) {
       this.strokeWidth = width;
     }
@@ -731,15 +755,12 @@ var _createClass = function () { function defineProperties(target, props) { for 
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-// import Line from './shapes/line';
-// import Pen from './shapes/pen';
-// import Rectangle from './shapes/rectangle';
-// import Circle from './shapes/circle';
-
 var Rectangle = function () {
   function Rectangle(canvas, posX, posY, width, height) {
     _classCallCheck(this, Rectangle);
 
+    this.supportedActions = ['x', 'y', 'width', 'height'];
+    this.action;
     this.canvas = canvas;
     this.shape = this.canvas.draw.rect(width, height).stroke({ width: this.canvas.strokeWidth });
     this.shape.move(posX, posY);
@@ -809,6 +830,7 @@ var Circle = function () {
   function Circle(canvas, posX, posY, rx, ry) {
     _classCallCheck(this, Circle);
 
+    this.supportedActions = ['x', 'y'];
     this.canvas = canvas;
     this.shape = this.canvas.draw.ellipse(rx, ry).stroke({ width: this.canvas.strokeWidth });
     this.shape.move(posX, posY);
@@ -847,6 +869,7 @@ var Line = function () {
   function Line(canvas, posX, posY, posX2, posY2) {
     _classCallCheck(this, Line);
 
+    this.supportedActions = ['x1', 'y1', 'x2', 'y2'];
     this.canvas = canvas;
     this.shape = this.canvas.draw.line(posX, posY, posX2, posY2).stroke({ width: this.canvas.strokeWidth });
     this.shape.stroke(this.canvas.strokeColor);
@@ -871,6 +894,7 @@ var Pen = function () {
   function Pen(canvas, posX, posY, posX2, posY2) {
     _classCallCheck(this, Pen);
 
+    this.supportedActions = [];
     this.canvas = canvas;
     this.data = [[posX, posY], [posX2, posY2]];
     this.shape = this.canvas.draw.polyline(this.data).fill('none').stroke({ width: this.canvas.strokeWidth });

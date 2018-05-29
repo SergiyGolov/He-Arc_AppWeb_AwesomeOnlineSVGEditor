@@ -1,11 +1,14 @@
 import {Rectangle, Line, Pen, Circle} from './shapes';
 
+
+let options = ['x','y','width','height','x1','y1','x2','y2','color'];
 export default class Canvas
 {
 
   constructor(divId,width,height)
   {
     //this.draw = SVG(divId).size(width,height);
+    this.supportedActions = ['width','height'];
     this.draw = SVG(divId).viewbox(0,0,width,height).attr({width:width/2,height:height/2});
 
     this.actions=[];
@@ -35,7 +38,7 @@ export default class Canvas
     this.draw.mousemove(this.mouseMove.bind(this));
     this.draw.mousedown(this.mouseDown.bind(this));
 
-    let selfCanvas = this; //désolé de nouveau, mais fallait que j'y accéde depuis un callback du eventManager
+    let selfCanvas = this;
     let importFunction=function(){ //à revoir pour les groupes svg
       if(this.type!="defs")
       {
@@ -67,6 +70,23 @@ export default class Canvas
         selfCanvas.shiftKey=false;
       }
     });
+
+    //Init des connections
+    for(let option in options){
+      //$('#'+options[option]).on('change');
+      // TODO Init connect to be able to recover events
+    }
+    this.manageOption(this);
+  }
+
+  manageOption(object)
+  {
+    for(let option in options){
+      $('#'+options[option]).hide();
+    }
+    for(let option in object.supportedActions){
+      $('#'+object.supportedActions[option]).show();
+    }
   }
 
   undo()
@@ -132,6 +152,10 @@ export default class Canvas
     {
       this.isMoving=true;
       this.shape=event.instance;
+      console.log(this.shape);
+      {
+        this.manageOption(this.shape);
+      }
 
       this.actions[this.actionIndex]=[this.modesEnum.pointer,this.shape,this.shape.x(),this.shape.y()];
       this.actionIndex++;

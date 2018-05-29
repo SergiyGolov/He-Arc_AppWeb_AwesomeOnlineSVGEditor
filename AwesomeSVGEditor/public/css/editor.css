@@ -61,6 +61,7 @@
 }
 
 #options {
+  color: white;
   background-color: #24292E;
   padding: 5px;
 }
@@ -78,6 +79,10 @@
 
 #options .height-null input {
   width: 100%;
+}
+
+#options #option-select {
+  padding-left: 5px;
 }
 
 #options .height-null > div {
