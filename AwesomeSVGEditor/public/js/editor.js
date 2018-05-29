@@ -471,13 +471,20 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
 
 var options = ['x', 'y', 'width', 'height', 'x1', 'y1', 'x2', 'y2', 'color'];
+var optionsType = {
+  'canvas': ['width', 'height'],
+  'rect': ['x', 'y', 'width', 'height'],
+  'ellipse': ['x', 'y'],
+  'polyline': [],
+  'line': ['x1', 'y1', 'x2', 'y2']
+};
 
 var Canvas = function () {
   function Canvas(divId, width, height) {
     _classCallCheck(this, Canvas);
 
+    this.type = "canvas";
     //this.draw = SVG(divId).size(width,height);
-    this.supportedActions = ['width', 'height'];
     this.draw = SVG(divId).viewbox(0, 0, width, height).attr({ width: width / 2, height: height / 2 });
 
     this.actions = [];
@@ -549,8 +556,8 @@ var Canvas = function () {
       for (var option in options) {
         $('#' + options[option]).hide();
       }
-      for (var _option in object.supportedActions) {
-        $('#' + object.supportedActions[_option]).show();
+      for (var _option in optionsType[object.type]) {
+        $('#' + optionsType[object.type][_option]).show();
       }
     }
   }, {
@@ -759,7 +766,7 @@ var Rectangle = function () {
   function Rectangle(canvas, posX, posY, width, height) {
     _classCallCheck(this, Rectangle);
 
-    this.supportedActions = ['x', 'y', 'width', 'height'];
+    this.type = "rect";
     this.action;
     this.canvas = canvas;
     this.shape = this.canvas.draw.rect(width, height).stroke({ width: this.canvas.strokeWidth });
@@ -830,7 +837,7 @@ var Circle = function () {
   function Circle(canvas, posX, posY, rx, ry) {
     _classCallCheck(this, Circle);
 
-    this.supportedActions = ['x', 'y'];
+    this.type = "ellipse";
     this.canvas = canvas;
     this.shape = this.canvas.draw.ellipse(rx, ry).stroke({ width: this.canvas.strokeWidth });
     this.shape.move(posX, posY);
@@ -869,7 +876,7 @@ var Line = function () {
   function Line(canvas, posX, posY, posX2, posY2) {
     _classCallCheck(this, Line);
 
-    this.supportedActions = ['x1', 'y1', 'x2', 'y2'];
+    this.type = "line";
     this.canvas = canvas;
     this.shape = this.canvas.draw.line(posX, posY, posX2, posY2).stroke({ width: this.canvas.strokeWidth });
     this.shape.stroke(this.canvas.strokeColor);
@@ -894,7 +901,7 @@ var Pen = function () {
   function Pen(canvas, posX, posY, posX2, posY2) {
     _classCallCheck(this, Pen);
 
-    this.supportedActions = [];
+    this.type = "polyline";
     this.canvas = canvas;
     this.data = [[posX, posY], [posX2, posY2]];
     this.shape = this.canvas.draw.polyline(this.data).fill('none').stroke({ width: this.canvas.strokeWidth });

@@ -2,13 +2,21 @@ import {Rectangle, Line, Pen, Circle} from './shapes';
 
 
 let options = ['x','y','width','height','x1','y1','x2','y2','color'];
+let optionsType ={
+  'canvas':['width','height'],
+  'rect':['x','y','width','height'],
+  'ellipse':['x','y'],
+  'polyline':[],
+  'line':['x1','y1','x2','y2']
+}
+
 export default class Canvas
 {
 
   constructor(divId,width,height)
   {
+    this.type="canvas";
     //this.draw = SVG(divId).size(width,height);
-    this.supportedActions = ['width','height'];
     this.draw = SVG(divId).viewbox(0,0,width,height).attr({width:width/2,height:height/2});
 
     this.actions=[];
@@ -84,8 +92,8 @@ export default class Canvas
     for(let option in options){
       $('#'+options[option]).hide();
     }
-    for(let option in object.supportedActions){
-      $('#'+object.supportedActions[option]).show();
+    for(let option in optionsType[object.type]){
+      $('#'+optionsType[object.type][option]).show();
     }
   }
 
@@ -212,7 +220,8 @@ export default class Canvas
     else if(this.shape!=null) //dyn Adding
     {
       this.shape.mouseMove(e);
-    }else
+    }
+    else
     {
       this.mouseX=relativePosX;
       this.mouseY=relativePosY;

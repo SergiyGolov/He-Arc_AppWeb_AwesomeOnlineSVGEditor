@@ -3,7 +3,7 @@
 export class Rectangle {
 
   constructor(canvas,posX,posY,width,height){
-    this.supportedActions = ['x','y','width','height'];
+    this.type ="rect";
     this.action
     this.canvas=canvas;
     this.shape=this.canvas.draw.rect(width, height).stroke({ width: this.canvas.strokeWidth });
@@ -82,7 +82,7 @@ export class Rectangle {
 export class Circle {
 
   constructor(canvas,posX,posY,rx,ry){
-    this.supportedActions = ['x','y'];
+    this.type ="ellipse";
     this.canvas=canvas;
     this.shape=this.canvas.draw.ellipse(rx,ry).stroke({ width: this.canvas.strokeWidth });
     this.shape.move(posX,posY);
@@ -118,7 +118,7 @@ export class Circle {
 
 export class Line {
   constructor(canvas,posX,posY,posX2,posY2){
-    this.supportedActions = ['x1','y1','x2','y2'];
+    this.type ="line";
     this.canvas = canvas;
     this.shape=this.canvas.draw.line(posX, posY,posX2,posY2).stroke({ width: this.canvas.strokeWidth });
     this.shape.stroke(this.canvas.strokeColor);
@@ -137,7 +137,7 @@ export class Line {
 
 export class Pen {
   constructor(canvas,posX,posY,posX2,posY2){
-    this.supportedActions = [];
+    this.type ="polyline";
     this.canvas = canvas;
     this.data = [[posX,posY],[posX2,posY2]];
     this.shape=this.canvas.draw.polyline(this.data).fill('none').stroke({ width: this.canvas.strokeWidth });
