@@ -65,8 +65,8 @@
                       <div id="navbar-title">
                         {{ isset($canvas)?$canvas->name:'' }}
                       </div>
-                      &nbsp;<button id="title-edit" class="btn btn-sm">
-                        <span>Edit</span>
+                      <button id="title-edit" type="button" class="btn btn-default">
+                        <span class="glyphicon glyphicon-pencil"></span>
                       </button>
 
                       <a id="save" href="#" class="btn btn-lg btn-outline-danger">Save</a>
