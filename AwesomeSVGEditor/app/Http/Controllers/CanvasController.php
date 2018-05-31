@@ -19,7 +19,7 @@ class CanvasController extends Controller
 
     public function __construct()
     {
-        //$this->middleware('auth.basic');
+        //$this->middleware('auth.basic')->except(['downloadPNG', 'downloadJPG', 'validateAccessRights', 'sharded', 'index', 'sanitise', 'show']);
     }
 
     private function validateAccessRights(int $id)

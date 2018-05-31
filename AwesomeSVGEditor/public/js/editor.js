@@ -623,6 +623,7 @@ var Canvas = function () {
       for (var option in options) {
         $('#' + options[option]).hide();
       }
+      $('#option-select').text(object.type);
       for (var _option in optionsType[object.type]) {
         $('#' + optionsType[object.type][_option]).show();
 

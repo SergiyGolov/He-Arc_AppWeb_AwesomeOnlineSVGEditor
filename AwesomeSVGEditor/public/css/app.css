@@ -10619,6 +10619,11 @@ button.toast-close-button {
   }
 }
 
+.card svg {
+  width: 100%;
+  height: auto;
+}
+
 .navbar a {
   color: white;
 }

@@ -9,6 +9,11 @@
 @import '~bootstrap/scss/bootstrap';
 @import "~toastr/toastr.scss";
 
+.card svg {
+  width:100%;
+  height:auto;
+}
+
 .navbar a{
   color: white;
 }

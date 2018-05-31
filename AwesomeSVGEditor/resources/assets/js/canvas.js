@@ -12,7 +12,6 @@ let optionsType ={
 
 export default class Canvas
 {
-
   constructor(divId,width,height)
   {
     this.type="svg";
@@ -167,6 +166,7 @@ export default class Canvas
     for(let option in options){
       $('#'+options[option]).hide();
     }
+    $('#option-select').text(object.type);
     for(let option in optionsType[object.type]){
       $('#'+optionsType[object.type][option]).show();
 
