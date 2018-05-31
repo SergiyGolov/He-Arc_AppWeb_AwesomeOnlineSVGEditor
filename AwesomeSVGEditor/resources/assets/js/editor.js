@@ -34,7 +34,7 @@ class EventManager
       if(!id || id<=0 ){
         $('#id').val(0);
         $.ajax({
-          type: "POST",
+          type: "post",
           url: '/canvas',
           data: {name:name, code:code, id:id, _token:_token, visibility:visibility},
           success: function(msg) {
@@ -60,7 +60,7 @@ class EventManager
         });
       }else{
         $.ajax({
-          type: "PUT",
+          type: "put",
           url: '/canvas/'+id,
           data: {name:name, code:code, id:id, _token:_token, visibility:visibility},
           success: function(msg) {
@@ -85,7 +85,7 @@ class EventManager
 
       //new Canvas:
       $.ajax({
-        type: "POST",
+        type: "post",
         url: '/canvas',
         data: {name:name, code:code, id:id, _token:_token, visibility:visibility},
         success: function(msg) {
@@ -233,7 +233,7 @@ class EventManager
           let _token = $('input[name=_token]').val();
 
           $.ajax({
-            type: "POST",
+            type: "post",
             url: '/sanitiseAjax',
             data: {code:importedSvg, _token:_token},
             success: function(msg) {
@@ -335,7 +335,7 @@ class EventManager
               let _token = $('input[name=_token]').val();
 
               $.ajax({
-                type: "POST",
+                type: "post",
                 url: '/sanitiseAjax',
                 data: {code:importedSvg, _token:_token},
                 success: function(msg) {

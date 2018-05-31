@@ -120,7 +120,7 @@ var EventManager = function () {
       if (!id || id <= 0) {
         $('#id').val(0);
         $.ajax({
-          type: "POST",
+          type: "post",
           url: '/canvas',
           data: { name: name, code: code, id: id, _token: _token, visibility: visibility },
           success: function success(msg) {
@@ -145,7 +145,7 @@ var EventManager = function () {
         });
       } else {
         $.ajax({
-          type: "PUT",
+          type: "put",
           url: '/canvas/' + id,
           data: { name: name, code: code, id: id, _token: _token, visibility: visibility },
           success: function success(msg) {
@@ -170,7 +170,7 @@ var EventManager = function () {
 
       //new Canvas:
       $.ajax({
-        type: "POST",
+        type: "post",
         url: '/canvas',
         data: { name: name, code: code, id: id, _token: _token, visibility: visibility },
         success: function success(msg) {
@@ -317,7 +317,7 @@ var EventManager = function () {
             var _token = $('input[name=_token]').val();
 
             $.ajax({
-              type: "POST",
+              type: "post",
               url: '/sanitiseAjax',
               data: { code: importedSvg, _token: _token },
               success: function success(msg) {
@@ -411,7 +411,7 @@ var EventManager = function () {
                 var _token = $('input[name=_token]').val();
 
                 $.ajax({
-                  type: "POST",
+                  type: "post",
                   url: '/sanitiseAjax',
                   data: { code: importedSvg, _token: _token },
                   success: function success(msg) {
@@ -470,20 +470,20 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
 
 
-var options = ['x', 'y', 'width', 'height', 'x1', 'y1', 'x2', 'y2', 'color'];
+var options = ['x', 'y', 'width', 'height', 'x1', 'y1', 'x2', 'y2', 'colorFill', 'colorStroke'];
 var optionsType = {
-  'canvas': ['width', 'height'],
-  'rect': ['x', 'y', 'width', 'height'],
-  'ellipse': ['x', 'y'],
-  'polyline': [],
-  'line': ['x1', 'y1', 'x2', 'y2']
+  'svg': ['width', 'height'],
+  'rect': ['x', 'y', 'width', 'height', 'colorFill', 'colorStroke'],
+  'ellipse': ['x', 'y', 'colorFill', 'colorStroke'],
+  'polyline': ['colorStroke'],
+  'line': ['x1', 'y1', 'x2', 'y2', 'colorStroke']
 };
 
 var Canvas = function () {
   function Canvas(divId, width, height) {
     _classCallCheck(this, Canvas);
 
-    this.type = "canvas";
+    this.type = "svg";
     //this.draw = SVG(divId).size(width,height);
     this.draw = SVG(divId).viewbox(0, 0, width, height).attr({ width: width / 2, height: height / 2 });
 
@@ -502,6 +502,7 @@ var Canvas = function () {
     this.isMoving = false;
     this.mode = this.modesEnum.pointer;
     this.shape = null;
+    this.optionShape = null;
 
     this.fillColor = '#000';
     this.strokeColor = '#000';
@@ -515,6 +516,14 @@ var Canvas = function () {
     this.draw.mousedown(this.mouseDown.bind(this));
 
     var selfCanvas = this;
+
+    $("#" + divId).mousedown(function (e) {
+
+      if (e.target.nodeName == "svg") {
+        selfCanvas.manageOption(selfCanvas);
+      }
+    });
+
     var importFunction = function importFunction() {
       //à revoir pour les groupes svg
       if (this.type != "defs") {
@@ -543,9 +552,63 @@ var Canvas = function () {
     });
 
     //Init des connections
+
+    var _loop = function _loop(option) {
+      $('#' + options[option]).on('change', function () {
+        var isCanvas = false;
+        var optionCanvas = void 0;
+
+        if (selfCanvas.optionShape.type == "svg") {
+          optionCanvas = selfCanvas.optionShape;
+          isCanvas = true;
+        }
+        switch (options[option]) {
+          case "width":
+            if (isCanvas) {
+              optionCanvas.viewbox(0, 0, $("#widthVal").val(), $("#heightVal").val());
+              optionCanvas.width($('#' + options[option] + "Val").val());
+            } else {
+              selfCanvas.optionShape.width($('#' + options[option] + "Val").val());
+            }
+            break;
+          case "height":
+            if (isCanvas) {
+              optionCanvas.viewbox(0, 0, $("#widthVal").val(), $("#heightVal").val());
+              optionCanvas.height($('#' + options[option] + "Val").val());
+            } else {
+              selfCanvas.optionShape.height($('#' + options[option] + "Val").val());
+            }
+            break;
+          case "x":
+            selfCanvas.optionShape.x($('#' + options[option] + "Val").val());
+            break;
+          case "y":
+            selfCanvas.optionShape.y($('#' + options[option] + "Val").val());
+            break;
+          case "x1":
+            selfCanvas.optionShape.x1($('#' + options[option] + "Val").val());
+            break;
+          case "y1":
+            selfCanvas.optionShape.y1($('#' + options[option] + "Val").val());
+            break;
+          case "x2":
+            selfCanvas.optionShape.x2($('#' + options[option] + "Val").val());
+            break;
+          case "y2":
+            selfCanvas.optionShape.y2($('#' + options[option] + "Val").val());
+            break;
+          case "colorStroke":
+            selfCanvas.optionShape.stroke($('#colorStrokeVal')[0].value);
+            break;
+          case "colorFill":
+            selfCanvas.optionShape.fill($('#colorFillVal')[0].value);
+            break;
+        }
+      });
+    };
+
     for (var option in options) {
-      //$('#'+options[option]).on('change');
-      // TODO Init connect to be able to recover events
+      _loop(option);
     }
     this.manageOption(this);
   }
@@ -553,12 +616,51 @@ var Canvas = function () {
   _createClass(Canvas, [{
     key: 'manageOption',
     value: function manageOption(object) {
+      this.optionShape = object;
+      if (this.optionShape.type == "svg") {
+        this.optionShape = this.optionShape.draw;
+      }
       for (var option in options) {
         $('#' + options[option]).hide();
       }
       for (var _option in optionsType[object.type]) {
         $('#' + optionsType[object.type][_option]).show();
+
+        switch (optionsType[object.type][_option]) {
+          case "width":
+            $('#' + optionsType[object.type][_option] + "Val").val(this.optionShape.width());
+            break;
+          case "height":
+            $('#' + optionsType[object.type][_option] + "Val").val(this.optionShape.height());
+            break;
+          case "x":
+            $('#' + optionsType[object.type][_option] + "Val").val(this.optionShape.x());
+            break;
+          case "y":
+            $('#' + optionsType[object.type][_option] + "Val").val(this.optionShape.y());
+            break;
+          case "x1":
+            $('#' + optionsType[object.type][_option] + "Val").val(this.optionShape.plot().value['0']['0']);
+            break;
+          case "y1":
+            $('#' + optionsType[object.type][_option] + "Val").val(this.optionShape.plot().value['0']['1']);
+            break;
+          case "x2":
+            $('#' + optionsType[object.type][_option] + "Val").val(this.optionShape.plot().value['1']['0']);
+            break;
+          case "y2":
+            $('#' + optionsType[object.type][_option] + "Val").val(this.optionShape.plot().value['1']['1']);
+            break;
+          case "colorStroke":
+            $('#' + optionsType[object.type][_option] + "Val").val(this.optionShape._stroke);
+            break;
+          case "colorFill":
+            $('#' + optionsType[object.type][_option] + "Val").val(this.optionShape.node.attributes[7].nodeValue);
+            break;
+
+        }
       }
+      $('#option-select').html(object.type);
     }
   }, {
     key: 'undo',
@@ -616,10 +718,9 @@ var Canvas = function () {
       } else if (this.mode == this.modesEnum.pointer) {
         this.isMoving = true;
         this.shape = event.instance;
-        console.log(this.shape);
-        {
-          this.manageOption(this.shape);
-        }
+        //console.log(this.shape);
+
+        this.manageOption(this.shape);
 
         this.actions[this.actionIndex] = [this.modesEnum.pointer, this.shape, this.shape.x(), this.shape.y()];
         this.actionIndex++;
@@ -632,7 +733,10 @@ var Canvas = function () {
       e.preventDefault();
       if (this.mode == this.modesEnum.pointer) {
         this.isMoving = false;
-        if (this.shape != null) this.actions[this.actionIndex] = [this.modesEnum.pointer, this.shape, this.shape.x(), this.shape.y()];
+        if (this.shape != null) {
+          this.actions[this.actionIndex] = [this.modesEnum.pointer, this.shape, this.shape.x(), this.shape.y()];
+          this.manageOption(this.shape);
+        }
         this.shape = null;
       } else if (this.mode > this.modesEnum.erase) {
         switch (this.mode) {
@@ -652,6 +756,8 @@ var Canvas = function () {
         this.actionIndex++;
         this.actions.splice(this.actionIndex, this.actions.length - this.actionIndex + 1);
         this.isDynAdding = false;
+        //console.log(this.shape.shape)
+        this.manageOption(this.shape.shape);
         this.shape = null;
       }
     }
@@ -886,11 +992,11 @@ var Line = function () {
   _createClass(Line, [{
     key: 'mouseMove',
     value: function mouseMove(e) {
-      var x2 = this.shape.node.x2.baseVal.value;
-      var y2 = this.shape.node.y2.baseVal.value;
+      var relativePosX = e.pageX - $('#svgEditor').children().first().offset().left;
+      var relativePosY = e.pageY - $('#svgEditor').children().first().offset().top;
       var box = this.canvas.draw.viewbox();
       var zoom = box.zoom;
-      this.shape.plot(this.canvas.mouseX, this.canvas.mouseY, x2 + e.movementX / zoom, y2 + e.movementY / zoom);
+      this.shape.plot(this.canvas.mouseX, this.canvas.mouseY, relativePosX / zoom, relativePosY / zoom);
     }
   }]);
 

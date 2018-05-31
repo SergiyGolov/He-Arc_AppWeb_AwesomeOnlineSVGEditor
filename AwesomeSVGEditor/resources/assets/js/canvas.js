@@ -1,13 +1,13 @@
 import {Rectangle, Line, Pen, Circle} from './shapes';
 
 
-let options = ['x','y','width','height','x1','y1','x2','y2','color'];
+let options = ['x','y','width','height','x1','y1','x2','y2','colorFill','colorStroke'];
 let optionsType ={
-  'canvas':['width','height'],
-  'rect':['x','y','width','height'],
-  'ellipse':['x','y'],
-  'polyline':[],
-  'line':['x1','y1','x2','y2']
+  'svg':['width','height'],
+  'rect':['x','y','width','height','colorFill','colorStroke'],
+  'ellipse':['x','y','colorFill','colorStroke'],
+  'polyline':['colorStroke'],
+  'line':['x1','y1','x2','y2','colorStroke']
 }
 
 export default class Canvas
@@ -15,7 +15,7 @@ export default class Canvas
 
   constructor(divId,width,height)
   {
-    this.type="canvas";
+    this.type="svg";
     //this.draw = SVG(divId).size(width,height);
     this.draw = SVG(divId).viewbox(0,0,width,height).attr({width:width/2,height:height/2});
 
@@ -34,6 +34,7 @@ export default class Canvas
     this.isMoving=false;
     this.mode = this.modesEnum.pointer;
     this.shape = null;
+    this.optionShape=null;
 
     this.fillColor='#000';
     this.strokeColor='#000';
@@ -46,7 +47,19 @@ export default class Canvas
     this.draw.mousemove(this.mouseMove.bind(this));
     this.draw.mousedown(this.mouseDown.bind(this));
 
+
+
+
     let selfCanvas = this;
+
+    $( "#"+divId ).mousedown(function(e) {
+
+      if(e.target.nodeName=="svg" )
+      {
+        selfCanvas.manageOption(selfCanvas);
+      }
+    });
+
     let importFunction=function(){ //à revoir pour les groupes svg
       if(this.type!="defs")
       {
@@ -81,20 +94,121 @@ export default class Canvas
 
     //Init des connections
     for(let option in options){
-      //$('#'+options[option]).on('change');
-      // TODO Init connect to be able to recover events
+      $('#'+options[option]).on('change',function(){
+        let isCanvas=false;
+        let optionCanvas;
+
+        if(selfCanvas.optionShape.type=="svg")
+        {
+          optionCanvas=selfCanvas.optionShape;
+          isCanvas=true;
+        }
+        switch(options[option])
+        {
+          case "width":
+          if(isCanvas)
+          {
+            optionCanvas.viewbox(0,0,$("#widthVal").val(),$("#heightVal").val());
+            optionCanvas.width($('#'+options[option]+"Val").val());
+          }
+          else
+          {
+            selfCanvas.optionShape.width($('#'+options[option]+"Val").val());
+          }
+          break;
+          case "height":
+          if(isCanvas)
+          {
+            optionCanvas.viewbox(0,0,$("#widthVal").val(),$("#heightVal").val());
+            optionCanvas.height($('#'+options[option]+"Val").val());
+          }
+          else
+          {
+            selfCanvas.optionShape.height($('#'+options[option]+"Val").val());
+          }
+          break;
+          case "x":
+          selfCanvas.optionShape.x($('#'+options[option]+"Val").val());
+          break;
+          case "y":
+          selfCanvas.optionShape.y($('#'+options[option]+"Val").val());
+          break;
+          case "x1":
+          selfCanvas.optionShape.x1($('#'+options[option]+"Val").val());
+          break;
+          case "y1":
+          selfCanvas.optionShape.y1($('#'+options[option]+"Val").val());
+          break;
+          case "x2":
+          selfCanvas.optionShape.x2($('#'+options[option]+"Val").val());
+          break;
+          case "y2":
+          selfCanvas.optionShape.y2($('#'+options[option]+"Val").val());
+          break;
+          case "colorStroke":
+          selfCanvas.optionShape.stroke($('#colorStrokeVal')[0].value);
+          break;
+          case "colorFill":
+          selfCanvas.optionShape.fill($('#colorFillVal')[0].value);
+          break;
+        }
+      });
     }
     this.manageOption(this);
   }
 
   manageOption(object)
   {
+    this.optionShape=object;
+    if(this.optionShape.type=="svg")
+    {
+      this.optionShape=this.optionShape.draw;
+    }
     for(let option in options){
       $('#'+options[option]).hide();
     }
     for(let option in optionsType[object.type]){
       $('#'+optionsType[object.type][option]).show();
+
+      switch(optionsType[object.type][option])
+      {
+        case "width":
+        $('#'+optionsType[object.type][option]+"Val").val(this.optionShape.width());
+        break;
+        case "height":
+        $('#'+optionsType[object.type][option]+"Val").val(this.optionShape.height());
+        break;
+        case "x":
+        $('#'+optionsType[object.type][option]+"Val").val(this.optionShape.x());
+        break;
+        case "y":
+        $('#'+optionsType[object.type][option]+"Val").val(this.optionShape.y());
+        break;
+        case "x1":
+        $('#'+optionsType[object.type][option]+"Val").val(this.optionShape.plot().value['0']['0']);
+        break;
+        case "y1":
+        $('#'+optionsType[object.type][option]+"Val").val(this.optionShape.plot().value['0']['1']);
+        break;
+        case "x2":
+        $('#'+optionsType[object.type][option]+"Val").val(this.optionShape.plot().value['1']['0']);
+        break;
+        case "y2":
+        $('#'+optionsType[object.type][option]+"Val").val(this.optionShape.plot().value['1']['1']);
+        break;
+        case "colorStroke":
+        $('#'+optionsType[object.type][option]+"Val").val(this.optionShape._stroke);
+        break;
+        case "colorFill":
+        $('#'+optionsType[object.type][option]+"Val").val(this.optionShape.node.attributes[7].nodeValue);
+        break;
+
+      }
+
     }
+    $('#option-select').html(object.type);
+
+
   }
 
   undo()
@@ -160,10 +274,10 @@ export default class Canvas
     {
       this.isMoving=true;
       this.shape=event.instance;
-      console.log(this.shape);
-      {
-        this.manageOption(this.shape);
-      }
+      //console.log(this.shape);
+
+      this.manageOption(this.shape);
+
 
       this.actions[this.actionIndex]=[this.modesEnum.pointer,this.shape,this.shape.x(),this.shape.y()];
       this.actionIndex++;
@@ -177,7 +291,11 @@ export default class Canvas
     if(this.mode == this.modesEnum.pointer)
     {
       this.isMoving=false;
-      if(this.shape!=null)this.actions[this.actionIndex]=[this.modesEnum.pointer,this.shape,this.shape.x(),this.shape.y()];
+      if(this.shape!=null)
+      {
+        this.actions[this.actionIndex]=[this.modesEnum.pointer,this.shape,this.shape.x(),this.shape.y()];
+        this.manageOption(this.shape);
+      }
       this.shape=null;
     }
     else if(this.mode > this.modesEnum.erase)
@@ -200,6 +318,8 @@ export default class Canvas
       this.actionIndex++;
       this.actions.splice(this.actionIndex,this.actions.length-this.actionIndex+1);
       this.isDynAdding=false;
+      //console.log(this.shape.shape)
+      this.manageOption(this.shape.shape);
       this.shape=null;
     }
   }

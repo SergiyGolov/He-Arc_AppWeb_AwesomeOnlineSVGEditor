@@ -180,55 +180,61 @@
                 <div id="width">
                   <div class="aspect-ratio">
                     <label>Width</label>
-                    <input type="number" value="500"/>
+                    <input type="number" value="500" id="widthVal"/>
                   </div>
                 </div>
                 <div id="height">
                   <div class="aspect-ratio">
                     <label>Height</label>
-                    <input type="number" value="500"/>
+                    <input type="number" value="500" id="heightVal"/>
                   </div>
                 </div>
                 <div id="x">
                   <div class="aspect-ratio">
                     <label>X</label>
-                    <input type="number" value="500"/>
+                    <input type="number" value="500" id="xVal"/>
                   </div>
                 </div>
                 <div id="y">
                   <div class="aspect-ratio">
                     <label>Y</label>
-                    <input type="number" value="500"/>
+                    <input type="number" value="500" id="yVal"/>
                   </div>
                 </div>
                 <div id="x1">
                   <div class="aspect-ratio">
                     <label>X1</label>
-                    <input type="number" value="500"/>
+                    <input type="number" value="500" id="x1Val"/>
                   </div>
                 </div>
                 <div id="y1">
                   <div class="aspect-ratio">
                     <label>Y1</label>
-                    <input type="number" value="500"/>
+                    <input type="number" value="500" id="y1Val"/>
                   </div>
                 </div>
                 <div id="x2">
                   <div class="aspect-ratio">
                     <label>X2</label>
-                    <input type="number" value="500"/>
+                    <input type="number" value="500" id="x2Val"/>
                   </div>
                 </div>
                 <div id="y2">
                   <div class="aspect-ratio">
                     <label>Y2</label>
-                    <input type="number" value="500"/>
+                    <input type="number" value="500" id="y2Val"/>
                   </div>
                 </div>
-                <div id="color">
+                <div id="colorStroke">
                   <div class="aspect-ratio">
-                    <label>Color</label>
-                    <input type="color" value="500"/>
+                    <label>Stroke</label>
+                    <input type="color" id="colorStrokeVal"/>
+                  </div>
+                </div>
+                <div id="colorFill">
+                  <div class="aspect-ratio">
+                    <label>Fill</label>
+                    <input type="color" id="colorFillVal"/>
                   </div>
                 </div>
               <div>

@@ -127,11 +127,11 @@ export class Line {
 
   mouseMove(e)
   {
-    let x2=this.shape.node.x2.baseVal.value;
-    let y2=this.shape.node.y2.baseVal.value;
+    let relativePosX=e.pageX-$('#svgEditor').children().first().offset().left;
+    let relativePosY=e.pageY-$('#svgEditor').children().first().offset().top;
     let box = this.canvas.draw.viewbox();
     let zoom = box.zoom;
-    this.shape.plot(this.canvas.mouseX,  this.canvas.mouseY,x2+e.movementX/zoom,y2+e.movementY/zoom);
+    this.shape.plot(this.canvas.mouseX,  this.canvas.mouseY,relativePosX/zoom,relativePosY/zoom);
   }
 }
 
