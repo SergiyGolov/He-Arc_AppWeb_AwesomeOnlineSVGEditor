@@ -3,11 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Canvas;
-use Request;
 use Response;
 use Auth;
 use Imagick;
 use ImagickPixel;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Input;
@@ -121,6 +121,18 @@ class CanvasController extends Controller
     }
 
     /**
+     * Show the form for creating a new Ressource after Log in
+     */
+    public function createPut()
+    {
+        $canvas = new Canvas();
+        $canvas->name       = Input::get('name');
+        $canvas->code       = Input::get('code');
+        $canvas->visibility = Input::get('visibility');
+        return View::make('canvas.editor', ['canvas' => $canvas]);
+    }
+
+    /**
      * Sanitise an SVG
      *
      * @return \ a sanitized SVG or FALSE if an error occured
@@ -178,7 +190,7 @@ class CanvasController extends Controller
     {
         // validate
         // read more on validation at http://laravel.com/docs/validation
-        if(Request::ajax()){
+        if ($request->ajax() || $request->wantsJson()){
             $rules = array(
                 'name'       => 'required',
                 'visibility' => 'boolean'

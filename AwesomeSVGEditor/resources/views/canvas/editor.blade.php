@@ -35,7 +35,6 @@
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
-
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
                     <!-- Left Side Of Navbar -->
                     <ul class="navbar-nav mr-auto">
@@ -76,8 +75,8 @@
                     <ul class="navbar-nav ml-auto">
                         <!-- Authentication Links -->
                         @guest
-                            <li><a class="nav-link" href="{{ route('login') }}">{{ __('Login') }}</a></li>
-                            <li><a class="nav-link" href="{{ route('register') }}">{{ __('Register') }}</a></li>
+                            <li><a id="login" class="nav-link" href="#">{{ __('Login') }}</a></li>
+                            <li><a id="register" class="nav-link" href="#">{{ __('Register') }}</a></li>
                         @else
                             <li class="nav-item dropdown">
                                 <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
@@ -110,7 +109,7 @@
                 <polygon class="fill" points="429.742,319.31 82.489,0 82.258,471.744 187.633,370.918 249.523,512 346.083,469.642 284.193,328.56"/>
                 </svg>
               </a>
-              <a id="pen"> <!-- TODO mode pinceau -->
+              <a id="pen">
                 <svg version="1.1" id="svg-pen" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
                 	 viewBox="0 0 493.638 493.638" xml:space="preserve">
                   <polygon class="fill" fill="#020202" points="427.092,118.538 99.89,445.738 90.239,436.086 417.439,108.885 358.708,50.154
@@ -241,15 +240,13 @@
             </div>
             <div class="hidden-data"></div>
             <div class="hidden-data">
-                {{ Form::open() }}
-
+                {{ Form::open(array('id' => 'form-update')) }}
                 {{ Form::text('name', isset($canvas)?$canvas->name:'', array('id' => 'name', 'class' => 'form-control')) }}
                 {{ Form::textarea('code', isset($canvas)?$canvas->code:'', array('id' => 'code', 'class' => 'form-control')) }}
                 {{ Form::hidden('id', isset($canvas)?$canvas->id:'', array('id' => 'id')) }}
                 {{ Form::checkbox('visibility',isset($canvas)?$canvas->visibility:1, isset($canvas)?$canvas->visibility?true:false:true, array('id' => 'visibility')) }}
-
+                {{ Form::submit() }}
                 {{ Form::close() }}
-
             </div>
           </div>
         </div>

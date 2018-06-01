@@ -122,6 +122,8 @@ var EventManager = function () {
         $.ajax({
           type: "post",
           url: '/canvas',
+          responseType: 'json',
+          xhrFields: { withCredentials: true },
           data: { name: name, code: code, id: id, _token: _token, visibility: visibility },
           success: function success(msg) {
             if (msg.status == 'success') {
@@ -147,6 +149,8 @@ var EventManager = function () {
         $.ajax({
           type: "put",
           url: '/canvas/' + id,
+          responseType: 'json',
+          xhrFields: { withCredentials: true },
           data: { name: name, code: code, id: id, _token: _token, visibility: visibility },
           success: function success(msg) {
             if (msg.status == 'success') {
@@ -172,6 +176,8 @@ var EventManager = function () {
       $.ajax({
         type: "post",
         url: '/canvas',
+        responseType: 'json',
+        xhrFields: { withCredentials: true },
         data: { name: name, code: code, id: id, _token: _token, visibility: visibility },
         success: function success(msg) {
           if (msg.status == 'success') {
@@ -388,7 +394,78 @@ var EventManager = function () {
       $('#strokeColor').trigger('change');
       $('#strokeWidth').trigger('change');
 
+      //Open login and register modal
+      $('#register').on('click', function (e) {
+        $('#authTab a[href="#tab-register"]').tab('show');
+        $('#modal-auth').modal('toggle');
+      });
+      $('#login').on('click', function () {
+        $('#authTab a[href="#tab-login"]').tab('show');
+        $('#modal-auth').modal('toggle');
+      });
+
+      //Save button
       $('#save').on('click', this.save);
+
+      //Loggin button
+      var authReload = function authReload() {
+        $('#svgEditor svg').removeAttr('xmlns:svgjs'); //Suppression d'un attribut qui est dupliqué
+        var detached = $('#svgEditor').find(':hidden').detach();
+        $('#code').val($('#svgEditor').html()); // TODO ne pas passer par l'élément DOM
+
+        $('#svgEditor svg').append(detached);
+        $('#form-update').attr('method', 'put');
+        $('#form-update').submit();
+      };
+
+      $('#btn-login').on('click', function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+
+        var email = $('#login-form #email').val();
+        var password = $('#login-form #password').val();
+        var _token = $('#login-form input[name=_token]').val();
+
+        $.ajax({
+          type: "post",
+          url: '/login',
+          data: { email: email, password: password, _token: _token },
+          success: function success(msg) {
+            console.log("Logged in");
+            authReload();
+          },
+          error: function error(msg) {
+            console.log(msg);
+            toastr.error('Error while login');
+          }
+        });
+      });
+      console.log("register : ");
+      console.log($('#btn-register'));
+      $('#btn-register').on('click', function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+
+        var email = $('#register-form #email').val();
+        var name = $('#register-form #name').val();
+        var password = $('#register-form #password').val();
+        var password_confirmation = $('#register-form #password-confirm').val();
+        var _token = $('#register-form input[name=_token]').val();
+        console.log({ email: email, name: name, password: password, password_confirmation: password_confirmation, _token: _token });
+        $.ajax({
+          type: "post",
+          url: '/register',
+          data: { email: email, name: name, password: password, password_confirmation: password_confirmation, _token: _token },
+          success: function success(msg) {
+            console.log("Registered");
+            authReload();
+          },
+          error: function error(msg) {
+            console.log(msg);
+            toastr.error('Error while register');
+          }
+        });
+      });
 
       //source: https://www.htmlgoodies.com/html5/javascript/drag-files-into-the-browser-from-the-desktop-using-jquery-event-binding.html
       $('#svgEditor').on({

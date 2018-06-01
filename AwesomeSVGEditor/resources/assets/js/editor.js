@@ -36,6 +36,8 @@ class EventManager
         $.ajax({
           type: "post",
           url: '/canvas',
+          responseType: 'json',
+          xhrFields: { withCredentials: true },
           data: {name:name, code:code, id:id, _token:_token, visibility:visibility},
           success: function(msg) {
             if(msg.status == 'success'){
@@ -62,6 +64,8 @@ class EventManager
         $.ajax({
           type: "put",
           url: '/canvas/'+id,
+          responseType: 'json',
+          xhrFields: { withCredentials: true },
           data: {name:name, code:code, id:id, _token:_token, visibility:visibility},
           success: function(msg) {
             if(msg.status == 'success'){
@@ -87,6 +91,8 @@ class EventManager
       $.ajax({
         type: "post",
         url: '/canvas',
+        responseType: 'json',
+        xhrFields: { withCredentials: true },
         data: {name:name, code:code, id:id, _token:_token, visibility:visibility},
         success: function(msg) {
           if(msg.status == 'success'){
@@ -311,8 +317,78 @@ class EventManager
     $('#strokeColor').trigger('change');
     $('#strokeWidth').trigger('change');
 
+    //Open login and register modal
+    $('#register').on('click',function(e){
+      $('#authTab a[href="#tab-register"]').tab('show');
+      $('#modal-auth').modal('toggle');
+    });
+    $('#login').on('click',function(){
+      $('#authTab a[href="#tab-login"]').tab('show');
+      $('#modal-auth').modal('toggle');
+    });
 
+    //Save button
     $('#save').on('click',this.save);
+
+    //Loggin button
+    let authReload = function(){
+      $('#svgEditor svg').removeAttr('xmlns:svgjs'); //Suppression d'un attribut qui est dupliqué
+      let detached=$('#svgEditor').find(':hidden').detach();
+      $('#code').val($('#svgEditor').html()); // TODO ne pas passer par l'élément DOM
+
+      $('#svgEditor svg').append(detached);
+      $('#form-update').attr('method','put');
+      $('#form-update').submit();
+    }
+
+    $('#btn-login').on('click',function(e){
+      e.preventDefault();
+      e.stopPropagation();
+
+      let email = $('#login-form #email').val();
+      let password = $('#login-form #password').val();
+      let _token = $('#login-form input[name=_token]').val();
+
+      $.ajax({
+        type: "post",
+        url: '/login',
+        data: {email:email, password:password, _token:_token},
+        success: function(msg) {
+          console.log("Logged in")
+          authReload();
+        },
+        error: function(msg){
+          console.log(msg);
+          toastr.error('Error while login');
+        }
+      });
+    });
+    console.log("register : ");
+    console.log($('#btn-register'));
+    $('#btn-register').on('click',function(e){
+      e.preventDefault();
+      e.stopPropagation();
+
+      let email = $('#register-form #email').val();
+      let name = $('#register-form #name').val();
+      let password = $('#register-form #password').val();
+      let password_confirmation = $('#register-form #password-confirm').val();
+      let _token = $('#register-form input[name=_token]').val();
+      console.log({email:email, name:name, password:password, password_confirmation:password_confirmation, _token:_token});
+      $.ajax({
+        type: "post",
+        url: '/register',
+        data: {email:email, name:name, password:password, password_confirmation:password_confirmation, _token:_token},
+        success: function(msg) {
+          console.log("Registered")
+          authReload();
+        },
+        error: function(msg){
+          console.log(msg);
+          toastr.error('Error while register');
+        }
+      });
+    });
 
     //source: https://www.htmlgoodies.com/html5/javascript/drag-files-into-the-browser-from-the-desktop-using-jquery-event-binding.html
     $('#svgEditor').on({
@@ -339,19 +415,15 @@ class EventManager
                 url: '/sanitiseAjax',
                 data: {code:importedSvg, _token:_token},
                 success: function(msg) {
-                  if(msg.status == 'success')
-                  {
+                  if(msg.status == 'success') {
                     window.eventmanager.saveNewTab(importedSvg);
-                  }
-                  else
-                  {
+                  } else {
                     toastr.error('Your imported .svg file is not valid');
                   }
                 },
                 error: function(msg){
                   console.log(msg);
                   toastr.error('Your imported .svg file is not valid');
-
                 }
               });
             };
