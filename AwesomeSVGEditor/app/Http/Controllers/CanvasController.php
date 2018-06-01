@@ -280,7 +280,7 @@ class CanvasController extends Controller
     public function update(Request $request,int $id)
     {
         //check if its our form
-        if(Request::ajax()){
+        if ($request->ajax() || $request->wantsJson()){
 
             $canvas =  Canvas::where('user_id',Auth::id())->where('id',$id)->firstOrFail();
             $rules = array(

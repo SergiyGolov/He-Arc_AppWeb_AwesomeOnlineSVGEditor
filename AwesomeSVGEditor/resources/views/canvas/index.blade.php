@@ -2,15 +2,19 @@
 
 @section('content')
 <div class="container-fluid">
-    <div class="row">
-      @foreach($canvas as $key => $value)
-        <div class="col-md-6 col-sm-12">
-          <div class="centered card">
-            <a href="canvas/{{ $value->id }}/edit"><h2>{{ $value->name }}</h2></a>
-            {!! $value->code !!}
-          </div>
+  <div class="card-columns">
+    @foreach($canvas as $key => $value)
+      <div class="card">
+        <div class="card-header d-flex justify-content-between align-items-baseline single-title">
+          <p class="invisible">By <em>{{ $value->user->name }}</em></p>
+          <a href="canvas/{{ $value->id }}"><h3>{{ $value->name }}</h3></a>
+          <p>By <em>{{ $value->user->name }}</em></p>
         </div>
+        <div class="centered">
+          {!! $value->code !!}
+        </div>
+      </div>
     @endforeach
-    </div>
+  </div>
 </div>
 @endsection

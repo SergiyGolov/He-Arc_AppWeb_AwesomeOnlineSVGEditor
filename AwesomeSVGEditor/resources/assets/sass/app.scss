@@ -9,6 +9,18 @@
 @import '~bootstrap/scss/bootstrap';
 @import "~toastr/toastr.scss";
 
+.card-columns {
+  @include media-breakpoint-only(sm) {
+    column-count: 2;
+  }
+  @include media-breakpoint-only(md) {
+    column-count: 3;
+  }
+  @include media-breakpoint-only(xl) {
+    column-count: 4;
+  }
+}
+
 .card svg {
   width:100%;
   height:auto;
@@ -76,4 +88,9 @@
 
 #app {
   overflow: hidden;
+}
+
+.single-title{
+  padding-top: 7px;
+  padding-bottom: 0;
 }
