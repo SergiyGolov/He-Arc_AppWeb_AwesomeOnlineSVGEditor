@@ -99,7 +99,7 @@ var EventManager = function () {
       $('#code').val($('#svgEditor').html()); // TODO ne pas passer par l'élément DOM
       $('#svgEditor svg').append(detached);
 
-      var name = $('#name').val();
+      var name = $('#name-canvas').val();
       var code = $('#code').val();
       var id = $('#id').val();
       var visibility = $('#visibility').prop('checked') ? 1 : 0; // Convert true/false in integer
@@ -108,7 +108,7 @@ var EventManager = function () {
 
       if (!name) {
         $('#modal-title').modal('toggle');
-        name = $('#name').val();
+        name = $('#name-canvas').val();
         if (!name) {
           return;
         }
@@ -336,8 +336,8 @@ var EventManager = function () {
 
                     case "saveopen":
                       window.eventmanager.save();
-                      $('#name').val($('#name').val() + "v2");
-                      $('#navbar-title').text($('#name').val());
+                      $('#name-canvas').val($('#name-canvas').val() + "v2");
+                      $('#navbar-title').text($('#name-canvas').val());
                       $('#id').val(-1);
 
                       $('#svgEditor').html(importedSvg);
@@ -370,7 +370,7 @@ var EventManager = function () {
 
       $('#save-modal').on('click', function () {
         var title = $('#name-modal').val();
-        $('#name').val(title);
+        $('#name-canvas').val(title);
         $('#navbar-title').text(title);
         $('#modal-title').modal('toggle');
       });
@@ -507,7 +507,7 @@ $(document).ready(function () {
   window.canvas = new __WEBPACK_IMPORTED_MODULE_0__canvas__["a" /* default */](id, 1000, 600);
   window.eventmanager = new EventManager(window.canvas);
 
-  var name = $('#name').val();
+  var name = $('#name-canvas').val();
   if (!name) {
     $('#modal-title').modal('toggle');
   }

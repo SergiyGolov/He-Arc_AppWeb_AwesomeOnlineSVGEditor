@@ -238,17 +238,17 @@
                 </div>
               <div>
             </div>
-            <div class="hidden-data"></div>
-            <div class="hidden-data">
-                {{ Form::open(array('id' => 'form-update')) }}
-                {{ Form::text('name', isset($canvas)?$canvas->name:'', array('id' => 'name', 'class' => 'form-control')) }}
-                {{ Form::textarea('code', isset($canvas)?$canvas->code:'', array('id' => 'code', 'class' => 'form-control')) }}
-                {{ Form::hidden('id', isset($canvas)?$canvas->id:'', array('id' => 'id')) }}
-                {{ Form::checkbox('visibility',isset($canvas)?$canvas->visibility:1, isset($canvas)?$canvas->visibility?true:false:true, array('id' => 'visibility')) }}
-                {{ Form::submit() }}
-                {{ Form::close() }}
-            </div>
           </div>
+        </div>
+        <div class="hidden-data"></div>
+        <div class="hidden-data">
+            {{ Form::open(array('id' => 'form-update')) }}
+            {{ Form::text('name', isset($canvas)?$canvas->name:'', array('id' => 'name-canvas', 'class' => 'form-control')) }}
+            {{ Form::textarea('code', isset($canvas)?$canvas->code:'', array('id' => 'code', 'class' => 'form-control')) }}
+            {{ Form::hidden('id', isset($canvas)?$canvas->id:'', array('id' => 'id')) }}
+            {{ Form::checkbox('visibility',isset($canvas)?$canvas->visibility:1, isset($canvas)?$canvas->visibility?true:false:true, array('id' => 'visibility')) }}
+            {{ Form::submit() }}
+            {{ Form::close() }}
         </div>
         @component('canvas.partial.modal', ['canvas' => isset($canvas)?$canvas:null])
             You are not allowed to access this resource!
