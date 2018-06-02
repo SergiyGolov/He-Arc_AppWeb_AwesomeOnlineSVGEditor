@@ -51,17 +51,16 @@ class CanvasController extends Controller
       ->header('Content-Type', 'image/png')
       ->header('Content-Disposition', 'attachment')
       ->header('filename', 'image.png');
-    }else if(Request::ajax()){
-      $response = array(
-        'status' => 'KO',
-        'msg' => 'No rights to download'
-      );
-      return Response::json($response);
     }else{
       abort(403, 'Unauthorized action.');
     }
   }
 
+  /**
+   * Access to a shared canvas
+   *
+   * @return view to this canvas
+   */
   public function shared(string $code){
     if($code != ""){
       //TODO Add migration to add share field
@@ -247,6 +246,44 @@ class CanvasController extends Controller
     }
 
     $canvas->share = '';
+    $canvas->save();
+
+    return redirect()->route('canvas.show',['id' => $id]);
+  }
+
+  /**
+  * Show the form for editing the specified resource.
+  *
+  * @param  \App\Canvas  $canvas
+  * @return \Illuminate\Http\Response
+  */
+  public function private(int $id)
+  {
+    $canvas = Canvas::findOrFail($id);
+    if($canvas->user_id != Auth::id()){
+      abort(403, 'Unauthorized action.');
+    }
+
+    $canvas->visibility = 0;
+    $canvas->save();
+
+    return redirect()->route('canvas.show',['id' => $id]);
+  }
+
+  /**
+  * Show the form for editing the specified resource.
+  *
+  * @param  \App\Canvas  $canvas
+  * @return \Illuminate\Http\Response
+  */
+  public function public(int $id)
+  {
+    $canvas = Canvas::findOrFail($id);
+    if($canvas->user_id != Auth::id()){
+      abort(403, 'Unauthorized action.');
+    }
+
+    $canvas->visibility = 1;
     $canvas->save();
 
     return redirect()->route('canvas.show',['id' => $id]);

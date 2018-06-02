@@ -125,7 +125,6 @@ var EventManager = function () {
           success: function success(msg) {
             if (msg.status == 'success') {
               toastr.success('Canvas saved successfully!');
-              console.log(msg);
               if ($('#id').val() == 0) {
                 $('#id').val(msg.id);
                 $('#svg-link').attr('href', '/canvas/' + msg.id + '/svg');
@@ -138,7 +137,6 @@ var EventManager = function () {
             }
           },
           error: function error(msg) {
-            console.log(msg);
             toastr.error('Canvas error while saving');
           }
         });
@@ -152,7 +150,6 @@ var EventManager = function () {
           success: function success(msg) {
             if (msg.status == 'success') {
               toastr.success('Canvas updated successfully!');
-              console.log(msg);
             } else {
               toastr.error('Canvas error while updating');
             }
@@ -185,7 +182,6 @@ var EventManager = function () {
           }
         },
         error: function error(msg) {
-          console.log(msg);
           toastr.error('Canvas error while importing');
         }
       });
@@ -363,7 +359,6 @@ var EventManager = function () {
                 }
               },
               error: function error(msg) {
-                console.log(msg);
                 toastr.error('Your imported .svg file is not valid');
               }
             });
@@ -426,17 +421,13 @@ var EventManager = function () {
           url: '/login',
           data: { email: email, password: password, _token: _token },
           success: function success(msg) {
-            console.log("Logged in");
             authReload();
           },
           error: function error(msg) {
-            console.log(msg);
             toastr.error('Error while login');
           }
         });
       });
-      console.log("register : ");
-      console.log($('#btn-register'));
       $('#btn-register').on('click', function (e) {
         e.preventDefault();
         e.stopPropagation();
@@ -446,17 +437,14 @@ var EventManager = function () {
         var password = $('#register-form #password').val();
         var password_confirmation = $('#register-form #password-confirm').val();
         var _token = $('#register-form input[name=_token]').val();
-        console.log({ email: email, name: name, password: password, password_confirmation: password_confirmation, _token: _token });
         $.ajax({
           type: "post",
           url: '/register',
           data: { email: email, name: name, password: password, password_confirmation: password_confirmation, _token: _token },
           success: function success(msg) {
-            console.log("Registered");
             authReload();
           },
           error: function error(msg) {
-            console.log(msg);
             toastr.error('Error while register');
           }
         });
@@ -494,7 +482,6 @@ var EventManager = function () {
                     }
                   },
                   error: function error(msg) {
-                    console.log(msg);
                     toastr.error('Your imported .svg file is not valid');
                   }
                 });
@@ -510,12 +497,12 @@ var EventManager = function () {
 }();
 
 $(document).ready(function () {
-
   toastr.options.positionClass = "toast-top-center";
 
   $('#svgEditor').html($('#code').val());
   var existingSVG = $('#svgEditor svg');
   var id = existingSVG.attr('id') || 'svgEditor';
+
   //Paramètres de taille par défault:
   window.canvas = new __WEBPACK_IMPORTED_MODULE_0__canvas__["a" /* default */](id, 1000, 600);
   window.eventmanager = new EventManager(window.canvas);

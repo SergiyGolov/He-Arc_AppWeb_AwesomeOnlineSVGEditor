@@ -21,8 +21,10 @@
         </ul>
         @if($admin)
         <div class="card-body">
-          <h3>Admin section</h3>
-          <h4 class="mt-3 mb-3">Share link</h4>
+          <h2>Admin section</h2>
+          <h4 class="mt-3 mb-3">Edit your canvas</h4>
+          <a role="button" class="btn btn-outline-primary" href="/canvas/{{ $canvas->id }}/edit">Edit</a>
+          <h4 class="mt-4 mb-3">Share link</h4>
           <div class="card">
             <ul class="list-group list-group-flush">
               <li class="list-group-item">
@@ -56,11 +58,11 @@
             <ul class="list-group list-group-flush">
               <li class="list-group-item">
                 @if($canvas->visibility == 1)
-                <button type="button" class="btn btn-outline-danger float-right">Make private</button>
+                <a role="button" class="btn btn-outline-danger float-right" href="/canvas/{{ $canvas->id }}/private">Make private</a>
                 <strong>Make this canvas private</strong>
                 <p class="card-text">Hide this repositry from the public.</p>
                 @else
-                <button type="button" class="btn btn-outline-danger float-right">Make public</button>
+                <a role="button" class="btn btn-outline-danger float-right" href="/canvas/{{ $canvas->id }}/public">Make public</a>
                 <strong>Make this canvas public</strong>
                 <p class="card-text">Make this repositry visible from the public.</p>
                 @endif

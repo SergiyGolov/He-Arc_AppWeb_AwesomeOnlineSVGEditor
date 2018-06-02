@@ -29,5 +29,7 @@ Route::get('/canvas/{id}/svg', 'CanvasController@downloadSVG');
 Route::get('/shared/{link}', 'CanvasController@shared');
 Route::get('/canvas/{id}/share', 'CanvasController@share');
 Route::get('/canvas/{id}/unshare', 'CanvasController@unshare');
+Route::get('/canvas/{id}/public', 'CanvasController@public');
+Route::get('/canvas/{id}/private', 'CanvasController@private');
 
 Route::post('/sanitiseAjax','CanvasController@sanitiseAjax');
