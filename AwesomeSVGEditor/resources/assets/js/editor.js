@@ -9,11 +9,8 @@ class EventManager
     this.save=function(){
       canvas.draw.defs().remove();
       $('#svgEditor svg').removeAttr('xmlns:svgjs'); //Suppression d'un attribut qui est dupliqué
-
       let detached=$('#svgEditor').find(':hidden').detach();
-
       $('#code').val($('#svgEditor').html()); // TODO ne pas passer par l'élément DOM
-
       $('#svgEditor svg').append(detached);
 
       let name = $('#name').val();
@@ -108,15 +105,11 @@ class EventManager
         }
       });
     }
-
     this._connect();
   }
 
-
-
   _connect(){
     let canvas = this.canvas;
-
     //Paint mode
     $('#pointer').on('click',function(){
       $('#tools a').removeClass("active");
@@ -230,7 +223,7 @@ class EventManager
     $("#fileinput").change(function (e){
       //source: https://stackoverflow.com/questions/32490959/filereader-on-input-change-jquery
       var f = e.target.files[0];
-      if (f){
+      if(f){
         var r = new FileReader();
         r.readAsText(f);
         r.onload = function(e){
@@ -290,13 +283,10 @@ class EventManager
             error: function(msg){
               console.log(msg);
               toastr.error('Your imported .svg file is not valid');
-
             }
           });
         };
-      }
-      else
-      {
+      } else {
         console.log("failed");
       }
     });

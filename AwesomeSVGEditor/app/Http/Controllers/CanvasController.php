@@ -107,7 +107,7 @@ class CanvasController extends Controller
     // List canvas
     $canvas = Canvas::where('visibility',1)->orWhere('user_id',Auth::id())->get();
 
-    return View::make('canvas.index')->with('canvas', $canvas);
+    return View::make('canvas.index',['canvas' => $canvas]);
   }
 
   /**
@@ -366,8 +366,14 @@ class CanvasController extends Controller
   * @param  \App\Canvas  $canvas
   * @return \Illuminate\Http\Response
   */
-  public function destroy(Canvas $canvas)
+  public function destroy(int $id)
   {
-    // TODO delete canvas
+    $canvas =  Canvas::where('user_id',Auth::id())->where('id',$id)->firstOrFail();
+    if($canvas == null){
+      abort(403, 'Unauthorized action.');
+    }
+
+    $canvas->delete();
+    return redirect('/canvas')->with('status', 'Canvas removed successfully!');
   }
 }

@@ -95,11 +95,8 @@ var EventManager = function () {
     this.save = function () {
       canvas.draw.defs().remove();
       $('#svgEditor svg').removeAttr('xmlns:svgjs'); //Suppression d'un attribut qui est dupliqué
-
       var detached = $('#svgEditor').find(':hidden').detach();
-
       $('#code').val($('#svgEditor').html()); // TODO ne pas passer par l'élément DOM
-
       $('#svgEditor svg').append(detached);
 
       var name = $('#name').val();
@@ -193,7 +190,6 @@ var EventManager = function () {
         }
       });
     };
-
     this._connect();
   }
 
@@ -201,7 +197,6 @@ var EventManager = function () {
     key: '_connect',
     value: function _connect() {
       var canvas = this.canvas;
-
       //Paint mode
       $('#pointer').on('click', function () {
         $('#tools a').removeClass("active");

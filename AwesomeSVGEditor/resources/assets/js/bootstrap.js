@@ -13,7 +13,6 @@ let SVG = require('svg.js');
 
 try {
     window.$ = window.jQuery = require('jquery');
-
     require('bootstrap');
 } catch (e) {}
 

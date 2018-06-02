@@ -35,11 +35,9 @@
                 <strong>Unshare this canvas</strong>
                 <div>
                   <label for="card-text">Your share link :</label>
-
-
                   <div class="contact">
                     <div class="input-group mb-3">
-                      <input type="text" class="form-control" disabled aria-label="Share link" aria-describedby="basic-addon2" value="{{ $url }}"></a>
+                      <input type="text" class="form-control" disabled aria-label="Share link" aria-describedby="basic-addon2" value="{{ $url }}">
                       <div class="input-group-append">
                         <button type="button" class="btn btn-outline-default btn-copy js-tooltip js-copy" data-toggle="tooltip" data-placement="bottom" data-copy="{{ $url }}" title="Copy to clipboard">
                           <!-- icon from google's material design library -->
@@ -68,7 +66,7 @@
                 @endif
               </li>
               <li class="list-group-item">
-                <button type="button" class="btn btn-outline-danger float-right">Remove this canvas</button>
+                <button type="button" class="btn btn-outline-danger float-right" data-toggle="modal" data-target=".bd-modal-sm">Remove this canvas</button>
                 <strong>Remove</strong>
                 <p class="card-text">Once you delete a canvas, there is no going back. Please be certain.</p>
               </li>
@@ -80,4 +78,41 @@
     </div>
   </div>
 </div>
+@if($admin)
+<div class="modal fade bd-modal-sm border-danger" tabindex="-1" role="dialog">
+  <div class="modal-dialog modal-sm" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Are you absolutely sure?</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <ul class="list-group list-group-flush">
+        <li class="alert-warning alert">
+          Unexpected bad things will happen if you don’t read this!
+        </li>
+        <li class="list-group-item">
+          This action <strong>cannot</strong> be undone. This will permanently <strong>delete</strong> this canvas.
+        </li>
+      </ul>
+      <div class="modal-footer">
+        <button id="remove" type="button" class="btn btn-outline-danger">Remove this canvas</button>
+        <button type="button" class="btn btn-outline-primary" data-dismiss="modal">Cancel</button>
+      </div>
+      <div class="invisible">
+      {{ Form::open(array('route' => array('canvas.destroy',$canvas->id), 'id' => 'form-remove', 'method' => 'delete')) }}
+      {{ Form::close() }}
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+document.addEventListener("DOMContentLoaded", function(event) {
+  $('#remove').on('click',function(){
+    $('#form-remove').submit();
+  });
+});
+</script>
+@endif
 @endsection

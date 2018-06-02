@@ -1,6 +1,5 @@
 import {Rectangle, Line, Pen, Circle} from './shapes';
 
-
 let options = ['x','y','width','height','x1','y1','x2','y2','colorFill','colorStroke'];
 let optionsType ={
   'svg':['width','height'],
