@@ -10722,3 +10722,13 @@ button.toast-close-button {
   padding-bottom: 0;
 }
 
+.form-checkbox {
+  float: left;
+  margin-left: -20px;
+  margin-top: 5px;
+}
+
+.card-checkbox {
+  padding-left: 20px;
+}
+

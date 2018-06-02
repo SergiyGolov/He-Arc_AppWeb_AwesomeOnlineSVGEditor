@@ -27,5 +27,7 @@ Route::resource('canvas', 'CanvasController');//->middleware('auth.basic');
 Route::get('/canvas/{id}/png', 'CanvasController@downloadPNG');
 Route::get('/canvas/{id}/svg', 'CanvasController@downloadSVG');
 Route::get('/shared/{link}', 'CanvasController@shared');
+Route::get('/canvas/{id}/share', 'CanvasController@share');
+Route::get('/canvas/{id}/unshare', 'CanvasController@unshare');
 
 Route::post('/sanitiseAjax','CanvasController@sanitiseAjax');
