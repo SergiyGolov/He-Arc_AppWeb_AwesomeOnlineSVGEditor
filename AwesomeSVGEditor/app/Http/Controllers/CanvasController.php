@@ -57,13 +57,12 @@ class CanvasController extends Controller
   }
 
   /**
-   * Access to a shared canvas
-   *
-   * @return view to this canvas
-   */
+  * Access to a shared canvas
+  *
+  * @return view to this canvas
+  */
   public function shared(string $code){
     if($code != ""){
-      //TODO Add migration to add share field
       $canvas = Canvas::where('share',$code)->first();
       if($canvas != null){
         return view('canvas.item', ['canvas' => $canvas, 'admin' => Auth::id()==$canvas->user_id, 'url' => URL::to("/shared/{$canvas->share}")]);
@@ -233,6 +232,42 @@ class CanvasController extends Controller
   }
 
   /**
+  * Generates the share hash, requested by an ajax request
+  *
+  * @param  \App\Canvas  $canvas
+  * @return \Illuminate\Http\Response
+  */
+  public function getShareAjax(Request $request)
+  {
+    $id=Input::get('id');
+
+    $canvas = Canvas::findOrFail($id);
+    if($canvas->user_id != Auth::id()){
+      $response = array(
+        'status' => 'KO',
+        'msg' => 'Unauthorized action',
+      );
+      return Response::json($response);
+    }else{
+
+      if($canvas->share=="")
+      {
+        $strong = true;
+        $appearance = 'sha256';
+        $canvas->share = hash($appearance,openssl_random_pseudo_bytes(128,$strong),false);
+        $canvas->save();
+      }
+      $response = array(
+        'status' => 'success',
+        'share' => $canvas->share,
+        'msg' => 'Canvas shared successfully',
+      );
+      return Response::json($response);
+    }
+  }
+
+
+  /**
   * Show the form for editing the specified resource.
   *
   * @param  \App\Canvas  $canvas
@@ -325,7 +360,7 @@ class CanvasController extends Controller
         $canvas->code       = Input::get('code');
         $canvas->user_id    = Auth::id();
         $canvas->visibility = Input::get('visibility');
-        $canvas->share      = hash('sha256',Input::get('name').Input::get('code').Auth::id());
+        $canvas->share      = '';
 
         $canvas->save();
 
@@ -334,7 +369,6 @@ class CanvasController extends Controller
           'status' => 'success',
           'msg' => 'Canvas created successfully',
           'id' => $canvas->id,
-          'share' => $canvas->share,
         );
         return Response::json($response);
       }

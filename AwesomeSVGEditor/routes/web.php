@@ -33,3 +33,4 @@ Route::get('/canvas/{id}/public', 'CanvasController@public');
 Route::get('/canvas/{id}/private', 'CanvasController@private');
 
 Route::post('/sanitiseAjax','CanvasController@sanitiseAjax');
+Route::post('/shareAjax','CanvasController@getShareAjax');

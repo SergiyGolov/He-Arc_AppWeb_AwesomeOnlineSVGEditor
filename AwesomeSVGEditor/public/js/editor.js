@@ -85,6 +85,30 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
 
 
+function copyToClipboard(text, el) {
+  var copyTest = document.queryCommandSupported('copy');
+  var elOriginalText = el.attr('data-original-title');
+
+  if (copyTest === true) {
+    var copyTextArea = document.createElement("textarea");
+    copyTextArea.value = text;
+    document.body.appendChild(copyTextArea);
+    copyTextArea.select();
+    try {
+      var successful = document.execCommand('copy');
+      var msg = successful ? 'Copied!' : 'Whoops, not copied!';
+      el.attr('data-original-title', msg).tooltip('show');
+    } catch (err) {
+      console.log('Oops, unable to copy');
+    }
+    document.body.removeChild(copyTextArea);
+    el.attr('data-original-title', elOriginalText);
+  } else {
+    // Fallback if browser doesn't support .execCommand('copy')
+    window.prompt("Copy to clipboard: Ctrl+C or Command+C, Enter", text);
+  }
+}
+
 //Class to connect the interface with our canvas object
 
 var EventManager = function () {
@@ -129,8 +153,8 @@ var EventManager = function () {
                 $('#id').val(msg.id);
                 $('#svg-link').attr('href', '/canvas/' + msg.id + '/svg');
                 $('#png-link').attr('href', '/canvas/' + msg.id + '/png');
-                $('#share').val(msg.share);
-                $('#share').val(window.location.origin + "/shared/" + $('#share').val());
+                // $('#share').val(msg.share);
+                // $('#share').val(window.location.origin+"/shared/"+$('#share').val());
               }
             } else {
               toastr.error('Canvas error while saving');
@@ -297,8 +321,40 @@ var EventManager = function () {
         $("#fileinput").trigger('click');
       });
 
+      $('#shareCopy').click(function () {
+        $('#share').select();
+        $(this).attr('data-copy', $('#share').val());
+        var text = $(this).attr('data-copy');
+        var el = $(this);
+        copyToClipboard(text, el);
+      });
+
       $("#shareLink").click(function (e) {
         e.preventDefault();
+        //ajax to get share link
+        if ($('#share').val() == "") {
+          var id = $('#id').val();
+          var _token = $('input[name=_token]').val();
+          $.ajax({
+            type: "post",
+            url: '/shareAjax',
+            responseType: 'json',
+            xhrFields: { withCredentials: true },
+            data: { id: id, _token: _token },
+            success: function success(msg) {
+              if (msg.status == 'success') {
+                toastr.success('Got share link succesfully');
+                $('#share').val(msg.share);
+                $('#share').val(window.location.origin + "/shared/" + $('#share').val());
+              } else {
+                toastr.error('Error while getting share link');
+              }
+            },
+            error: function error(msg) {
+              toastr.error('Error while getting share link');
+            }
+          });
+        }
         $('#modal-share').modal('toggle');
       });
 
@@ -782,6 +838,9 @@ var Canvas = function () {
 
         this.manageOption(this.shape);
 
+        this.startMouseX = e.pageX - $('#svgEditor').children().first().offset().left;
+        this.startMouseY = e.pageY - $('#svgEditor').children().first().offset().top;
+
         this.actions[this.actionIndex] = [this.modesEnum.pointer, this.shape, this.shape.x(), this.shape.y()];
         this.actionIndex++;
         this.actions.splice(this.actionIndex, this.actions.length - this.actionIndex + 1);
@@ -793,8 +852,14 @@ var Canvas = function () {
       e.preventDefault();
       if (this.mode == this.modesEnum.pointer) {
         this.isMoving = false;
-        if (this.shape != null) {
+        var stopMouseX = e.pageX - $('#svgEditor').children().first().offset().left;
+        var stopMouseY = e.pageY - $('#svgEditor').children().first().offset().top;
+        if (this.shape != null && (stopMouseX != this.startMouseX || stopMouseY != this.startMouseY)) {
           this.actions[this.actionIndex] = [this.modesEnum.pointer, this.shape, this.shape.x(), this.shape.y()];
+          this.manageOption(this.shape);
+        } else if (this.shape != null) {
+          this.actions.splice(this.actionIndex, this.actions.length - this.actionIndex + 1);
+          this.actionIndex--;
           this.manageOption(this.shape);
         }
         this.shape = null;

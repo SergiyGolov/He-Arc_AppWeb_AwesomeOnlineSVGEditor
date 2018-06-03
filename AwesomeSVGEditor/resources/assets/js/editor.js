@@ -1,5 +1,29 @@
 import Canvas from './canvas';
 
+function copyToClipboard(text, el) {
+  var copyTest = document.queryCommandSupported('copy');
+  var elOriginalText = el.attr('data-original-title');
+
+  if (copyTest === true) {
+    var copyTextArea = document.createElement("textarea");
+    copyTextArea.value = text;
+    document.body.appendChild(copyTextArea);
+    copyTextArea.select();
+    try {
+      var successful = document.execCommand('copy');
+      var msg = successful ? 'Copied!' : 'Whoops, not copied!';
+      el.attr('data-original-title', msg).tooltip('show');
+    } catch (err) {
+      console.log('Oops, unable to copy');
+    }
+    document.body.removeChild(copyTextArea);
+    el.attr('data-original-title', elOriginalText);
+  } else {
+    // Fallback if browser doesn't support .execCommand('copy')
+    window.prompt("Copy to clipboard: Ctrl+C or Command+C, Enter", text);
+  }
+}
+
 //Class to connect the interface with our canvas object
 class EventManager
 {
@@ -43,8 +67,8 @@ class EventManager
                 $('#id').val(msg.id);
                 $('#svg-link').attr('href','/canvas/'+msg.id+'/svg')
                 $('#png-link').attr('href','/canvas/'+msg.id+'/png')
-                $('#share').val(msg.share);
-                $('#share').val(window.location.origin+"/shared/"+$('#share').val());
+                // $('#share').val(msg.share);
+                // $('#share').val(window.location.origin+"/shared/"+$('#share').val());
               }
 
             }else{
@@ -211,8 +235,43 @@ class EventManager
       $("#fileinput").trigger('click');
     });
 
+
+
+    $('#shareCopy').click(function() {
+      $('#share').select();
+      $(this).attr('data-copy',$('#share').val());
+      var text = $(this).attr('data-copy');
+      var el = $(this);
+      copyToClipboard(text, el);
+    });
+
     $("#shareLink").click(function(e){
       e.preventDefault();
+      //ajax to get share link
+      if($('#share').val()=="")
+      {
+        let id=$('#id').val();
+        let _token = $('input[name=_token]').val();
+        $.ajax({
+          type: "post",
+          url: '/shareAjax',
+          responseType: 'json',
+          xhrFields: { withCredentials: true },
+          data: {id:id, _token:_token},
+          success: function(msg) {
+            if(msg.status == 'success'){
+              toastr.success('Got share link succesfully');
+              $('#share').val(msg.share);
+              $('#share').val(window.location.origin+"/shared/"+$('#share').val());
+            }else{
+              toastr.error('Error while getting share link');
+            }
+          },
+          error: function(msg){
+            toastr.error('Error while getting share link');
+          }
+        });
+      }
       $('#modal-share').modal('toggle');
     });
 

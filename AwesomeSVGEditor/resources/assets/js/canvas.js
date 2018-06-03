@@ -277,6 +277,8 @@ export default class Canvas
 
       this.manageOption(this.shape);
 
+      this.startMouseX=e.pageX-$('#svgEditor').children().first().offset().left;
+      this.startMouseY=e.pageY-$('#svgEditor').children().first().offset().top;
 
       this.actions[this.actionIndex]=[this.modesEnum.pointer,this.shape,this.shape.x(),this.shape.y()];
       this.actionIndex++;
@@ -290,9 +292,16 @@ export default class Canvas
     if(this.mode == this.modesEnum.pointer)
     {
       this.isMoving=false;
-      if(this.shape!=null)
+      let stopMouseX=e.pageX-$('#svgEditor').children().first().offset().left;
+      let stopMouseY=e.pageY-$('#svgEditor').children().first().offset().top;
+      if(this.shape!=null && (stopMouseX!=this.startMouseX || stopMouseY!=this.startMouseY) )
       {
         this.actions[this.actionIndex]=[this.modesEnum.pointer,this.shape,this.shape.x(),this.shape.y()];
+        this.manageOption(this.shape);
+      }else if(this.shape!=null)
+      {
+        this.actions.splice(this.actionIndex,this.actions.length-this.actionIndex+1);
+        this.actionIndex--;
         this.manageOption(this.shape);
       }
       this.shape=null;
