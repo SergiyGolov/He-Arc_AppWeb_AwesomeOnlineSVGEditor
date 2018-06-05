@@ -85,30 +85,6 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
 
 
-function copyToClipboard(text, el) {
-  var copyTest = document.queryCommandSupported('copy');
-  var elOriginalText = el.attr('data-original-title');
-
-  if (copyTest === true) {
-    var copyTextArea = document.createElement("textarea");
-    copyTextArea.value = text;
-    document.body.appendChild(copyTextArea);
-    copyTextArea.select();
-    try {
-      var successful = document.execCommand('copy');
-      var msg = successful ? 'Copied!' : 'Whoops, not copied!';
-      el.attr('data-original-title', msg).tooltip('show');
-    } catch (err) {
-      console.log('Oops, unable to copy');
-    }
-    document.body.removeChild(copyTextArea);
-    el.attr('data-original-title', elOriginalText);
-  } else {
-    // Fallback if browser doesn't support .execCommand('copy')
-    window.prompt("Copy to clipboard: Ctrl+C or Command+C, Enter", text);
-  }
-}
-
 //Class to connect the interface with our canvas object
 
 var EventManager = function () {
@@ -329,33 +305,55 @@ var EventManager = function () {
         copyToClipboard(text, el);
       });
 
-      $("#shareLink").click(function (e) {
+      $('#shareLink').click(function (e) {
         e.preventDefault();
-        //ajax to get share link
-        if ($('#share').val() == "") {
-          var id = $('#id').val();
-          var _token = $('input[name=_token]').val();
-          $.ajax({
-            type: "post",
-            url: '/shareAjax',
-            responseType: 'json',
-            xhrFields: { withCredentials: true },
-            data: { id: id, _token: _token },
-            success: function success(msg) {
-              if (msg.status == 'success') {
-                toastr.success('Got share link succesfully');
-                $('#share').val(msg.share);
-                $('#share').val(window.location.origin + "/shared/" + $('#share').val());
-              } else {
-                toastr.error('Error while getting share link');
-              }
-            },
-            error: function error(msg) {
+        $('#modal-share').modal('toggle');
+      });
+
+      $('#share-btn').click(function (e) {
+        var id = $('#id').val();
+        var _token = $('input[name=_token]').val();
+        $.ajax({
+          type: 'post',
+          url: '/canvas/' + id + '/share',
+          responseType: 'json',
+          data: { _token: _token },
+          success: function success(msg) {
+            if (msg.status == 'OK') {
+              $('#div-unshare').removeClass('d-none');
+              $('#div-share').addClass('d-none');
+              $('#link-copy').attr('data-copy', msg.link);
+              $('#link-display').val(msg.link);
+            } else {
               toastr.error('Error while getting share link');
             }
-          });
-        }
-        $('#modal-share').modal('toggle');
+          },
+          error: function error(msg) {
+            toastr.error('Error while getting share link');
+          }
+        });
+      });
+
+      $('#unshare-btn').click(function (e) {
+        var id = $('#id').val();
+        var _token = $('input[name=_token]').val();
+        $.ajax({
+          type: 'post',
+          url: '/canvas/' + id + '/unshare',
+          responseType: 'json',
+          data: { _token: _token },
+          success: function success(msg) {
+            if (msg.status == 'OK') {
+              $('#div-share').removeClass('d-none');
+              $('#div-unshare').addClass('d-none');
+            } else {
+              toastr.error('Error unsharing');
+            }
+          },
+          error: function error(msg) {
+            toastr.error('Error while unsharing');
+          }
+        });
       });
 
       $("#fileinput").change(function (e) {
@@ -568,7 +566,6 @@ $(document).ready(function () {
     $('#modal-title').modal('toggle');
   }
 
-  if ($('#share').val() != "") $('#share').val(window.location.origin + "/shared/" + $('#share').val());
   $('#strokeWidth').popover({ trigger: 'hover', content: "Stroke width in pixels" });
 });
 

@@ -20,7 +20,7 @@ class CanvasController extends Controller
 
   public function __construct()
   {
-    //$this->middleware('auth.basic')->except(['downloadPNG', 'downloadJPG', 'validateAccessRights', 'sharded', 'index', 'sanitise', 'show']);
+    //Rien
   }
 
   private function validateAccessRights(int $id)
@@ -128,7 +128,7 @@ class CanvasController extends Controller
     $canvas->name       = Input::get('name');
     $canvas->code       = Input::get('code');
     $canvas->visibility = Input::get('visibility');
-    return View::make('canvas.editor', ['canvas' => $canvas]);
+    return View::make('canvas.editor', ['canvas' => $canvas, 'url' => '']);
   }
 
   /**
@@ -186,7 +186,6 @@ class CanvasController extends Controller
   */
   public function show(int $id)
   {
-    // TODO return view
     $canvas = CanvasController::validateAccessRights($id);
     if($canvas == null){
       abort(403, 'Unauthorized action.');
@@ -207,7 +206,7 @@ class CanvasController extends Controller
       abort(403, 'Unauthorized action.');
     }
 
-    return view('canvas.editor', ['canvas' => $canvas]);
+    return view('canvas.editor', ['canvas' => $canvas, 'url' => URL::to("/shared/{$canvas->share}")]);
   }
 
   /**
@@ -216,56 +215,44 @@ class CanvasController extends Controller
   * @param  \App\Canvas  $canvas
   * @return \Illuminate\Http\Response
   */
-  public function share(int $id)
+  public function share(Request $request, int $id)
   {
     $canvas = Canvas::findOrFail($id);
-    if($canvas->user_id != Auth::id()){
-      abort(403, 'Unauthorized action.');
-    }
 
+    if ($request->ajax() || $request->wantsJson()){
+      if($canvas->user_id != Auth::id()){
+        $response = array(
+          'status' => 'KO',
+          'msg' => 'Unauthorized action',
+        );
+        return Response::json($response);
+      }else{
+        $canvas->share = CanvasController::generateShareLink();
+        $canvas->save();
+
+        $response = array(
+          'status' => 'OK',
+          'link' => URL::to("/shared/{$canvas->share}")
+        );
+        return Response::json($response);
+      }
+    }else{
+      if($canvas->user_id != Auth::id()){
+        abort(403, 'Unauthorized action.');
+      }
+
+      $canvas->share = CanvasController::generateShareLink();
+      $canvas->save();
+
+      return redirect()->route('canvas.show',['id' => $id]);
+    }
+  }
+
+  private static function generateShareLink(){
     $strong = true;
     $appearance = 'sha256';
-    $canvas->share = hash($appearance,openssl_random_pseudo_bytes(128,$strong),false);
-    $canvas->save();
-
-    return redirect()->route('canvas.show',['id' => $id]);
+    return hash($appearance,openssl_random_pseudo_bytes(128,$strong),false);
   }
-
-  /**
-  * Generates the share hash, requested by an ajax request
-  *
-  * @param  \App\Canvas  $canvas
-  * @return \Illuminate\Http\Response
-  */
-  public function getShareAjax(Request $request)
-  {
-    $id=Input::get('id');
-
-    $canvas = Canvas::findOrFail($id);
-    if($canvas->user_id != Auth::id()){
-      $response = array(
-        'status' => 'KO',
-        'msg' => 'Unauthorized action',
-      );
-      return Response::json($response);
-    }else{
-
-      if($canvas->share=="")
-      {
-        $strong = true;
-        $appearance = 'sha256';
-        $canvas->share = hash($appearance,openssl_random_pseudo_bytes(128,$strong),false);
-        $canvas->save();
-      }
-      $response = array(
-        'status' => 'success',
-        'share' => $canvas->share,
-        'msg' => 'Canvas shared successfully',
-      );
-      return Response::json($response);
-    }
-  }
-
 
   /**
   * Show the form for editing the specified resource.
@@ -273,17 +260,36 @@ class CanvasController extends Controller
   * @param  \App\Canvas  $canvas
   * @return \Illuminate\Http\Response
   */
-  public function unshare(int $id)
+  public function unshare(Request $request, int $id)
   {
     $canvas = Canvas::findOrFail($id);
-    if($canvas->user_id != Auth::id()){
-      abort(403, 'Unauthorized action.');
+
+    if ($request->ajax() || $request->wantsJson()){
+      if($canvas->user_id != Auth::id()){
+        $response = array(
+          'status' => 'KO',
+          'msg' => 'Unauthorized action',
+        );
+        return Response::json($response);
+      }else{
+        $canvas->share = '';
+        $canvas->save();
+
+        $response = array(
+          'status' => 'OK'
+        );
+        return Response::json($response);
+      }
+    }else{
+      if($canvas->user_id != Auth::id()){
+        abort(403, 'Unauthorized action.');
+      }
+
+      $canvas->share = '';
+      $canvas->save();
+
+      return redirect()->route('canvas.show',['id' => $id]);
     }
-
-    $canvas->share = '';
-    $canvas->save();
-
-    return redirect()->route('canvas.show',['id' => $id]);
   }
 
   /**

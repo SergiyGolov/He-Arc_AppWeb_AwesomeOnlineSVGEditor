@@ -13804,9 +13804,6 @@ function copyToClipboard(text, el) {
 }
 
 $(document).ready(function () {
-  // Initialize
-  // ---------------------------------------------------------------------
-
   // Tooltips
   // Requires Bootstrap 3 for functionality
   $('.js-tooltip').tooltip();
