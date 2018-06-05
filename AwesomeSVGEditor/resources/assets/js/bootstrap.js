@@ -4,6 +4,9 @@ window.Popper = require('popper.js').default;
 window.toastr = require('toastr');
 
 let SVG = require('svg.js');
+require('svg.draggable.js');
+require('svg.select.js');
+require('svg.resize.js');
 
 /**
  * We'll load jQuery and the Bootstrap jQuery plugin which provides support
