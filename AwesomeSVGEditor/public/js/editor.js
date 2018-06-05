@@ -642,6 +642,12 @@ var Canvas = function () {
         if (this.type == "svg") {
           this.each(importFunction);
         } else {
+          this.draggable().on('beforedrag', function (e) {
+            //TODO before move
+          });
+          this.draggable().on('dragend', function (e) {
+            //TODO after move
+          });
           this.mousedown(selfCanvas.elementClick.bind(selfCanvas));
         }
       }
@@ -770,7 +776,6 @@ var Canvas = function () {
           case "colorFill":
             $('#' + optionsType[object.type][_option] + "Val").val(this.optionShape.node.attributes[7].nodeValue);
             break;
-
         }
       }
       $('#option-select').html(object.type);
@@ -878,7 +883,6 @@ var Canvas = function () {
         this.actionIndex++;
         this.actions.splice(this.actionIndex, this.actions.length - this.actionIndex + 1);
         this.isDynAdding = false;
-        //console.log(this.shape.shape)
         this.manageOption(this.shape.shape);
         this.shape = null;
       }
@@ -895,7 +899,7 @@ var Canvas = function () {
       relativePosY /= zoom;
       if (this.isMoving) //if clicked on element (move mode)
         {
-          this.shape.move(relativePosX - this.shape.width() / 2 * zoom, relativePosY - this.shape.height() / 2 * zoom);
+          //this.shape.move(relativePosX-this.shape.width()/2*zoom,relativePosY-this.shape.height()/2*zoom);
         } else if (this.shape != null) //dyn Adding
         {
           this.shape.mouseMove(e);

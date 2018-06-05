@@ -64,6 +64,12 @@ export default class Canvas
         }
         else
         {
+          this.draggable().on('beforedrag', function(e){
+            //TODO before move
+          });
+          this.draggable().on('dragend', function(e){
+            //TODO after move
+          })
           this.mousedown(selfCanvas.elementClick.bind(selfCanvas));
         }
       }
@@ -198,13 +204,9 @@ export default class Canvas
         case "colorFill":
         $('#'+optionsType[object.type][option]+"Val").val(this.optionShape.node.attributes[7].nodeValue);
         break;
-
       }
-
     }
     $('#option-select').html(object.type);
-
-
   }
 
   undo()
@@ -323,7 +325,6 @@ export default class Canvas
       this.actionIndex++;
       this.actions.splice(this.actionIndex,this.actions.length-this.actionIndex+1);
       this.isDynAdding=false;
-      //console.log(this.shape.shape)
       this.manageOption(this.shape.shape);
       this.shape=null;
     }
@@ -340,7 +341,7 @@ export default class Canvas
     relativePosY /= zoom;
     if(this.isMoving) //if clicked on element (move mode)
     {
-      this.shape.move(relativePosX-this.shape.width()/2*zoom,relativePosY-this.shape.height()/2*zoom);
+      //this.shape.move(relativePosX-this.shape.width()/2*zoom,relativePosY-this.shape.height()/2*zoom);
     }
     else if(this.shape!=null) //dyn Adding
     {
