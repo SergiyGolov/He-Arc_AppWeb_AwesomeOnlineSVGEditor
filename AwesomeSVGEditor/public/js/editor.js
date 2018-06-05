@@ -369,7 +369,7 @@ var EventManager = function () {
 
             $.ajax({
               type: "post",
-              url: '/sanitiseAjax',
+              url: '/canvas/sanitise',
               data: { code: importedSvg, _token: _token },
               success: function success(msg) {
                 if (msg.status == 'success') {
@@ -526,7 +526,7 @@ var EventManager = function () {
 
                 $.ajax({
                   type: "post",
-                  url: '/sanitiseAjax',
+                  url: '/canvas/sanitize',
                   data: { code: importedSvg, _token: _token },
                   success: function success(msg) {
                     if (msg.status == 'success') {

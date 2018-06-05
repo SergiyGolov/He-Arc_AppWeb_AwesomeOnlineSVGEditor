@@ -37,9 +37,19 @@ class CanvasController extends Controller
   *
   * @return PNG file
   */
-  public function downloadPNG(int $id)
+  public function downloadPNG_ID(int $id)
   {
     $canvas = CanvasController::validateAccessRights($id);
+    return $this->downloadPNG($canvas);
+  }
+
+  public function downloadPNG_Link(string $link)
+  {
+    $canvas = Canvas::where('share',$link)->first();
+    return $this->downloadPNG($canvas);
+  }
+
+  private function downloadPNG(Canvas $canvas){
     if($canvas != false){
 
       $image = new IMagick();
@@ -57,18 +67,14 @@ class CanvasController extends Controller
   }
 
   /**
-  * Access to a shared canvas
+  * Download le canvas au format svg
   *
-  * @return view to this canvas
+  * @return SVG file
   */
-  public function shared(string $code){
-    if($code != ""){
-      $canvas = Canvas::where('share',$code)->first();
-      if($canvas != null){
-        return view('canvas.item', ['canvas' => $canvas, 'admin' => Auth::id()==$canvas->user_id, 'url' => URL::to("/shared/{$canvas->share}")]);
-      }
-    }
-    abort(403, 'Unauthorized action.');
+  public function downloadSVG_ID(int $id)
+  {
+    $canvas = CanvasController::validateAccessRights($id);
+    return $this->downloadSVG($canvas);
   }
 
   /**
@@ -76,9 +82,13 @@ class CanvasController extends Controller
   *
   * @return SVG file
   */
-  public function downloadSVG(int $id)
+  public function downloadSVG_Link(string $link)
   {
-    $canvas = CanvasController::validateAccessRights($id);
+    $canvas = Canvas::where('share',$link)->first();
+    return $this->downloadSVG($canvas);
+  }
+
+  private function downloadSVG(Canvas $canvas){
     if($canvas != false){
       return response($canvas->code)
       ->header('Content-Type', 'image/svg+xml')
@@ -207,6 +217,21 @@ class CanvasController extends Controller
     }
 
     return view('canvas.editor', ['canvas' => $canvas, 'url' => URL::to("/shared/{$canvas->share}")]);
+  }
+
+  /**
+  * Access to a shared canvas
+  *
+  * @return view to this canvas
+  */
+  public function shared(string $code){
+    if($code != ""){
+      $canvas = Canvas::where('share',$code)->first();
+      if($canvas != null){
+        return view('canvas.item', ['canvas' => $canvas, 'admin' => Auth::id()==$canvas->user_id, 'url' => URL::to("/shared/{$canvas->share}")]);
+      }
+    }
+    abort(403, 'Unauthorized action.');
   }
 
   /**

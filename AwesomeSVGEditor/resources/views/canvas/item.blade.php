@@ -15,8 +15,8 @@
             {!! $canvas->code !!}
           </li>
           <li class="list-group-item">
-            <a href="/canvas/{{ $canvas->id }}/png" role="button" class="btn btn-primary png-file"></a>
-            <a href="/canvas/{{ $canvas->id }}/svg" role="button" class="btn btn-dark svg-file"></a>
+            <a href="{{ URL::current() }}/png" role="button" class="btn btn-primary png-file"></a>
+            <a href="{{ URL::current() }}/svg" role="button" class="btn btn-dark svg-file"></a>
           </li>
         </ul>
         @if($admin)

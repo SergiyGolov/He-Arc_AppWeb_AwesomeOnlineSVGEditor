@@ -283,7 +283,7 @@ class EventManager
 
           $.ajax({
             type: "post",
-            url: '/sanitiseAjax',
+            url: '/canvas/sanitise',
             data: {code:importedSvg, _token:_token},
             success: function(msg) {
               if(msg.status == 'success')
@@ -444,7 +444,7 @@ class EventManager
 
               $.ajax({
                 type: "post",
-                url: '/sanitiseAjax',
+                url: '/canvas/sanitize',
                 data: {code:importedSvg, _token:_token},
                 success: function(msg) {
                   if(msg.status == 'success') {
