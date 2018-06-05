@@ -45,9 +45,6 @@ export default class Canvas
     this.draw.mousemove(this.mouseMove.bind(this));
     this.draw.mousedown(this.mouseDown.bind(this));
 
-
-
-
     let selfCanvas = this;
 
     $( "#"+divId ).mousedown(function(e) {
