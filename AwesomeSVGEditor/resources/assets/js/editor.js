@@ -458,9 +458,7 @@ class EventManager
                 }
               });
             };
-
           }
-
         }
       }
     });

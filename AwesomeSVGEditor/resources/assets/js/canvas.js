@@ -55,6 +55,7 @@ export default class Canvas
       }
     });
 
+    let canvas = this;
     let importFunction=function(){ //à revoir pour les groupes svg
       if(this.type!="defs")
       {
@@ -65,10 +66,17 @@ export default class Canvas
         else
         {
           this.draggable().on('beforedrag', function(e){
-            //TODO before move
+            this.drag_start=[this.x(),this.y()];
           });
           this.draggable().on('dragend', function(e){
-            //TODO after move
+            if(this.drag_start[0] == this.x() && this.drag_start[1] == this.y()){
+              //Rien
+            }else{
+              canvas.actions[canvas.actionIndex]=[canvas.modesEnum.pointer,this,this.drag_start[0],this.drag_start[1],this.x(),this.y()];
+              canvas.actionIndex++;
+              canvas.actions.splice(canvas.actionIndex,canvas.actions.length-canvas.actionIndex+1);
+              canvas.manageOption(this);
+            }
           })
           this.mousedown(selfCanvas.elementClick.bind(selfCanvas));
         }
@@ -239,7 +247,7 @@ export default class Canvas
       switch(this.actions[this.actionIndex][0])
       {
         case this.modesEnum.pointer:
-        this.actions[this.actionIndex][1].move(this.actions[this.actionIndex][2],this.actions[this.actionIndex][3]);
+        this.actions[this.actionIndex][1].move(this.actions[this.actionIndex][4],this.actions[this.actionIndex][5]);
         break;
         case this.modesEnum.pen:
         case this.modesEnum.line:
@@ -254,7 +262,6 @@ export default class Canvas
       this.actionIndex++;
     }
   }
-
 
   elementClick(e)
   {
@@ -275,13 +282,6 @@ export default class Canvas
       //console.log(this.shape);
 
       this.manageOption(this.shape);
-
-      this.startMouseX=e.pageX-$('#svgEditor').children().first().offset().left;
-      this.startMouseY=e.pageY-$('#svgEditor').children().first().offset().top;
-
-      this.actions[this.actionIndex]=[this.modesEnum.pointer,this.shape,this.shape.x(),this.shape.y()];
-      this.actionIndex++;
-      this.actions.splice(this.actionIndex,this.actions.length-this.actionIndex+1);
     }
   }
 
@@ -291,18 +291,18 @@ export default class Canvas
     if(this.mode == this.modesEnum.pointer)
     {
       this.isMoving=false;
-      let stopMouseX=e.pageX-$('#svgEditor').children().first().offset().left;
-      let stopMouseY=e.pageY-$('#svgEditor').children().first().offset().top;
-      if(this.shape!=null && (stopMouseX!=this.startMouseX || stopMouseY!=this.startMouseY) )
-      {
-        this.actions[this.actionIndex]=[this.modesEnum.pointer,this.shape,this.shape.x(),this.shape.y()];
-        this.manageOption(this.shape);
-      }else if(this.shape!=null)
-      {
-        this.actions.splice(this.actionIndex,this.actions.length-this.actionIndex+1);
-        this.actionIndex--;
-        this.manageOption(this.shape);
-      }
+      // let stopMouseX=e.pageX-$('#svgEditor').children().first().offset().left;
+      // let stopMouseY=e.pageY-$('#svgEditor').children().first().offset().top;
+      // if(this.shape!=null && (stopMouseX!=this.startMouseX || stopMouseY!=this.startMouseY) )
+      // {
+      //   // this.actions[this.actionIndex]=[this.modesEnum.pointer,this.shape,this.shape.x(),this.shape.y()];
+      //   // this.manageOption(this.shape);
+      // }else if(this.shape!=null)
+      // {
+      //   // this.actions.splice(this.actionIndex,this.actions.length-this.actionIndex+1);
+      //   // this.actionIndex--;
+      //   // this.manageOption(this.shape);
+      // }
       this.shape=null;
     }
     else if(this.mode > this.modesEnum.erase)
