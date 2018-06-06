@@ -7,6 +7,7 @@ class EventManager
   {
     this.canvas = canvas;
     this.save=function(){
+      canvas.unselect();
       canvas.draw.defs().remove();
       $('#svgEditor svg').removeAttr('xmlns:svgjs'); //Suppression d'un attribut qui est dupliqué
       let detached=$('#svgEditor').find(':hidden').detach();
