@@ -44,31 +44,34 @@ export default class Canvas
     this.draw.mousemove(this.mouseMove.bind(this));
     this.draw.mousedown(this.mouseDown.bind(this));
 
-    let selfCanvas = this;
+    let canvas = this;
 
     $( "#"+divId ).mousedown(function(e) {
       if(e.target.nodeName=="svg" )
       {
-        selfCanvas.manageOption(selfCanvas);
+        canvas.manageOption(canvas);
       }
     });
-
-    let canvas = this;
-
 
     this.stopDraggable = function(){
       this.draggable(false);
     };
+
+    this.unselectAll = function(){
+      if(this.type!='defs' && this.type!='g' && canvas.shape!=this){
+        this.selectize(false);
+      }
+    }
+
     this.startDraggable=function(){ //à revoir pour les groupes svg
 
       if(this.type!="defs")
       {
-
-
-        this.draggable().on('beforedrag', function(e){
+        this.draggable(function(x, y) {
+          return { x: x < canvas.draw.viewbox().width && x>0, y: y < canvas.draw.viewbox().height && y>0 }
+        }).on('beforedrag', function(e){
           this.drag_start=[this.x(),this.y()];
-        });
-        this.draggable().on('dragend', function(e){
+        }).on('dragend', function(e){
           if(this.drag_start[0] != this.x() || this.drag_start[1] != this.y()){
             canvas.actions[canvas.actionIndex]=[canvas.modesEnum.pointer,this,this.drag_start[0],this.drag_start[1],this.x(),this.y()];
             canvas.actionIndex++;
@@ -76,12 +79,7 @@ export default class Canvas
             canvas.manageOption(this);
           }
         });
-        this.mousedown(selfCanvas.elementClick.bind(selfCanvas));
-
-        this.draggable(function(x, y) {
-          return { x: x < selfCanvas.draw.viewbox().width && x>0, y: y < selfCanvas.draw.viewbox().height && y>0 }
-        })
-
+        this.mousedown(canvas.elementClick.bind(canvas));
       }
 
     };
@@ -91,30 +89,29 @@ export default class Canvas
 
     $(document).keydown(function(e) {
       if(e.which == 16) {
-        selfCanvas.shiftKey=true;
+        canvas.shiftKey=true;
       }
       if(e.keyCode == 90 && e.ctrlKey && e.shiftKey || e.keyCode == 89 && e.ctrlKey ){
-        selfCanvas.redo();
+        canvas.redo();
       }else if(e.keyCode == 90 && e.ctrlKey){
-        selfCanvas.undo();
+        canvas.undo();
       }
     });
 
     $(document).keyup(function(e) {
       if(e.which == 16) {
-        selfCanvas.shiftKey=false;
+        canvas.shiftKey=false;
       }
     });
 
     //Init des connections
     for(let option in options){
-      $('#'+options[option]).on('change',function(){
+      $('#'+options[option]).on('change',function() {
         let isCanvas=false;
         let optionCanvas;
 
-        if(selfCanvas.optionShape.type=="svg")
-        {
-          optionCanvas=selfCanvas.optionShape;
+        if(canvas.optionShape.type=="svg") {
+          optionCanvas=canvas.optionShape;
           isCanvas=true;
         }
         switch(options[option])
@@ -124,7 +121,7 @@ export default class Canvas
             optionCanvas.viewbox(0,0,$("#widthVal").val(),$("#heightVal").val());
             optionCanvas.width($('#'+options[option]+"Val").val());
           } else {
-            selfCanvas.optionShape.width($('#'+options[option]+"Val").val());
+            canvas.optionShape.width($('#'+options[option]+"Val").val());
           }
           break;
           case "height":
@@ -132,39 +129,39 @@ export default class Canvas
             optionCanvas.viewbox(0,0,$("#widthVal").val(),$("#heightVal").val());
             optionCanvas.height($('#'+options[option]+"Val").val());
           } else {
-            selfCanvas.optionShape.height($('#'+options[option]+"Val").val());
+            canvas.optionShape.height($('#'+options[option]+"Val").val());
           }
           break;
           case "x":
-          selfCanvas.optionShape.x($('#'+options[option]+"Val").val());
+          canvas.optionShape.x($('#'+options[option]+"Val").val());
           break;
           case "y":
-          selfCanvas.optionShape.y($('#'+options[option]+"Val").val());
+          canvas.optionShape.y($('#'+options[option]+"Val").val());
           break;
           case "x1":
-          selfCanvas.optionShape.attr('x1',$('#'+options[option]+"Val").val());
+          canvas.optionShape.x1($('#'+options[option]+"Val").val());
           break;
           case "y1":
-          selfCanvas.optionShape.attr('y1',$('#'+options[option]+"Val").val());
+          canvas.optionShape.y1($('#'+options[option]+"Val").val());
           break;
           case "x2":
-          selfCanvas.optionShape.attr('x2',$('#'+options[option]+"Val").val());
+          canvas.optionShape.x2($('#'+options[option]+"Val").val());
           break;
           case "y2":
-          selfCanvas.optionShape.attr('y2',$('#'+options[option]+"Val").val());
+          canvas.optionShape.y2($('#'+options[option]+"Val").val());
           break;
           case "colorStroke":
-          selfCanvas.optionShape.stroke($('#colorStrokeVal')[0].value);
+          canvas.optionShape.stroke($('#colorStrokeVal')[0].value);
           break;
           case "colorFill":
           if(isCanvas) {
             optionCanvas.style('fill',$('#colorFillVal')[0].value);
           }else{
-          selfCanvas.optionShape.fill($('#colorFillVal')[0].value);
+          canvas.optionShape.fill($('#colorFillVal')[0].value);
           }
           break;
           case "strokeWidthDiv":
-          selfCanvas.optionShape.attr('stroke-width',$('#'+options[option]+"Val").val());
+          canvas.optionShape.attr('stroke-width',$('#'+options[option]+"Val").val());
           break;
         }
       });
@@ -175,8 +172,7 @@ export default class Canvas
   manageOption(object)
   {
     this.optionShape=object;
-    if(this.optionShape.type=="svg")
-    {
+    if(this.optionShape.type=="svg") {
       this.optionShape=this.optionShape.draw;
 
     }
@@ -229,8 +225,7 @@ export default class Canvas
 
   undo()
   {
-    if(this.actionIndex>0)
-    {
+    if(this.actionIndex>0) {
       this.actionIndex--;
       switch(this.actions[this.actionIndex][0])
       {
@@ -252,8 +247,7 @@ export default class Canvas
 
   redo()
   {
-    if(this.actionIndex<this.actions.length)
-    {
+    if(this.actionIndex<this.actions.length) {
       switch(this.actions[this.actionIndex][0])
       {
         case this.modesEnum.pointer:
@@ -276,20 +270,29 @@ export default class Canvas
   elementClick(e)
   {
     e.preventDefault();
+
     let event = e.target || e.srcElement;
-    if(this.mode == this.modesEnum.erase)
-    {
+    if(this.mode == this.modesEnum.erase) {
       event.instance.hide();
 
       this.actions[this.actionIndex]=[this.modesEnum.erase,event.instance];
       this.actionIndex++;
       this.actions.splice(this.actionIndex,this.actions.length-this.actionIndex+1);
-    }
-    else if(this.mode == this.modesEnum.pointer)
-    {
+    } else if(this.mode == this.modesEnum.pointer) {
+
       this.shape=event.instance;
+      this.draw.each(this.unselectAll);
       this.manageOption(this.shape);
+      this.shape.selectize().resize();
     }
+  }
+
+  unselect(){
+    this.draw.each(function(){
+      if(this.type!='defs' && this.type!='g' && canvas.shape!=this){
+        this.selectize(false);
+      }
+    });
   }
 
   mouseUp(e)
@@ -329,12 +332,9 @@ export default class Canvas
     let zoom = box.zoom;
     relativePosX /= zoom;
     relativePosY /= zoom;
-    if(this.shape!=null && this.mode > this.modesEnum.erase) //dyn Adding
-    {
+    if(this.shape!=null && this.mode > this.modesEnum.erase) {
       this.shape.mouseMove(e);
-    }
-    else
-    {
+    } else {
       this.mouseX=relativePosX;
       this.mouseY=relativePosY;
     }
@@ -342,8 +342,7 @@ export default class Canvas
 
   mouseDown()
   {
-    switch(this.mode)
-    {
+    switch(this.mode) {
       case this.modesEnum.rectangle:
       this.shape=new Rectangle(this,this.mouseX, this.mouseY, 1, 1);
       break;
@@ -357,7 +356,7 @@ export default class Canvas
       this.shape=new Circle(this,this.mouseX, this.mouseY, 1,1);
       break;
     }
-    if(this.mode > this.modesEnum.erase){
+    if(this.mode > this.modesEnum.erase) {
       this.shape.shape.mousedown(canvas.elementClick.bind(canvas));
     }
   }

@@ -632,28 +632,33 @@ var Canvas = function () {
     this.draw.mousemove(this.mouseMove.bind(this));
     this.draw.mousedown(this.mouseDown.bind(this));
 
-    var selfCanvas = this;
+    var canvas = this;
 
     $("#" + divId).mousedown(function (e) {
       if (e.target.nodeName == "svg") {
-        selfCanvas.manageOption(selfCanvas);
+        canvas.manageOption(canvas);
       }
     });
-
-    var canvas = this;
 
     this.stopDraggable = function () {
       this.draggable(false);
     };
+
+    this.unselectAll = function () {
+      if (this.type != 'defs' && this.type != 'g' && canvas.shape != this) {
+        this.selectize(false);
+      }
+    };
+
     this.startDraggable = function () {
       //à revoir pour les groupes svg
 
       if (this.type != "defs") {
-
-        this.draggable().on('beforedrag', function (e) {
+        this.draggable(function (x, y) {
+          return { x: x < canvas.draw.viewbox().width && x > 0, y: y < canvas.draw.viewbox().height && y > 0 };
+        }).on('beforedrag', function (e) {
           this.drag_start = [this.x(), this.y()];
-        });
-        this.draggable().on('dragend', function (e) {
+        }).on('dragend', function (e) {
           if (this.drag_start[0] != this.x() || this.drag_start[1] != this.y()) {
             canvas.actions[canvas.actionIndex] = [canvas.modesEnum.pointer, this, this.drag_start[0], this.drag_start[1], this.x(), this.y()];
             canvas.actionIndex++;
@@ -661,11 +666,7 @@ var Canvas = function () {
             canvas.manageOption(this);
           }
         });
-        this.mousedown(selfCanvas.elementClick.bind(selfCanvas));
-
-        this.draggable(function (x, y) {
-          return { x: x < selfCanvas.draw.viewbox().width && x > 0, y: y < selfCanvas.draw.viewbox().height && y > 0 };
-        });
+        this.mousedown(canvas.elementClick.bind(canvas));
       }
     };
 
@@ -674,18 +675,18 @@ var Canvas = function () {
 
     $(document).keydown(function (e) {
       if (e.which == 16) {
-        selfCanvas.shiftKey = true;
+        canvas.shiftKey = true;
       }
       if (e.keyCode == 90 && e.ctrlKey && e.shiftKey || e.keyCode == 89 && e.ctrlKey) {
-        selfCanvas.redo();
+        canvas.redo();
       } else if (e.keyCode == 90 && e.ctrlKey) {
-        selfCanvas.undo();
+        canvas.undo();
       }
     });
 
     $(document).keyup(function (e) {
       if (e.which == 16) {
-        selfCanvas.shiftKey = false;
+        canvas.shiftKey = false;
       }
     });
 
@@ -696,8 +697,8 @@ var Canvas = function () {
         var isCanvas = false;
         var optionCanvas = void 0;
 
-        if (selfCanvas.optionShape.type == "svg") {
-          optionCanvas = selfCanvas.optionShape;
+        if (canvas.optionShape.type == "svg") {
+          optionCanvas = canvas.optionShape;
           isCanvas = true;
         }
         switch (options[option]) {
@@ -706,7 +707,7 @@ var Canvas = function () {
               optionCanvas.viewbox(0, 0, $("#widthVal").val(), $("#heightVal").val());
               optionCanvas.width($('#' + options[option] + "Val").val());
             } else {
-              selfCanvas.optionShape.width($('#' + options[option] + "Val").val());
+              canvas.optionShape.width($('#' + options[option] + "Val").val());
             }
             break;
           case "height":
@@ -714,39 +715,39 @@ var Canvas = function () {
               optionCanvas.viewbox(0, 0, $("#widthVal").val(), $("#heightVal").val());
               optionCanvas.height($('#' + options[option] + "Val").val());
             } else {
-              selfCanvas.optionShape.height($('#' + options[option] + "Val").val());
+              canvas.optionShape.height($('#' + options[option] + "Val").val());
             }
             break;
           case "x":
-            selfCanvas.optionShape.x($('#' + options[option] + "Val").val());
+            canvas.optionShape.x($('#' + options[option] + "Val").val());
             break;
           case "y":
-            selfCanvas.optionShape.y($('#' + options[option] + "Val").val());
+            canvas.optionShape.y($('#' + options[option] + "Val").val());
             break;
           case "x1":
-            selfCanvas.optionShape.attr('x1', $('#' + options[option] + "Val").val());
+            canvas.optionShape.x1($('#' + options[option] + "Val").val());
             break;
           case "y1":
-            selfCanvas.optionShape.attr('y1', $('#' + options[option] + "Val").val());
+            canvas.optionShape.y1($('#' + options[option] + "Val").val());
             break;
           case "x2":
-            selfCanvas.optionShape.attr('x2', $('#' + options[option] + "Val").val());
+            canvas.optionShape.x2($('#' + options[option] + "Val").val());
             break;
           case "y2":
-            selfCanvas.optionShape.attr('y2', $('#' + options[option] + "Val").val());
+            canvas.optionShape.y2($('#' + options[option] + "Val").val());
             break;
           case "colorStroke":
-            selfCanvas.optionShape.stroke($('#colorStrokeVal')[0].value);
+            canvas.optionShape.stroke($('#colorStrokeVal')[0].value);
             break;
           case "colorFill":
             if (isCanvas) {
               optionCanvas.style('fill', $('#colorFillVal')[0].value);
             } else {
-              selfCanvas.optionShape.fill($('#colorFillVal')[0].value);
+              canvas.optionShape.fill($('#colorFillVal')[0].value);
             }
             break;
           case "strokeWidthDiv":
-            selfCanvas.optionShape.attr('stroke-width', $('#' + options[option] + "Val").val());
+            canvas.optionShape.attr('stroke-width', $('#' + options[option] + "Val").val());
             break;
         }
       });
@@ -856,6 +857,7 @@ var Canvas = function () {
     key: 'elementClick',
     value: function elementClick(e) {
       e.preventDefault();
+
       var event = e.target || e.srcElement;
       if (this.mode == this.modesEnum.erase) {
         event.instance.hide();
@@ -864,9 +866,21 @@ var Canvas = function () {
         this.actionIndex++;
         this.actions.splice(this.actionIndex, this.actions.length - this.actionIndex + 1);
       } else if (this.mode == this.modesEnum.pointer) {
+
         this.shape = event.instance;
+        this.draw.each(this.unselectAll);
         this.manageOption(this.shape);
+        this.shape.selectize().resize();
       }
+    }
+  }, {
+    key: 'unselect',
+    value: function unselect() {
+      this.draw.each(function () {
+        if (this.type != 'defs' && this.type != 'g' && canvas.shape != this) {
+          this.selectize(false);
+        }
+      });
     }
   }, {
     key: 'mouseUp',
@@ -905,10 +919,9 @@ var Canvas = function () {
       var zoom = box.zoom;
       relativePosX /= zoom;
       relativePosY /= zoom;
-      if (this.shape != null && this.mode > this.modesEnum.erase) //dyn Adding
-        {
-          this.shape.mouseMove(e);
-        } else {
+      if (this.shape != null && this.mode > this.modesEnum.erase) {
+        this.shape.mouseMove(e);
+      } else {
         this.mouseX = relativePosX;
         this.mouseY = relativePosY;
       }

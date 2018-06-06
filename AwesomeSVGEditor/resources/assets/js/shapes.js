@@ -1,7 +1,4 @@
-
-
 export class Rectangle {
-
   constructor(canvas,posX,posY,width,height){
     this.type ="rect";
     this.action
