@@ -611,7 +611,6 @@ var Canvas = function () {
       "circle": 5
     });
 
-    this.isMoving = false;
     this.mode = this.modesEnum.pointer;
     this.shape = null;
     this.optionShape = null;
@@ -630,7 +629,6 @@ var Canvas = function () {
     var selfCanvas = this;
 
     $("#" + divId).mousedown(function (e) {
-
       if (e.target.nodeName == "svg") {
         selfCanvas.manageOption(selfCanvas);
       }
@@ -641,36 +639,36 @@ var Canvas = function () {
     this.stopDraggable = function () {
       this.draggable(false);
     };
-    this.importFunction = function () {
+    this.startDraggable = function () {
       //à revoir pour les groupes svg
       if (this.type != "defs") {
-        if (this.type != "svg") {
-          this.draggable().on('beforedrag', function (e) {
-            this.drag_start = [this.x(), this.y()];
-          });
-          this.draggable().on('dragend', function (e) {
-            if (this.drag_start[0] == this.x() && this.drag_start[1] == this.y()) {
-              //Rien
-            } else {
-              canvas.actions[canvas.actionIndex] = [canvas.modesEnum.pointer, this, this.drag_start[0], this.drag_start[1], this.x(), this.y()];
-              canvas.actionIndex++;
-              canvas.actions.splice(canvas.actionIndex, canvas.actions.length - canvas.actionIndex + 1);
-              canvas.manageOption(this);
-            }
-          });
-          this.mousedown(selfCanvas.elementClick.bind(selfCanvas));
-        }
+        this.draggable().on('beforedrag', function (e) {
+          this.drag_start = [this.x(), this.y()];
+        });
+        this.draggable().on('dragend', function (e) {
+          if (this.drag_start[0] != this.x() || this.drag_start[1] != this.y()) {
+            canvas.actions[canvas.actionIndex] = [canvas.modesEnum.pointer, this, this.drag_start[0], this.drag_start[1], this.x(), this.y()];
+            canvas.actionIndex++;
+            canvas.actions.splice(canvas.actionIndex, canvas.actions.length - canvas.actionIndex + 1);
+            canvas.manageOption(this);
+          }
+        });
+        this.mousedown(selfCanvas.elementClick.bind(selfCanvas));
       }
     };
 
-    this.draw.each(this.importFunction);
+    this.draw.each(this.startDraggable);
     this.shiftKey = false;
 
     $(document).keydown(function (e) {
       if (e.which == 16) {
         selfCanvas.shiftKey = true;
       }
-      if (e.keyCode == 90 && e.ctrlKey && e.shiftKey || e.keyCode == 89 && e.ctrlKey) selfCanvas.redo();else if (e.keyCode == 90 && e.ctrlKey) selfCanvas.undo();
+      if (e.keyCode == 90 && e.ctrlKey && e.shiftKey || e.keyCode == 89 && e.ctrlKey) {
+        selfCanvas.redo();
+      } else if (e.keyCode == 90 && e.ctrlKey) {
+        selfCanvas.undo();
+      }
     });
 
     $(document).keyup(function (e) {
@@ -838,13 +836,12 @@ var Canvas = function () {
       e.preventDefault();
       var event = e.target || e.srcElement;
       if (this.mode == this.modesEnum.erase) {
-        this.actions[this.actionIndex] = [this.modesEnum.erase, event.instance];
         event.instance.hide();
-        this.erase = false;
+
+        this.actions[this.actionIndex] = [this.modesEnum.erase, event.instance];
         this.actionIndex++;
         this.actions.splice(this.actionIndex, this.actions.length - this.actionIndex + 1);
       } else if (this.mode == this.modesEnum.pointer) {
-        this.isMoving = true;
         this.shape = event.instance;
         this.manageOption(this.shape);
       }
@@ -854,9 +851,8 @@ var Canvas = function () {
     value: function mouseUp(e) {
       e.preventDefault();
       if (this.mode == this.modesEnum.pointer) {
-        this.isMoving = false;
         this.shape = null;
-      } else if (this.mode > this.modesEnum.erase) {
+      } else if (this.mode > this.modesEnum.erase && this.shape != null) {
         switch (this.mode) {
           case this.modesEnum.pen:
             this.actions[this.actionIndex] = [this.modesEnum.pen, this.shape];
@@ -873,7 +869,6 @@ var Canvas = function () {
         }
         this.actionIndex++;
         this.actions.splice(this.actionIndex, this.actions.length - this.actionIndex + 1);
-        this.isDynAdding = false;
         this.manageOption(this.shape.shape);
         this.shape = null;
       }
@@ -888,7 +883,7 @@ var Canvas = function () {
       var zoom = box.zoom;
       relativePosX /= zoom;
       relativePosY /= zoom;
-      if (this.shape != null && this.isDynAdding) //dyn Adding
+      if (this.shape != null && this.mode > this.modesEnum.erase) //dyn Adding
         {
           this.shape.mouseMove(e);
         } else {
@@ -913,8 +908,7 @@ var Canvas = function () {
           this.shape = new __WEBPACK_IMPORTED_MODULE_0__shapes__["a" /* Circle */](this, this.mouseX, this.mouseY, 1, 1);
           break;
       }
-      if (this.mode >= this.modesEnum.erase) {
-        this.isDynAdding = true;
+      if (this.mode > this.modesEnum.erase) {
         this.shape.shape.mousedown(canvas.elementClick.bind(canvas));
       }
     }
@@ -922,35 +916,40 @@ var Canvas = function () {
     key: 'startMoving',
     value: function startMoving() {
       this.mode = this.modesEnum.pointer;
-      this.draw.each(this.importFunction);
+      this.draw.each(this.startDraggable);
     }
   }, {
     key: 'dynAddRectangle',
     value: function dynAddRectangle() {
+      this.shape = null;
       this.mode = this.modesEnum.rectangle;
       this.draw.each(this.stopDraggable);
     }
   }, {
     key: 'dynAddLine',
     value: function dynAddLine() {
+      this.shape = null;
       this.mode = this.modesEnum.line;
       this.draw.each(this.stopDraggable);
     }
   }, {
     key: 'dynAddPolyLine',
     value: function dynAddPolyLine() {
+      this.shape = null;
       this.mode = this.modesEnum.pen;
       this.draw.each(this.stopDraggable);
     }
   }, {
     key: 'dynAddCircle',
     value: function dynAddCircle() {
+      this.shape = null;
       this.mode = this.modesEnum.circle;
       this.draw.each(this.stopDraggable);
     }
   }, {
     key: 'startErase',
     value: function startErase() {
+      this.shape = null;
       this.mode = this.modesEnum.erase;
       this.draw.each(this.stopDraggable);
     }
