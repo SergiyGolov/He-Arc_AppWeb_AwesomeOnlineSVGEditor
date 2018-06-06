@@ -647,7 +647,9 @@ var Canvas = function () {
     };
     this.startDraggable = function () {
       //à revoir pour les groupes svg
+
       if (this.type != "defs") {
+
         this.draggable().on('beforedrag', function (e) {
           this.drag_start = [this.x(), this.y()];
         });
@@ -660,6 +662,10 @@ var Canvas = function () {
           }
         });
         this.mousedown(selfCanvas.elementClick.bind(selfCanvas));
+
+        this.draggable(function (x, y) {
+          return { x: x < selfCanvas.draw.viewbox().width && x > 0, y: y < selfCanvas.draw.viewbox().height && y > 0 };
+        });
       }
     };
 
