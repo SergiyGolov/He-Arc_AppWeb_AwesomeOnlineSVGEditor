@@ -49,22 +49,15 @@ export default class Canvas
     let canvas = this;
 
     $( "#"+divId ).mousedown(function(e) {
-      if(e.target.nodeName=="svg" )
-      {
+      if(e.target.nodeName=="svg" ) {
         canvas.manageOption(canvas);
       }
     });
 
-<<<<<<< HEAD
     $('#zoom').on('change',function(){
-      selfCanvas.updateZoom();
+      canvas.updateZoom();
     });
 
-    let canvas = this;
-
-
-=======
->>>>>>> ee8df75cc4b275324e352afcd91685354fe7a850
     this.stopDraggable = function(){
       this.draggable(false);
     };
@@ -166,11 +159,7 @@ export default class Canvas
           if(isCanvas) {
             optionCanvas.style('fill',$('#colorFillVal')[0].value);
           }else{
-<<<<<<< HEAD
-            selfCanvas.optionShape.fill($('#colorFillVal')[0].value);
-=======
           canvas.optionShape.fill($('#colorFillVal')[0].value);
->>>>>>> ee8df75cc4b275324e352afcd91685354fe7a850
           }
           break;
           case "strokeWidthDiv":
