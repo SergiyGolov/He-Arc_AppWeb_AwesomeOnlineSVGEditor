@@ -56,8 +56,11 @@ export default class Canvas
     });
 
     let canvas = this;
-    this.importFunction=function(i, elt){ //à revoir pour les groupes svg
-      console.log(elt[i])
+
+    this.stopDraggable = function(){
+      this.draggable(false);
+    };
+    this.importFunction=function(){ //à revoir pour les groupes svg
       if(this.type!="defs")
       {
         if(this.type!="svg")
@@ -276,8 +279,6 @@ export default class Canvas
     {
       this.isMoving=true;
       this.shape=event.instance;
-      //console.log(this.shape);
-
       this.manageOption(this.shape);
     }
   }
@@ -288,18 +289,6 @@ export default class Canvas
     if(this.mode == this.modesEnum.pointer)
     {
       this.isMoving=false;
-      // let stopMouseX=e.pageX-$('#svgEditor').children().first().offset().left;
-      // let stopMouseY=e.pageY-$('#svgEditor').children().first().offset().top;
-      // if(this.shape!=null && (stopMouseX!=this.startMouseX || stopMouseY!=this.startMouseY) )
-      // {
-      //   // this.actions[this.actionIndex]=[this.modesEnum.pointer,this.shape,this.shape.x(),this.shape.y()];
-      //   // this.manageOption(this.shape);
-      // }else if(this.shape!=null)
-      // {
-      //   // this.actions.splice(this.actionIndex,this.actions.length-this.actionIndex+1);
-      //   // this.actionIndex--;
-      //   // this.manageOption(this.shape);
-      // }
       this.shape=null;
     }
     else if(this.mode > this.modesEnum.erase)
@@ -336,11 +325,7 @@ export default class Canvas
     let zoom = box.zoom;
     relativePosX /= zoom;
     relativePosY /= zoom;
-    if(this.isMoving) //if clicked on element (move mode)
-    {
-      //this.shape.move(relativePosX-this.shape.width()/2*zoom,relativePosY-this.shape.height()/2*zoom);
-    }
-    else if(this.shape!=null) //dyn Adding
+    if(this.shape!=null && this.isDynAdding) //dyn Adding
     {
       this.shape.mouseMove(e);
     }
@@ -368,54 +353,46 @@ export default class Canvas
       this.shape=new Circle(this,this.mouseX, this.mouseY, 1,1);
       break;
     }
-    if(this.shape != null){
-        let tempShape = this.shape.shape;
-        let canvas = this;
-        tempShape.draggable().on('beforedrag', function(e){
-          tempShape.drag_start=[tempShape.x(),tempShape.y()];
-        });
-        tempShape.draggable().on('dragend', function(e){
-          if(tempShape.drag_start[0] == tempShape.x() && tempShape.drag_start[1] == tempShape.y()){
-            //Rien
-          }else{
-            canvas.actions[canvas.actionIndex]=[canvas.modesEnum.pointer,tempShape,tempShape.drag_start[0],tempShape.drag_start[1],tempShape.x(),tempShape.y()];
-            canvas.actionIndex++;
-            canvas.actions.splice(canvas.actionIndex,canvas.actions.length-canvas.actionIndex+1);
-            canvas.manageOption(tempShape);
-          }
-        });
-        tempShape.mousedown(canvas.elementClick.bind(canvas));
+    if(this.mode >= this.modesEnum.erase){
+      this.isDynAdding = true;
+      this.shape.shape.mousedown(canvas.elementClick.bind(canvas));
     }
   }
 
   startMoving()
   {
     this.mode = this.modesEnum.pointer;
+    this.draw.each(this.importFunction);
   }
 
   dynAddRectangle()
   {
     this.mode = this.modesEnum.rectangle;
+    this.draw.each(this.stopDraggable);
   }
 
   dynAddLine()
   {
     this.mode = this.modesEnum.line;
+    this.draw.each(this.stopDraggable);
   }
 
   dynAddPolyLine()
   {
     this.mode = this.modesEnum.pen;
+    this.draw.each(this.stopDraggable);
   }
 
   dynAddCircle()
   {
     this.mode = this.modesEnum.circle;
+    this.draw.each(this.stopDraggable);
   }
 
   startErase()
   {
     this.mode = this.modesEnum.erase;
+    this.draw.each(this.stopDraggable);
   }
 
   setFillColor(color) //color format: string: '#RGB' R,G and B from '0' to 'F'
