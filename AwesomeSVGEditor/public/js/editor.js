@@ -93,6 +93,7 @@ var EventManager = function () {
 
     this.canvas = canvas;
     this.save = function () {
+      canvas.unselect();
       canvas.draw.defs().remove();
       $('#svgEditor svg').removeAttr('xmlns:svgjs'); //Suppression d'un attribut qui est dupliqué
       var detached = $('#svgEditor').find(':hidden').detach();
@@ -652,7 +653,6 @@ var Canvas = function () {
 
     this.startDraggable = function () {
       //à revoir pour les groupes svg
-
       if (this.type != "defs") {
         this.draggable(function (x, y) {
           return { x: x < canvas.draw.viewbox().width && x > 0, y: y < canvas.draw.viewbox().height && y > 0 };
@@ -877,7 +877,7 @@ var Canvas = function () {
     key: 'unselect',
     value: function unselect() {
       this.draw.each(function () {
-        if (this.type != 'defs' && this.type != 'g' && canvas.shape != this) {
+        if (this.type != 'defs' && this.type != 'g') {
           this.selectize(false);
         }
       });

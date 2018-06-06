@@ -64,9 +64,7 @@ export default class Canvas
     }
 
     this.startDraggable=function(){ //à revoir pour les groupes svg
-
-      if(this.type!="defs")
-      {
+      if(this.type!="defs") {
         this.draggable(function(x, y) {
           return { x: x < canvas.draw.viewbox().width && x>0, y: y < canvas.draw.viewbox().height && y>0 }
         }).on('beforedrag', function(e){
@@ -81,7 +79,6 @@ export default class Canvas
         });
         this.mousedown(canvas.elementClick.bind(canvas));
       }
-
     };
 
     this.draw.each(this.startDraggable);
@@ -289,7 +286,7 @@ export default class Canvas
 
   unselect(){
     this.draw.each(function(){
-      if(this.type!='defs' && this.type!='g' && canvas.shape!=this){
+      if(this.type!='defs' && this.type!='g'){
         this.selectize(false);
       }
     });

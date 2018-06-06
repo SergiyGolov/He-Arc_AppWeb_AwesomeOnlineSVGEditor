@@ -75,9 +75,7 @@ export class Rectangle {
   }
 }
 
-
 export class Circle {
-
   constructor(canvas,posX,posY,rx,ry){
     this.type ="ellipse";
     this.canvas=canvas;
@@ -111,7 +109,6 @@ export class Circle {
     }
   }
 }
-
 
 export class Line {
   constructor(canvas,posX,posY,posX2,posY2){
