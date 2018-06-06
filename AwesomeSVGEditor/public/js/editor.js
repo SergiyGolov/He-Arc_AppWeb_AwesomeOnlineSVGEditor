@@ -957,6 +957,7 @@ var Canvas = function () {
     key: 'dynAddRectangle',
     value: function dynAddRectangle() {
       this.shape = null;
+      this.unselect();
       this.mode = this.modesEnum.rectangle;
       this.draw.each(this.stopDraggable);
     }
@@ -964,6 +965,7 @@ var Canvas = function () {
     key: 'dynAddLine',
     value: function dynAddLine() {
       this.shape = null;
+      this.unselect();
       this.mode = this.modesEnum.line;
       this.draw.each(this.stopDraggable);
     }
@@ -971,6 +973,7 @@ var Canvas = function () {
     key: 'dynAddPolyLine',
     value: function dynAddPolyLine() {
       this.shape = null;
+      this.unselect();
       this.mode = this.modesEnum.pen;
       this.draw.each(this.stopDraggable);
     }
@@ -978,6 +981,7 @@ var Canvas = function () {
     key: 'dynAddCircle',
     value: function dynAddCircle() {
       this.shape = null;
+      this.unselect();
       this.mode = this.modesEnum.circle;
       this.draw.each(this.stopDraggable);
     }
@@ -985,6 +989,7 @@ var Canvas = function () {
     key: 'startErase',
     value: function startErase() {
       this.shape = null;
+      this.unselect();
       this.mode = this.modesEnum.erase;
       this.draw.each(this.stopDraggable);
     }

@@ -367,6 +367,7 @@ export default class Canvas
   dynAddRectangle()
   {
     this.shape = null;
+    this.unselect();
     this.mode = this.modesEnum.rectangle;
     this.draw.each(this.stopDraggable);
   }
@@ -374,6 +375,7 @@ export default class Canvas
   dynAddLine()
   {
     this.shape = null;
+    this.unselect();
     this.mode = this.modesEnum.line;
     this.draw.each(this.stopDraggable);
   }
@@ -381,6 +383,7 @@ export default class Canvas
   dynAddPolyLine()
   {
     this.shape = null;
+    this.unselect();
     this.mode = this.modesEnum.pen;
     this.draw.each(this.stopDraggable);
   }
@@ -388,6 +391,7 @@ export default class Canvas
   dynAddCircle()
   {
     this.shape = null;
+    this.unselect();
     this.mode = this.modesEnum.circle;
     this.draw.each(this.stopDraggable);
   }
@@ -395,6 +399,7 @@ export default class Canvas
   startErase()
   {
     this.shape = null;
+    this.unselect();
     this.mode = this.modesEnum.erase;
     this.draw.each(this.stopDraggable);
   }
