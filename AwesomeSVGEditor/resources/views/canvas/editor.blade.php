@@ -58,21 +58,28 @@
                 </a>
               </div>
             </li>
+            <li class="nav-item dropdown">
+              <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
+                Edit <span class="caret"></span>
+              </a>
+              <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                <a class="dropdown-item" href="" id="title-edit">
+                  Edit canvas name
+                </a>
+                <span class="dropdown-item"><input type="checkbox" id="visibility"><label for="visibility">publicly visible</label></span>
+              </div>
+            </li>
           </ul>
-          <span class="navbar-nav whitetext"><input type="checkbox" id="visibility"><label for="visibility">publicly visible</label></span>
+
           <ul class="navbar-nav mx-auto">
             <div id="navbar-title">
               {{ isset($canvas)?$canvas->name:'' }}
             </div>
-            <button id="title-edit" type="button" class="btn btn-default">
-              <span class="glyphicon glyphicon-pencil"></span>
-            </button>
-
-            <a id="save" href="#" class="btn btn-lg btn-outline-danger">Save</a>
           </ul>
 
           <!-- Right Side Of Navbar -->
           <ul class="navbar-nav ml-auto">
+            <a id="save" href="#" class="btn btn-lg btn-outline-danger">Save</a>
             <!-- Authentication Links -->
             @guest
             <li><a id="login" class="nav-link" href="#">{{ __('Login') }}</a></li>
@@ -221,6 +228,12 @@
             <div class="aspect-ratio">
               <label>Y2</label>
               <input type="number" value="500" id="y2Val"/>
+            </div>
+          </div>
+          <div id="strokeWidthDiv">
+            <div class="aspect-ratio">
+              <label>Stroke (px)</label>
+              <input type="number" value="500" id="strokeWidthDivVal"/>
             </div>
           </div>
           <div id="colorStroke">

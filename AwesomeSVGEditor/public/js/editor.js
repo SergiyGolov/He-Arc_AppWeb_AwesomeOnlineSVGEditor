@@ -429,8 +429,14 @@ var EventManager = function () {
         $('#modal-title').modal('toggle');
       });
 
-      $('#title-edit').on('click', function () {
+      $('#title-edit').click(function (e) {
+        e.preventDefault();
         $('#modal-title').modal('toggle');
+      });
+
+      $("label[for='visibility']").on('click', function (e) {
+        $('#visibility').click();
+        return false;
       });
 
       //Load preconfigure colors and width
@@ -582,13 +588,13 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
 
 
-var options = ['x', 'y', 'width', 'height', 'x1', 'y1', 'x2', 'y2', 'colorFill', 'colorStroke'];
+var options = ['x', 'y', 'width', 'height', 'x1', 'y1', 'x2', 'y2', 'colorFill', 'colorStroke', 'strokeWidthDiv'];
 var optionsType = {
   'svg': ['width', 'height'],
-  'rect': ['x', 'y', 'width', 'height', 'colorFill', 'colorStroke'],
-  'ellipse': ['x', 'y', 'colorFill', 'colorStroke'],
-  'polyline': ['colorStroke'],
-  'line': ['x1', 'y1', 'x2', 'y2', 'colorStroke']
+  'rect': ['x', 'y', 'width', 'height', 'strokeWidthDiv', 'colorFill', 'colorStroke'],
+  'ellipse': ['x', 'y', 'colorFill', 'strokeWidthDiv', 'colorStroke'],
+  'polyline': ['colorStroke', 'strokeWidthDiv'],
+  'line': ['x1', 'y1', 'x2', 'y2', 'strokeWidthDiv', 'colorStroke']
 };
 
 var Canvas = function () {
@@ -712,22 +718,29 @@ var Canvas = function () {
             selfCanvas.optionShape.y($('#' + options[option] + "Val").val());
             break;
           case "x1":
-            selfCanvas.optionShape.x1($('#' + options[option] + "Val").val());
+            selfCanvas.optionShape.attr('x1', $('#' + options[option] + "Val").val());
             break;
           case "y1":
-            selfCanvas.optionShape.y1($('#' + options[option] + "Val").val());
+            selfCanvas.optionShape.attr('y1', $('#' + options[option] + "Val").val());
             break;
           case "x2":
-            selfCanvas.optionShape.x2($('#' + options[option] + "Val").val());
+            selfCanvas.optionShape.attr('x2', $('#' + options[option] + "Val").val());
             break;
           case "y2":
-            selfCanvas.optionShape.y2($('#' + options[option] + "Val").val());
+            selfCanvas.optionShape.attr('y2', $('#' + options[option] + "Val").val());
             break;
           case "colorStroke":
             selfCanvas.optionShape.stroke($('#colorStrokeVal')[0].value);
             break;
           case "colorFill":
-            selfCanvas.optionShape.fill($('#colorFillVal')[0].value);
+            if (isCanvas) {
+              optionCanvas.style('fill', $('#colorFillVal')[0].value);
+            } else {
+              selfCanvas.optionShape.fill($('#colorFillVal')[0].value);
+            }
+            break;
+          case "strokeWidthDiv":
+            selfCanvas.optionShape.attr('stroke-width', $('#' + options[option] + "Val").val());
             break;
         }
       });
@@ -767,22 +780,25 @@ var Canvas = function () {
             $('#' + optionsType[object.type][_option] + "Val").val(this.optionShape.y());
             break;
           case "x1":
-            $('#' + optionsType[object.type][_option] + "Val").val(this.optionShape.plot().value['0']['0']);
+            $('#' + optionsType[object.type][_option] + "Val").val(this.optionShape.attr('x1'));
             break;
           case "y1":
-            $('#' + optionsType[object.type][_option] + "Val").val(this.optionShape.plot().value['0']['1']);
+            $('#' + optionsType[object.type][_option] + "Val").val(this.optionShape.attr('y1'));
             break;
           case "x2":
-            $('#' + optionsType[object.type][_option] + "Val").val(this.optionShape.plot().value['1']['0']);
+            $('#' + optionsType[object.type][_option] + "Val").val(this.optionShape.attr('x2'));
             break;
           case "y2":
-            $('#' + optionsType[object.type][_option] + "Val").val(this.optionShape.plot().value['1']['1']);
+            $('#' + optionsType[object.type][_option] + "Val").val(this.optionShape.attr('y2'));
             break;
           case "colorStroke":
-            $('#' + optionsType[object.type][_option] + "Val").val(this.optionShape._stroke);
+            $('#' + optionsType[object.type][_option] + "Val").val(this.optionShape.attr('stroke'));
             break;
           case "colorFill":
-            $('#' + optionsType[object.type][_option] + "Val").val(this.optionShape.node.attributes[7].nodeValue);
+            $('#' + optionsType[object.type][_option] + "Val").val(this.optionShape.attr('fill'));
+            break;
+          case "strokeWidthDiv":
+            $('#' + optionsType[object.type][_option] + "Val").val(this.optionShape.attr('stroke-width'));
             break;
         }
       }

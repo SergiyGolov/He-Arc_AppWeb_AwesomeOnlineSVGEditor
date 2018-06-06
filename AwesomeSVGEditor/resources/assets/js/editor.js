@@ -347,9 +347,15 @@ class EventManager
       $('#modal-title').modal('toggle');
     })
 
-    $('#title-edit').on('click', function(){
+    $('#title-edit').click(function(e){
+      e.preventDefault();
       $('#modal-title').modal('toggle');
     })
+
+    $("label[for='visibility']").on('click',function(e){
+      $('#visibility').click();
+      return false;
+    });
 
     //Load preconfigure colors and width
     $('#fillColor').trigger('change');
