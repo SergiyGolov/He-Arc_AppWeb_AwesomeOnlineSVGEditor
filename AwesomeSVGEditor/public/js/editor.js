@@ -637,12 +637,11 @@ var Canvas = function () {
     });
 
     var canvas = this;
-    var importFunction = function importFunction() {
+    this.importFunction = function (i, elt) {
       //à revoir pour les groupes svg
+      console.log(elt[i]);
       if (this.type != "defs") {
-        if (this.type == "svg") {
-          this.each(importFunction);
-        } else {
+        if (this.type != "svg") {
           this.draggable().on('beforedrag', function (e) {
             this.drag_start = [this.x(), this.y()];
           });
@@ -661,7 +660,7 @@ var Canvas = function () {
       }
     };
 
-    this.draw.each(importFunction);
+    this.draw.each(this.importFunction);
     this.shiftKey = false;
 
     $(document).keydown(function (e) {
@@ -927,6 +926,24 @@ var Canvas = function () {
         case this.modesEnum.circle:
           this.shape = new __WEBPACK_IMPORTED_MODULE_0__shapes__["a" /* Circle */](this, this.mouseX, this.mouseY, 1, 1);
           break;
+      }
+      if (this.shape != null) {
+        var tempShape = this.shape.shape;
+        var canvas = this;
+        tempShape.draggable().on('beforedrag', function (e) {
+          tempShape.drag_start = [tempShape.x(), tempShape.y()];
+        });
+        tempShape.draggable().on('dragend', function (e) {
+          if (tempShape.drag_start[0] == tempShape.x() && tempShape.drag_start[1] == tempShape.y()) {
+            //Rien
+          } else {
+            canvas.actions[canvas.actionIndex] = [canvas.modesEnum.pointer, tempShape, tempShape.drag_start[0], tempShape.drag_start[1], tempShape.x(), tempShape.y()];
+            canvas.actionIndex++;
+            canvas.actions.splice(canvas.actionIndex, canvas.actions.length - canvas.actionIndex + 1);
+            canvas.manageOption(tempShape);
+          }
+        });
+        tempShape.mousedown(canvas.elementClick.bind(canvas));
       }
     }
   }, {

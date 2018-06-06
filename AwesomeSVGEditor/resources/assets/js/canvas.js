@@ -56,14 +56,11 @@ export default class Canvas
     });
 
     let canvas = this;
-    let importFunction=function(){ //à revoir pour les groupes svg
+    this.importFunction=function(i, elt){ //à revoir pour les groupes svg
+      console.log(elt[i])
       if(this.type!="defs")
       {
-        if(this.type=="svg")
-        {
-          this.each(importFunction);
-        }
-        else
+        if(this.type!="svg")
         {
           this.draggable().on('beforedrag', function(e){
             this.drag_start=[this.x(),this.y()];
@@ -77,13 +74,13 @@ export default class Canvas
               canvas.actions.splice(canvas.actionIndex,canvas.actions.length-canvas.actionIndex+1);
               canvas.manageOption(this);
             }
-          })
+          });
           this.mousedown(selfCanvas.elementClick.bind(selfCanvas));
         }
       }
     };
 
-    this.draw.each(importFunction);
+    this.draw.each(this.importFunction);
     this.shiftKey=false;
 
     $(document).keydown(function(e) {
@@ -370,6 +367,24 @@ export default class Canvas
       case this.modesEnum.circle:
       this.shape=new Circle(this,this.mouseX, this.mouseY, 1,1);
       break;
+    }
+    if(this.shape != null){
+        let tempShape = this.shape.shape;
+        let canvas = this;
+        tempShape.draggable().on('beforedrag', function(e){
+          tempShape.drag_start=[tempShape.x(),tempShape.y()];
+        });
+        tempShape.draggable().on('dragend', function(e){
+          if(tempShape.drag_start[0] == tempShape.x() && tempShape.drag_start[1] == tempShape.y()){
+            //Rien
+          }else{
+            canvas.actions[canvas.actionIndex]=[canvas.modesEnum.pointer,tempShape,tempShape.drag_start[0],tempShape.drag_start[1],tempShape.x(),tempShape.y()];
+            canvas.actionIndex++;
+            canvas.actions.splice(canvas.actionIndex,canvas.actions.length-canvas.actionIndex+1);
+            canvas.manageOption(tempShape);
+          }
+        });
+        tempShape.mousedown(canvas.elementClick.bind(canvas));
     }
   }
 
