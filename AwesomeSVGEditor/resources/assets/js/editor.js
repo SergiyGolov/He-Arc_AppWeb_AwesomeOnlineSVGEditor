@@ -488,4 +488,6 @@ $(document).ready(function(){
   }
 
   $('#strokeWidth').popover({ trigger: 'hover',content: "Stroke width in pixels" })
+
+    $('#zoom').popover({ trigger: 'hover',content: "Zoom level" })
 });

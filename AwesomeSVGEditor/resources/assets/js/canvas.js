@@ -15,7 +15,8 @@ export default class Canvas
   {
     this.type="svg";
     //this.draw = SVG(divId).size(width,height);
-    this.draw = SVG(divId).viewbox(0,0,width,height).attr({width:width/2,height:height/2});
+    this.draw = SVG(divId).viewbox(0,0,width,height).attr({width:width,height:height});
+    this.zoom=1;
 
     this.actions=[];
     this.actionIndex=0;
@@ -40,6 +41,7 @@ export default class Canvas
     this.mouseX=0;
     this.mouseY=0;
 
+
     this.draw.mouseup(this.mouseUp.bind(this)); //bind(this) -> necessary to access this
     this.draw.mousemove(this.mouseMove.bind(this));
     this.draw.mousedown(this.mouseDown.bind(this));
@@ -51,6 +53,10 @@ export default class Canvas
       {
         selfCanvas.manageOption(selfCanvas);
       }
+    });
+
+    $('#zoom').on('change',function(){
+      selfCanvas.updateZoom();
     });
 
     let canvas = this;
@@ -121,7 +127,7 @@ export default class Canvas
         {
           case "width":
           if(isCanvas){
-            optionCanvas.viewbox(0,0,$("#widthVal").val(),$("#heightVal").val());
+            optionCanvas.viewbox(0,0,$("#widthVal").val()/selfCanvas.zoom,$("#heightVal").val()/selfCanvas.zoom);
             optionCanvas.width($('#'+options[option]+"Val").val());
           } else {
             selfCanvas.optionShape.width($('#'+options[option]+"Val").val());
@@ -160,7 +166,7 @@ export default class Canvas
           if(isCanvas) {
             optionCanvas.style('fill',$('#colorFillVal')[0].value);
           }else{
-          selfCanvas.optionShape.fill($('#colorFillVal')[0].value);
+            selfCanvas.optionShape.fill($('#colorFillVal')[0].value);
           }
           break;
           case "strokeWidthDiv":
@@ -170,6 +176,13 @@ export default class Canvas
       });
     }
     this.manageOption(this);
+  }
+
+  updateZoom()
+  {
+    this.zoom=($('#zoom').val()+1)/100; //trouver une echelle plus maligne
+    this.draw.viewbox(0,0,this.draw.width()/this.zoom,this.draw.height()/this.zoom);
+    console.log(this.draw.viewbox().zoom);
   }
 
   manageOption(object)
@@ -220,7 +233,7 @@ export default class Canvas
         $('#'+optionsType[object.type][option]+"Val").val(this.optionShape.attr('fill'));
         break;
         case "strokeWidthDiv":
-          $('#'+optionsType[object.type][option]+"Val").val(this.optionShape.attr('stroke-width'));
+        $('#'+optionsType[object.type][option]+"Val").val(this.optionShape.attr('stroke-width'));
         break;
       }
     }

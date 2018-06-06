@@ -162,3 +162,21 @@ a.active svg .stroke {
   margin-top: 20px;
 }
 
+input[type=range][orient=vertical] {
+  -webkit-writing-mode: bt-lr;
+      -ms-writing-mode: bt-lr;
+          writing-mode: bt-lr;
+  /* IE */
+  -webkit-appearance: slider-vertical;
+  /* WebKit */
+  width: 8px;
+  height: 175px;
+  margin-left: 15px;
+  margin-top: 5px;
+}
+
+.slider-text {
+  color: white;
+  margin-left: 15px;
+}
+

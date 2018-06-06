@@ -573,6 +573,8 @@ $(document).ready(function () {
   }
 
   $('#strokeWidth').popover({ trigger: 'hover', content: "Stroke width in pixels" });
+
+  $('#zoom').popover({ trigger: 'hover', content: "Zoom level" });
 });
 
 /***/ }),
@@ -603,7 +605,8 @@ var Canvas = function () {
 
     this.type = "svg";
     //this.draw = SVG(divId).size(width,height);
-    this.draw = SVG(divId).viewbox(0, 0, width, height).attr({ width: width / 2, height: height / 2 });
+    this.draw = SVG(divId).viewbox(0, 0, width, height).attr({ width: width, height: height });
+    this.zoom = 1;
 
     this.actions = [];
     this.actionIndex = 0;
@@ -638,6 +641,10 @@ var Canvas = function () {
       if (e.target.nodeName == "svg") {
         selfCanvas.manageOption(selfCanvas);
       }
+    });
+
+    $('#zoom').on('change', function () {
+      selfCanvas.updateZoom();
     });
 
     var canvas = this;
@@ -703,7 +710,7 @@ var Canvas = function () {
         switch (options[option]) {
           case "width":
             if (isCanvas) {
-              optionCanvas.viewbox(0, 0, $("#widthVal").val(), $("#heightVal").val());
+              optionCanvas.viewbox(0, 0, $("#widthVal").val() / selfCanvas.zoom, $("#heightVal").val() / selfCanvas.zoom);
               optionCanvas.width($('#' + options[option] + "Val").val());
             } else {
               selfCanvas.optionShape.width($('#' + options[option] + "Val").val());
@@ -759,6 +766,13 @@ var Canvas = function () {
   }
 
   _createClass(Canvas, [{
+    key: 'updateZoom',
+    value: function updateZoom() {
+      this.zoom = ($('#zoom').val() + 1) / 100; //trouver une echelle plus maligne
+      this.draw.viewbox(0, 0, this.draw.width() / this.zoom, this.draw.height() / this.zoom);
+      console.log(this.draw.viewbox().zoom);
+    }
+  }, {
     key: 'manageOption',
     value: function manageOption(object) {
       this.optionShape = object;
