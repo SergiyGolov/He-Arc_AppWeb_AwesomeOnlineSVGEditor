@@ -584,7 +584,7 @@ $(document).ready(function () {
 /***/ 46:
 /***/ (function(module, exports) {
 
-throw new Error("Module build failed: SyntaxError: Unexpected token (58:0)\n\n\u001b[0m \u001b[90m 56 | \u001b[39m    })\u001b[33m;\u001b[39m\n \u001b[90m 57 | \u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 58 | \u001b[39m\u001b[33m<<\u001b[39m\u001b[33m<<\u001b[39m\u001b[33m<<\u001b[39m\u001b[33m<\u001b[39m \u001b[33mHEAD\u001b[39m\n \u001b[90m    | \u001b[39m\u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 59 | \u001b[39m    $(\u001b[32m'#zoom'\u001b[39m)\u001b[33m.\u001b[39mon(\u001b[32m'change'\u001b[39m\u001b[33m,\u001b[39m\u001b[36mfunction\u001b[39m(){\n \u001b[90m 60 | \u001b[39m      selfCanvas\u001b[33m.\u001b[39mupdateZoom()\u001b[33m;\u001b[39m\n \u001b[90m 61 | \u001b[39m    })\u001b[33m;\u001b[39m\u001b[0m\n");
+throw new Error("Module build failed: SyntaxError: D:/Projects/AWb-g2-AwesomeOnlineSVGEditor/AwesomeSVGEditor/resources/assets/js/canvas.js: Unexpected token (58:0)\n\n  56 |     });\n  57 | \n> 58 | <<<<<<< HEAD\n     | ^\n  59 |     $('#zoom').on('change',function(){\n  60 |       selfCanvas.updateZoom();\n  61 |     });\n");
 
 /***/ })
 
