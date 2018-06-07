@@ -378,12 +378,16 @@ class EventManager
 
     //Loggin button
     let authReload = function(){
+      console.log("reload !!!")
       $('#svgEditor svg').removeAttr('xmlns:svgjs'); //Suppression d'un attribut qui est dupliqué
       let detached=$('#svgEditor').find(':hidden').detach();
       $('#code').val($('#svgEditor').html()); // TODO ne pas passer par l'élément DOM
 
       $('#svgEditor svg').append(detached);
-      $('#form-update').attr('method','put');
+      //let action = $('#form-update').attr('action');
+      //action = action.substring(0,action.lastIndexOf("/"));
+      //action = action.substring(0,action.lastIndexOf("/")+1)+"reload";
+      //$('#form-update').attr('action', action);
       $('#form-update').submit();
     }
 

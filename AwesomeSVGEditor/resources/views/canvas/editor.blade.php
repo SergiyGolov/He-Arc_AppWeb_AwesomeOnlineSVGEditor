@@ -257,7 +257,11 @@
       </div>
       <div class="hidden-data"></div>
       <div class="hidden-data">
-        {{ Form::open(array('id' => 'form-update')) }}
+        <?php
+          $action = Auth::check()?(URL::route('canvas.store')):(URL::route('reload'));
+          echo Form::open(array('id' => 'form-update', 'url' => $action));
+        ?>
+        @csrf
         {{ Form::text('name', isset($canvas)?$canvas->name:'', array('id' => 'name-canvas', 'class' => 'form-control')) }}
         {{ Form::textarea('code', isset($canvas)?$canvas->code:'', array('id' => 'code', 'class' => 'form-control')) }}
         {{ Form::hidden('id', isset($canvas)?$canvas->id:'', array('id' => 'id')) }}

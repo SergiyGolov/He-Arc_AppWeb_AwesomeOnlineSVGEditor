@@ -55,4 +55,22 @@ class LoginController extends Controller
             ]);
         }
     }
+
+    protected function sendLoginResponse(Request $request)
+    {
+        $this->clearLoginAttempts($request);
+        if($request->ajax()){
+            // If request from AJAX
+            return response()->json([
+                'auth' => auth()->check(),
+                'user' => $user,
+                'intended' => URL::previous(),
+            ]);
+        } else {
+            // Normal POST do redirect
+            $request->session()->regenerate();
+            return $this->authenticated($request, $this->guard()->user())
+                ?: redirect()->intended($this->redirectPath());
+        }
+    }
 }

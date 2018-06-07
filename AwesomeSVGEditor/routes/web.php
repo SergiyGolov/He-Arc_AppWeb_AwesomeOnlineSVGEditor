@@ -23,7 +23,7 @@ Auth::routes();
 //Canvas edit section
 Route::resource('canvas', 'CanvasController');//->middleware('auth.basic');
 
-Route::put('/canvas/create', 'CanvasController@createPut'); //Route supplémentaire pour ne rien perdre après une authentification
+Route::post('/reload', 'CanvasController@reload')->name('reload'); //Route supplémentaire pour ne rien perdre après une authentification
 Route::post('/canvas/sanitise','CanvasController@sanitiseAjax'); //Sanitise un svg
 Route::get('/canvas/{id}/png', 'CanvasController@downloadPNG_ID');
 Route::get('/canvas/{id}/svg', 'CanvasController@downloadSVG_ID');

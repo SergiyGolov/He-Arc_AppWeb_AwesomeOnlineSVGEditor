@@ -132,7 +132,7 @@ class CanvasController extends Controller
   /**
   * Show the form for creating a new Ressource after Log in
   */
-  public function createPut()
+  public function reload()
   {
     $canvas = new Canvas();
     $canvas->name       = Input::get('name');
