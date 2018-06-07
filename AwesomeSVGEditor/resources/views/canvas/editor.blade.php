@@ -171,9 +171,7 @@
         </a>
 
         <input type="number" id="strokeWidth" min=0 value=1>
-        <span class="slider-text">+</span>
-        <input id="zoom" type="range" orient="vertical" min=0 max=100 value=30 />
-        <span class="slider-text">-</span>
+
 
         <!-- Hidden color picker, don't remove those lines -->
         <input type="color" id="fillColor" class="invisible">

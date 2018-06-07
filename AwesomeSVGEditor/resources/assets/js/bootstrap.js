@@ -7,6 +7,7 @@ let SVG = require('svg.js');
 require('svg.draggable.js');
 require('svg.select.js');
 require('svg.resize.js');
+require('svg.panzoom.js');
 
 /**
  * We'll load jQuery and the Bootstrap jQuery plugin which provides support

@@ -71,7 +71,7 @@
 
 
 var bind = __webpack_require__(5);
-var isBuffer = __webpack_require__(24);
+var isBuffer = __webpack_require__(25);
 
 /*global toString:true*/
 
@@ -10752,7 +10752,7 @@ return jQuery;
 /* WEBPACK VAR INJECTION */(function(process) {
 
 var utils = __webpack_require__(0);
-var normalizeHeaderName = __webpack_require__(27);
+var normalizeHeaderName = __webpack_require__(28);
 
 var DEFAULT_CONTENT_TYPE = {
   'Content-Type': 'application/x-www-form-urlencoded'
@@ -10846,7 +10846,7 @@ utils.forEach(['post', 'put', 'patch'], function forEachMethodWithData(method) {
 
 module.exports = defaults;
 
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(26)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(27)))
 
 /***/ }),
 /* 3 */
@@ -13430,12 +13430,12 @@ module.exports = function bind(fn, thisArg) {
 
 
 var utils = __webpack_require__(0);
-var settle = __webpack_require__(28);
-var buildURL = __webpack_require__(30);
-var parseHeaders = __webpack_require__(31);
-var isURLSameOrigin = __webpack_require__(32);
+var settle = __webpack_require__(29);
+var buildURL = __webpack_require__(31);
+var parseHeaders = __webpack_require__(32);
+var isURLSameOrigin = __webpack_require__(33);
 var createError = __webpack_require__(7);
-var btoa = (typeof window !== 'undefined' && window.btoa && window.btoa.bind(window)) || __webpack_require__(33);
+var btoa = (typeof window !== 'undefined' && window.btoa && window.btoa.bind(window)) || __webpack_require__(34);
 
 module.exports = function xhrAdapter(config) {
   return new Promise(function dispatchXhrRequest(resolve, reject) {
@@ -13532,7 +13532,7 @@ module.exports = function xhrAdapter(config) {
     // This is only done if running in a standard browser environment.
     // Specifically not if we're in a web worker, or react-native.
     if (utils.isStandardBrowserEnv()) {
-      var cookies = __webpack_require__(34);
+      var cookies = __webpack_require__(35);
 
       // Add xsrf header
       var xsrfValue = (config.withCredentials || isURLSameOrigin(config.url)) && config.xsrfCookieName ?
@@ -13616,7 +13616,7 @@ module.exports = function xhrAdapter(config) {
 "use strict";
 
 
-var enhanceError = __webpack_require__(29);
+var enhanceError = __webpack_require__(30);
 
 /**
  * Create an Error with the specified message, config, error code, request and response.
@@ -13677,8 +13677,8 @@ module.exports = Cancel;
 /***/ (function(module, exports, __webpack_require__) {
 
 __webpack_require__(11);
-__webpack_require__(42);
-module.exports = __webpack_require__(43);
+__webpack_require__(43);
+module.exports = __webpack_require__(44);
 
 
 /***/ }),
@@ -13723,6 +13723,7 @@ var SVG = __webpack_require__(17);
 __webpack_require__(18);
 __webpack_require__(19);
 __webpack_require__(20);
+__webpack_require__(21);
 
 /**
  * We'll load jQuery and the Bootstrap jQuery plugin which provides support
@@ -13732,7 +13733,7 @@ __webpack_require__(20);
 
 try {
   window.$ = window.jQuery = __webpack_require__(1);
-  __webpack_require__(21);
+  __webpack_require__(22);
 } catch (e) {}
 
 /**
@@ -13741,7 +13742,7 @@ try {
  * CSRF token as a header based on the value of the "XSRF" token cookie.
  */
 
-window.axios = __webpack_require__(22);
+window.axios = __webpack_require__(23);
 window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 
 /**
@@ -31454,13 +31455,13 @@ module.exports = function() {
 
 var __WEBPACK_AMD_DEFINE_RESULT__;/*!
 * svg.js - A lightweight library for manipulating and animating SVG.
-* @version 2.6.4
+* @version 2.6.5
 * https://svgdotjs.github.io/
 *
 * @copyright Wout Fierens <wout@mick-wout.com>
 * @license MIT
 *
-* BUILT: Wed Feb 07 2018 22:59:25 GMT+0100 (Mitteleuropäische Zeit)
+* BUILT: Sat May 26 2018 22:47:07 GMT+0200 (Mitteleuropäische Sommerzeit)
 */;
 (function(root, factory) {
   /* istanbul ignore next */
@@ -32011,7 +32012,11 @@ SVG.extend(SVG.PointArray, {
     if (Array.isArray(array)) {
       // and it is not flat, there is no need to parse it
       if(Array.isArray(array[0])) {
-        return array
+        // make sure to use a clone
+        return array.map(function (el) { return el.slice() })
+      } else if (array[0].x != null){
+        // allow point objects to be passed
+        return array.map(function (el) { return [el.x, el.y] })
       }
     } else { // Else, it is considered as a string
       // parse points
@@ -32536,7 +32541,7 @@ SVG.Element = SVG.invent({
         .height(new SVG.Number(p.height))
     }
     // Clone element
-  , clone: function(parent, withData) {
+  , clone: function(parent) {
       // write dom data to the dom so the clone can pickup the data
       this.writeDataToDom()
 
@@ -32652,7 +32657,7 @@ SVG.Element = SVG.invent({
       // loop trough ancestors if type is given
       while(parent && parent.node instanceof window.SVGElement){
         if(typeof type === 'string' ? parent.matches(type) : parent instanceof type) return parent
-        if(parent.node.parentNode.nodeName == '#document') return null // #720
+        if(!parent.node.parentNode || parent.node.parentNode.nodeName == '#document') return null // #759, #720
         parent = SVG.adopt(parent.node.parentNode)
       }
     }
@@ -32689,7 +32694,7 @@ SVG.Element = SVG.invent({
       // act as a setter if svg is given
       if (svg && this instanceof SVG.Parent) {
         // dump raw svg
-        well.innerHTML = '<svg>' + svg.replace(/\n/, '').replace(/<(\w+)([^<]+?)\/>/g, '<$1$2></$1>') + '</svg>'
+        well.innerHTML = '<svg>' + svg.replace(/\n/, '').replace(/<([\w:-]+)([^<]+?)\/>/g, '<$1$2></$1>') + '</svg>'
 
         // transplant nodes
         for (var i = 0, il = well.firstChild.childNodes.length; i < il; i++)
@@ -33494,8 +33499,13 @@ SVG.MorphObj = SVG.invent({
   create: function(from, to){
     // prepare color for morphing
     if(SVG.Color.isColor(to)) return new SVG.Color(from).morph(to)
-    // prepare value list for morphing
-    if(SVG.regex.delimiter.test(from)) return new SVG.Array(from).morph(to)
+    // check if we have a list of values
+    if(SVG.regex.delimiter.test(from)) {
+      // prepare path for morphing
+      if(SVG.regex.pathLetters.test(from)) return new SVG.PathArray(from).morph(to)
+      // prepare value list for morphing
+      else return new SVG.Array(from).morph(to)
+    }
     // prepare number for morphing
     if(SVG.regex.numberAndUnit.test(to)) return new SVG.Number(from).morph(to)
 
@@ -33995,7 +34005,11 @@ SVG.Matrix = SVG.invent({
     }
     // Convert matrix to string
   , toString: function() {
-      return 'matrix(' + this.a + ',' + this.b + ',' + this.c + ',' + this.d + ',' + this.e + ',' + this.f + ')'
+      // Construct the matrix directly, avoid values that are too small
+      return 'matrix(' + float32String(this.a) + ',' + float32String(this.b)
+        + ',' + float32String(this.c) + ',' + float32String(this.d)
+        + ',' + float32String(this.e) + ',' + float32String(this.f)
+        + ')'
     }
   }
 
@@ -34971,7 +34985,7 @@ SVG.extend(SVG.Element, {
     if(event instanceof window.Event){
         this.node.dispatchEvent(event)
     }else{
-        this.node.dispatchEvent(event = new window.CustomEvent(event, {detail:data, cancelable: true}))
+        this.node.dispatchEvent(event = new SVG.CustomEvent(event, {detail:data, cancelable: true}))
     }
 
     this._event = event
@@ -35040,6 +35054,122 @@ SVG.G = SVG.invent({
       return this.put(new SVG.G)
     }
   }
+})
+
+SVG.Doc = SVG.invent({
+  // Initialize node
+  create: function(element) {
+    if (element) {
+      // ensure the presence of a dom element
+      element = typeof element == 'string' ?
+        document.getElementById(element) :
+        element
+
+      // If the target is an svg element, use that element as the main wrapper.
+      // This allows svg.js to work with svg documents as well.
+      if (element.nodeName == 'svg') {
+        this.constructor.call(this, element)
+      } else {
+        this.constructor.call(this, SVG.create('svg'))
+        element.appendChild(this.node)
+        this.size('100%', '100%')
+      }
+
+      // set svg element attributes and ensure defs node
+      this.namespace().defs()
+    }
+  }
+
+  // Inherit from
+, inherit: SVG.Container
+
+  // Add class methods
+, extend: {
+    // Add namespaces
+    namespace: function() {
+      return this
+        .attr({ xmlns: SVG.ns, version: '1.1' })
+        .attr('xmlns:xlink', SVG.xlink, SVG.xmlns)
+        .attr('xmlns:svgjs', SVG.svgjs, SVG.xmlns)
+    }
+    // Creates and returns defs element
+  , defs: function() {
+      if (!this._defs) {
+        var defs
+
+        // Find or create a defs element in this instance
+        if (defs = this.node.getElementsByTagName('defs')[0])
+          this._defs = SVG.adopt(defs)
+        else
+          this._defs = new SVG.Defs
+
+        // Make sure the defs node is at the end of the stack
+        this.node.appendChild(this._defs.node)
+      }
+
+      return this._defs
+    }
+    // custom parent method
+  , parent: function() {
+      if(!this.node.parentNode || this.node.parentNode.nodeName == '#document') return null
+      return this.node.parentNode
+    }
+    // Fix for possible sub-pixel offset. See:
+    // https://bugzilla.mozilla.org/show_bug.cgi?id=608812
+  , spof: function() {
+      var pos = this.node.getScreenCTM()
+
+      if (pos)
+        this
+          .style('left', (-pos.e % 1) + 'px')
+          .style('top',  (-pos.f % 1) + 'px')
+
+      return this
+    }
+
+      // Removes the doc from the DOM
+  , remove: function() {
+      if(this.parent()) {
+        this.parent().removeChild(this.node)
+      }
+
+      return this
+    }
+  , clear: function() {
+      // remove children
+      while(this.node.hasChildNodes())
+        this.node.removeChild(this.node.lastChild)
+
+      // remove defs reference
+      delete this._defs
+
+      // add back parser
+      if(!SVG.parser.draw.parentNode)
+        this.node.appendChild(SVG.parser.draw)
+
+      return this
+    }
+  , clone: function (parent) {
+      // write dom data to the dom so the clone can pickup the data
+      this.writeDataToDom()
+
+      // get reference to node
+      var node = this.node
+
+      // clone element and assign new id
+      var clone = assignNewId(node.cloneNode(true))
+
+      // insert the clone in the given parent or after myself
+      if(parent) {
+        (parent.node || parent).appendChild(clone.node)
+      } else {
+        node.parentNode.insertBefore(clone.node, node.nextSibling)
+      }
+
+      return clone
+    }
+  }
+
 })
 
 // ### This module adds backward / forward functionality to elements.
@@ -35150,7 +35280,7 @@ SVG.Mask = SVG.invent({
       this.targets = []
 
       // remove mask from parent
-      this.parent().removeElement(this)
+      SVG.Element.prototype.remove.call(this)
 
       return this
     }
@@ -35410,102 +35540,6 @@ SVG.extend(SVG.Defs, {
   }
 
 })
-SVG.Doc = SVG.invent({
-  // Initialize node
-  create: function(element) {
-    if (element) {
-      // ensure the presence of a dom element
-      element = typeof element == 'string' ?
-        document.getElementById(element) :
-        element
-
-      // If the target is an svg element, use that element as the main wrapper.
-      // This allows svg.js to work with svg documents as well.
-      if (element.nodeName == 'svg') {
-        this.constructor.call(this, element)
-      } else {
-        this.constructor.call(this, SVG.create('svg'))
-        element.appendChild(this.node)
-        this.size('100%', '100%')
-      }
-
-      // set svg element attributes and ensure defs node
-      this.namespace().defs()
-    }
-  }
-
-  // Inherit from
-, inherit: SVG.Container
-
-  // Add class methods
-, extend: {
-    // Add namespaces
-    namespace: function() {
-      return this
-        .attr({ xmlns: SVG.ns, version: '1.1' })
-        .attr('xmlns:xlink', SVG.xlink, SVG.xmlns)
-        .attr('xmlns:svgjs', SVG.svgjs, SVG.xmlns)
-    }
-    // Creates and returns defs element
-  , defs: function() {
-      if (!this._defs) {
-        var defs
-
-        // Find or create a defs element in this instance
-        if (defs = this.node.getElementsByTagName('defs')[0])
-          this._defs = SVG.adopt(defs)
-        else
-          this._defs = new SVG.Defs
-
-        // Make sure the defs node is at the end of the stack
-        this.node.appendChild(this._defs.node)
-      }
-
-      return this._defs
-    }
-    // custom parent method
-  , parent: function() {
-      return this.node.parentNode.nodeName == '#document' ? null : this.node.parentNode
-    }
-    // Fix for possible sub-pixel offset. See:
-    // https://bugzilla.mozilla.org/show_bug.cgi?id=608812
-  , spof: function() {
-      var pos = this.node.getScreenCTM()
-
-      if (pos)
-        this
-          .style('left', (-pos.e % 1) + 'px')
-          .style('top',  (-pos.f % 1) + 'px')
-
-      return this
-    }
-
-      // Removes the doc from the DOM
-  , remove: function() {
-      if(this.parent()) {
-        this.parent().removeChild(this.node)
-      }
-
-      return this
-    }
-  , clear: function() {
-      // remove children
-      while(this.node.hasChildNodes())
-        this.node.removeChild(this.node.lastChild)
-
-      // remove defs reference
-      delete this._defs
-
-      // add back parser
-      if(!SVG.parser.draw.parentNode)
-        this.node.appendChild(SVG.parser.draw)
-
-      return this
-    }
-  }
-
-})
-
 SVG.Shape = SVG.invent({
   // Initialize node
   create: function(element) {
@@ -36015,7 +36049,7 @@ SVG.Text = SVG.invent({
       if (y == null)
         return typeof oy === 'number' ? oy - o : oy
 
-      return this.attr('y', typeof y === 'number' ? y + o : y)
+      return this.attr('y', typeof y.valueOf() === 'number' ? y + o : y)
     }
     // Move center over x-axis
   , cx: function(x) {
@@ -36956,26 +36990,35 @@ function fullBox(b) {
 
 // Get id from reference string
 function idFromReference(url) {
-  var m = url.toString().match(SVG.regex.reference)
+  var m = (url || '').toString().match(SVG.regex.reference)
 
   if (m) return m[1]
 }
 
+// If values like 1e-88 are passed, this is not a valid 32 bit float,
+// but in those cases, we are so close to 0 that 0 works well!
+function float32String(v) {
+  return Math.abs(v) > 1e-37 ? v : 0
+}
+
 // Create matrix array for looping
 var abcdef = 'abcdef'.split('')
+
 // Add CustomEvent to IE9 and IE10
 if (typeof window.CustomEvent !== 'function') {
   // Code from: https://developer.mozilla.org/en-US/docs/Web/API/CustomEvent
-  var CustomEvent = function(event, options) {
+  var CustomEventPoly = function(event, options) {
     options = options || { bubbles: false, cancelable: false, detail: undefined }
     var e = document.createEvent('CustomEvent')
     e.initCustomEvent(event, options.bubbles, options.cancelable, options.detail)
     return e
   }
 
-  CustomEvent.prototype = window.Event.prototype
+  CustomEventPoly.prototype = window.Event.prototype
 
-  window.CustomEvent = CustomEvent
+  SVG.CustomEvent = CustomEventPoly
+} else {
+  SVG.CustomEvent = window.CustomEvent
 }
 
 // requestAnimationFrame / cancelAnimationFrame Polyfill with fallback based on Paul Irish
@@ -38027,10 +38070,229 @@ SVG.Element.prototype.selectize.defaults = {
 
 /***/ }),
 /* 21 */
+/***/ (function(module, exports) {
+
+/*!
+* svg.panzoom.js - A plugin for svg.js that enables panzoom for viewport elements
+* @version 1.1.1
+* https://github.com/svgdotjs/svg.panzoom.js#readme
+*
+* @copyright Ulrich-Matthias Schäfer
+* @license MIT
+*/;
+;(function() {
+"use strict";
+
+var normalizeEvent = function(ev) {
+  if(!ev.touches) {
+    ev.touches = [{clientX: ev.clientX, clientY: ev.clientY}]
+  }
+
+  return ev.touches
+}
+
+SVG.extend(SVG.Doc, SVG.Nested, {
+
+  panZoom: function(options) {
+    this.off('.panZoom')
+
+    // when called with false, disable panZoom
+    if(options === false) return this
+
+    options = options || {}
+    var zoomFactor = options.zoomFactor || 0.03
+    var zoomMin = options.zoomMin || Number.MIN_VALUE
+    var zoomMax = options.zoomMax || Number.MAX_VALUE
+
+    var lastP, lastTouches, zoomInProgress = false
+
+    var wheelZoom = function(ev) {
+      ev.preventDefault()
+
+      // touchpads can give ev.deltaY == 0, which skews the lvl calculation
+      if(ev.deltaY == 0) return
+
+      var lvl = this.zoom() - zoomFactor * ev.deltaY/Math.abs(ev.deltaY)
+        , p = this.point(ev.clientX, ev.clientY)
+
+      if(lvl > zoomMax)
+        lvl = zoomMax
+
+      if(lvl < zoomMin)
+        lvl = zoomMin
+
+      this.zoom(lvl, p)
+    }
+
+    var pinchZoomStart = function(ev) {
+      lastTouches = normalizeEvent(ev)
+
+      if(lastTouches.length < 2) return
+      ev.preventDefault()
+
+      if(this.fire('pinchZoomStart', {event: ev}).event().defaultPrevented)
+        return
+
+      this.off('touchstart.panZoom', pinchZoomStart)
+
+      zoomInProgress = true
+      SVG.on(document, 'touchmove.panZoom', pinchZoom, this, {passive:false})
+      SVG.on(document, 'touchend.panZoom', pinchZoomStop, this, {passive:false})
+    }
+
+    var pinchZoomStop = function(ev) {
+      ev.preventDefault()
+      zoomInProgress = false
+
+      this.fire('pinchZoomEnd', {event: ev})
+
+      SVG.off(document,'touchmove.panZoom', pinchZoom)
+      SVG.off(document,'touchend.panZoom', pinchZoomStop)
+      this.on('touchstart.panZoom', pinchZoomStart)
+    }
+
+    var pinchZoom = function(ev) {
+      ev.preventDefault()
+
+      var currentTouches = normalizeEvent(ev)
+        , zoom = this.zoom()
+
+      // Distance Formula
+      var lastDelta = Math.sqrt(
+        Math.pow(lastTouches[0].clientX - lastTouches[1].clientX, 2) +
+        Math.pow(lastTouches[0].clientY - lastTouches[1].clientY, 2)
+      )
+
+      var currentDelta = Math.sqrt(
+        Math.pow(currentTouches[0].clientX - currentTouches[1].clientX, 2) +
+        Math.pow(currentTouches[0].clientY - currentTouches[1].clientY, 2)
+      )
+
+      var zoomAmount = lastDelta/currentDelta
+
+      if((zoom < zoomMin && zoomAmount > 1) || (zoom > zoomMax && zoomAmount < 1))
+        zoomAmount = 1
+
+      var currentFocus = {
+        x: currentTouches[0].clientX + 0.5 * (currentTouches[1].clientX - currentTouches[0].clientX),
+        y: currentTouches[0].clientY + 0.5 * (currentTouches[1].clientY - currentTouches[0].clientY)
+      }
+
+      var lastFocus = {
+        x: lastTouches[0].clientX + 0.5 * (lastTouches[1].clientX - lastTouches[0].clientX),
+        y: lastTouches[0].clientY + 0.5 * (lastTouches[1].clientY - lastTouches[0].clientY)
+      }
+
+      var p = this.point(currentFocus.x, currentFocus.y)
+      var focusP = this.point(2*currentFocus.x-lastFocus.x, 2*currentFocus.y-lastFocus.y)
+      var box = new SVG.Box(this.viewbox()).transform(
+        new SVG.Matrix()
+          .translate(p.x, p.y)
+          .scale(zoomAmount, 0, 0)
+          .translate(-focusP.x, -focusP.y)
+      )
+
+      this.viewbox(box)
+
+      lastTouches = currentTouches
+
+      this.fire('zoom', {box: box, focus: focusP})
+    }
+
+    var panStart = function(ev) {
+      ev.preventDefault()
+
+      this.off('mousedown.panZoom', panStart)
+
+      lastTouches = normalizeEvent(ev)
+
+      if(zoomInProgress) return
+
+      this.fire('panStart', {event: ev})
+
+      lastP = {x: lastTouches[0].clientX, y: lastTouches[0].clientY }
+
+      SVG.on(document, 'mousemove.panZoom', panning, this)
+      SVG.on(document, 'mouseup.panZoom', panStop, this)
+    }
+
+    var panStop = function(ev) {
+      ev.preventDefault()
+
+      this.fire('panEnd', {event: ev})
+
+      SVG.off(document,'mousemove.panZoom', panning)
+      SVG.off(document,'mouseup.panZoom', panStop)
+      this.on('mousedown.panZoom', panStart)
+    }
+
+    var panning = function(ev) {
+      ev.preventDefault()
+
+      var currentTouches = normalizeEvent(ev)
+
+      var currentP = {x: currentTouches[0].clientX, y: currentTouches[0].clientY }
+        , p1 = this.point(currentP.x, currentP.y)
+        , p2 = this.point(lastP.x, lastP.y)
+        , deltaP = [p2.x - p1.x, p2.y - p1.y]
+        , box = new SVG.Box(this.viewbox()).transform(new SVG.Matrix().translate(deltaP[0], deltaP[1]))
+
+      this.viewbox(box)
+      lastP = currentP
+    }
+
+    this.on('wheel.panZoom', wheelZoom)
+    this.on('touchstart.panZoom', pinchZoomStart, this, {passive:false})
+    this.on('mousedown.panZoom', panStart, this)
+
+    return this
+
+  },
+
+  zoom: function(level, point) {
+    var style = window.getComputedStyle(this.node)
+      , width = parseFloat(style.getPropertyValue('width'))
+      , height = parseFloat(style.getPropertyValue('height'))
+      , v = this.viewbox()
+      , zoomX = width / v.width
+      , zoomY = height / v.height
+      , zoom = Math.min(zoomX, zoomY)
+
+    if(level == null) {
+      return zoom
+    }
+
+    var zoomAmount = zoom / level
+    if(zoomAmount === Infinity) zoomAmount = Number.MIN_VALUE
+
+    point = point || new SVG.Point(width/2 / zoomX + v.x, height/2 / zoomY + v.y)
+
+    var box = new SVG.Box(v)
+      .transform(new SVG.Matrix()
+        .scale(zoomAmount, point.x, point.y)
+      )
+
+    if(this.fire('zoom', {box: box, focus: point}).event().defaultPrevented)
+      return this
+
+    return this.viewbox(box)
+  }
+})
+
+SVG.extend(SVG.FX, {
+  zoom: function(level, point) {
+    return this.add('zoom', [new SVG.Number(level)].concat(point || []))
+  }
+})
+}());
+
+
+/***/ }),
+/* 22 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /*!
-  * Bootstrap v4.1.0 (https://getbootstrap.com/)
+  * Bootstrap v4.1.1 (https://getbootstrap.com/)
   * Copyright 2011-2018 The Bootstrap Authors (https://github.com/twbs/bootstrap/graphs/contributors)
   * Licensed under MIT (https://github.com/twbs/bootstrap/blob/master/LICENSE)
   */
@@ -38101,7 +38363,7 @@ SVG.Element.prototype.selectize.defaults = {
 
   /**
    * --------------------------------------------------------------------------
-   * Bootstrap (v4.1.0): util.js
+   * Bootstrap (v4.1.1): util.js
    * Licensed under MIT (https://github.com/twbs/bootstrap/blob/master/LICENSE)
    * --------------------------------------------------------------------------
    */
@@ -38234,7 +38496,7 @@ SVG.Element.prototype.selectize.defaults = {
 
   /**
    * --------------------------------------------------------------------------
-   * Bootstrap (v4.1.0): alert.js
+   * Bootstrap (v4.1.1): alert.js
    * Licensed under MIT (https://github.com/twbs/bootstrap/blob/master/LICENSE)
    * --------------------------------------------------------------------------
    */
@@ -38246,7 +38508,7 @@ SVG.Element.prototype.selectize.defaults = {
      * ------------------------------------------------------------------------
      */
     var NAME = 'alert';
-    var VERSION = '4.1.0';
+    var VERSION = '4.1.1';
     var DATA_KEY = 'bs.alert';
     var EVENT_KEY = "." + DATA_KEY;
     var DATA_API_KEY = '.data-api';
@@ -38283,9 +38545,11 @@ SVG.Element.prototype.selectize.defaults = {
 
       // Public
       _proto.close = function close(element) {
-        element = element || this._element;
+        var rootElement = this._element;
 
-        var rootElement = this._getRootElement(element);
+        if (element) {
+          rootElement = this._getRootElement(element);
+        }
 
         var customEvent = this._triggerCloseEvent(rootElement);
 
@@ -38407,7 +38671,7 @@ SVG.Element.prototype.selectize.defaults = {
 
   /**
    * --------------------------------------------------------------------------
-   * Bootstrap (v4.1.0): button.js
+   * Bootstrap (v4.1.1): button.js
    * Licensed under MIT (https://github.com/twbs/bootstrap/blob/master/LICENSE)
    * --------------------------------------------------------------------------
    */
@@ -38419,7 +38683,7 @@ SVG.Element.prototype.selectize.defaults = {
      * ------------------------------------------------------------------------
      */
     var NAME = 'button';
-    var VERSION = '4.1.0';
+    var VERSION = '4.1.1';
     var DATA_KEY = 'bs.button';
     var EVENT_KEY = "." + DATA_KEY;
     var DATA_API_KEY = '.data-api';
@@ -38571,7 +38835,7 @@ SVG.Element.prototype.selectize.defaults = {
 
   /**
    * --------------------------------------------------------------------------
-   * Bootstrap (v4.1.0): carousel.js
+   * Bootstrap (v4.1.1): carousel.js
    * Licensed under MIT (https://github.com/twbs/bootstrap/blob/master/LICENSE)
    * --------------------------------------------------------------------------
    */
@@ -38583,7 +38847,7 @@ SVG.Element.prototype.selectize.defaults = {
      * ------------------------------------------------------------------------
      */
     var NAME = 'carousel';
-    var VERSION = '4.1.0';
+    var VERSION = '4.1.1';
     var DATA_KEY = 'bs.carousel';
     var EVENT_KEY = "." + DATA_KEY;
     var DATA_API_KEY = '.data-api';
@@ -39072,7 +39336,7 @@ SVG.Element.prototype.selectize.defaults = {
 
   /**
    * --------------------------------------------------------------------------
-   * Bootstrap (v4.1.0): collapse.js
+   * Bootstrap (v4.1.1): collapse.js
    * Licensed under MIT (https://github.com/twbs/bootstrap/blob/master/LICENSE)
    * --------------------------------------------------------------------------
    */
@@ -39084,7 +39348,7 @@ SVG.Element.prototype.selectize.defaults = {
      * ------------------------------------------------------------------------
      */
     var NAME = 'collapse';
-    var VERSION = '4.1.0';
+    var VERSION = '4.1.1';
     var DATA_KEY = 'bs.collapse';
     var EVENT_KEY = "." + DATA_KEY;
     var DATA_API_KEY = '.data-api';
@@ -39355,7 +39619,7 @@ SVG.Element.prototype.selectize.defaults = {
           var $this = $$$1(this);
           var data = $this.data(DATA_KEY);
 
-          var _config = _objectSpread({}, Default, $this.data(), typeof config === 'object' && config);
+          var _config = _objectSpread({}, Default, $this.data(), typeof config === 'object' && config ? config : {});
 
           if (!data && _config.toggle && /show|hide/.test(config)) {
             _config.toggle = false;
@@ -39432,7 +39696,7 @@ SVG.Element.prototype.selectize.defaults = {
 
   /**
    * --------------------------------------------------------------------------
-   * Bootstrap (v4.1.0): dropdown.js
+   * Bootstrap (v4.1.1): dropdown.js
    * Licensed under MIT (https://github.com/twbs/bootstrap/blob/master/LICENSE)
    * --------------------------------------------------------------------------
    */
@@ -39444,7 +39708,7 @@ SVG.Element.prototype.selectize.defaults = {
      * ------------------------------------------------------------------------
      */
     var NAME = 'dropdown';
-    var VERSION = '4.1.0';
+    var VERSION = '4.1.1';
     var DATA_KEY = 'bs.dropdown';
     var EVENT_KEY = "." + DATA_KEY;
     var DATA_API_KEY = '.data-api';
@@ -39914,7 +40178,7 @@ SVG.Element.prototype.selectize.defaults = {
 
   /**
    * --------------------------------------------------------------------------
-   * Bootstrap (v4.1.0): modal.js
+   * Bootstrap (v4.1.1): modal.js
    * Licensed under MIT (https://github.com/twbs/bootstrap/blob/master/LICENSE)
    * --------------------------------------------------------------------------
    */
@@ -39926,7 +40190,7 @@ SVG.Element.prototype.selectize.defaults = {
      * ------------------------------------------------------------------------
      */
     var NAME = 'modal';
-    var VERSION = '4.1.0';
+    var VERSION = '4.1.1';
     var DATA_KEY = 'bs.modal';
     var EVENT_KEY = "." + DATA_KEY;
     var DATA_API_KEY = '.data-api';
@@ -40402,7 +40666,7 @@ SVG.Element.prototype.selectize.defaults = {
         return this.each(function () {
           var data = $$$1(this).data(DATA_KEY);
 
-          var _config = _objectSpread({}, Modal.Default, $$$1(this).data(), typeof config === 'object' && config);
+          var _config = _objectSpread({}, Default, $$$1(this).data(), typeof config === 'object' && config ? config : {});
 
           if (!data) {
             data = new Modal(this, _config);
@@ -40492,7 +40756,7 @@ SVG.Element.prototype.selectize.defaults = {
 
   /**
    * --------------------------------------------------------------------------
-   * Bootstrap (v4.1.0): tooltip.js
+   * Bootstrap (v4.1.1): tooltip.js
    * Licensed under MIT (https://github.com/twbs/bootstrap/blob/master/LICENSE)
    * --------------------------------------------------------------------------
    */
@@ -40504,7 +40768,7 @@ SVG.Element.prototype.selectize.defaults = {
      * ------------------------------------------------------------------------
      */
     var NAME = 'tooltip';
-    var VERSION = '4.1.0';
+    var VERSION = '4.1.1';
     var DATA_KEY = 'bs.tooltip';
     var EVENT_KEY = "." + DATA_KEY;
     var JQUERY_NO_CONFLICT = $$$1.fn[NAME];
@@ -41009,7 +41273,7 @@ SVG.Element.prototype.selectize.defaults = {
       };
 
       _proto._getConfig = function _getConfig(config) {
-        config = _objectSpread({}, this.constructor.Default, $$$1(this.element).data(), config);
+        config = _objectSpread({}, this.constructor.Default, $$$1(this.element).data(), typeof config === 'object' && config ? config : {});
 
         if (typeof config.delay === 'number') {
           config.delay = {
@@ -41159,7 +41423,7 @@ SVG.Element.prototype.selectize.defaults = {
 
   /**
    * --------------------------------------------------------------------------
-   * Bootstrap (v4.1.0): popover.js
+   * Bootstrap (v4.1.1): popover.js
    * Licensed under MIT (https://github.com/twbs/bootstrap/blob/master/LICENSE)
    * --------------------------------------------------------------------------
    */
@@ -41171,7 +41435,7 @@ SVG.Element.prototype.selectize.defaults = {
      * ------------------------------------------------------------------------
      */
     var NAME = 'popover';
-    var VERSION = '4.1.0';
+    var VERSION = '4.1.1';
     var DATA_KEY = 'bs.popover';
     var EVENT_KEY = "." + DATA_KEY;
     var JQUERY_NO_CONFLICT = $$$1.fn[NAME];
@@ -41356,7 +41620,7 @@ SVG.Element.prototype.selectize.defaults = {
 
   /**
    * --------------------------------------------------------------------------
-   * Bootstrap (v4.1.0): scrollspy.js
+   * Bootstrap (v4.1.1): scrollspy.js
    * Licensed under MIT (https://github.com/twbs/bootstrap/blob/master/LICENSE)
    * --------------------------------------------------------------------------
    */
@@ -41368,7 +41632,7 @@ SVG.Element.prototype.selectize.defaults = {
      * ------------------------------------------------------------------------
      */
     var NAME = 'scrollspy';
-    var VERSION = '4.1.0';
+    var VERSION = '4.1.1';
     var DATA_KEY = 'bs.scrollspy';
     var EVENT_KEY = "." + DATA_KEY;
     var DATA_API_KEY = '.data-api';
@@ -41495,7 +41759,7 @@ SVG.Element.prototype.selectize.defaults = {
 
 
       _proto._getConfig = function _getConfig(config) {
-        config = _objectSpread({}, Default, config);
+        config = _objectSpread({}, Default, typeof config === 'object' && config ? config : {});
 
         if (typeof config.target !== 'string') {
           var id = $$$1(config.target).attr('id');
@@ -41668,7 +41932,7 @@ SVG.Element.prototype.selectize.defaults = {
 
   /**
    * --------------------------------------------------------------------------
-   * Bootstrap (v4.1.0): tab.js
+   * Bootstrap (v4.1.1): tab.js
    * Licensed under MIT (https://github.com/twbs/bootstrap/blob/master/LICENSE)
    * --------------------------------------------------------------------------
    */
@@ -41680,7 +41944,7 @@ SVG.Element.prototype.selectize.defaults = {
      * ------------------------------------------------------------------------
      */
     var NAME = 'tab';
-    var VERSION = '4.1.0';
+    var VERSION = '4.1.1';
     var DATA_KEY = 'bs.tab';
     var EVENT_KEY = "." + DATA_KEY;
     var DATA_API_KEY = '.data-api';
@@ -41916,7 +42180,7 @@ SVG.Element.prototype.selectize.defaults = {
 
   /**
    * --------------------------------------------------------------------------
-   * Bootstrap (v4.0.0): index.js
+   * Bootstrap (v4.1.1): index.js
    * Licensed under MIT (https://github.com/twbs/bootstrap/blob/master/LICENSE)
    * --------------------------------------------------------------------------
    */
@@ -41957,13 +42221,13 @@ SVG.Element.prototype.selectize.defaults = {
 
 
 /***/ }),
-/* 22 */
+/* 23 */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(23);
+module.exports = __webpack_require__(24);
 
 /***/ }),
-/* 23 */
+/* 24 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -41971,7 +42235,7 @@ module.exports = __webpack_require__(23);
 
 var utils = __webpack_require__(0);
 var bind = __webpack_require__(5);
-var Axios = __webpack_require__(25);
+var Axios = __webpack_require__(26);
 var defaults = __webpack_require__(2);
 
 /**
@@ -42006,14 +42270,14 @@ axios.create = function create(instanceConfig) {
 
 // Expose Cancel & CancelToken
 axios.Cancel = __webpack_require__(9);
-axios.CancelToken = __webpack_require__(40);
+axios.CancelToken = __webpack_require__(41);
 axios.isCancel = __webpack_require__(8);
 
 // Expose all/spread
 axios.all = function all(promises) {
   return Promise.all(promises);
 };
-axios.spread = __webpack_require__(41);
+axios.spread = __webpack_require__(42);
 
 module.exports = axios;
 
@@ -42022,7 +42286,7 @@ module.exports.default = axios;
 
 
 /***/ }),
-/* 24 */
+/* 25 */
 /***/ (function(module, exports) {
 
 /*!
@@ -42049,7 +42313,7 @@ function isSlowBuffer (obj) {
 
 
 /***/ }),
-/* 25 */
+/* 26 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -42057,8 +42321,8 @@ function isSlowBuffer (obj) {
 
 var defaults = __webpack_require__(2);
 var utils = __webpack_require__(0);
-var InterceptorManager = __webpack_require__(35);
-var dispatchRequest = __webpack_require__(36);
+var InterceptorManager = __webpack_require__(36);
+var dispatchRequest = __webpack_require__(37);
 
 /**
  * Create a new instance of Axios
@@ -42135,7 +42399,7 @@ module.exports = Axios;
 
 
 /***/ }),
-/* 26 */
+/* 27 */
 /***/ (function(module, exports) {
 
 // shim for using process in browser
@@ -42325,7 +42589,7 @@ process.umask = function() { return 0; };
 
 
 /***/ }),
-/* 27 */
+/* 28 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -42344,7 +42608,7 @@ module.exports = function normalizeHeaderName(headers, normalizedName) {
 
 
 /***/ }),
-/* 28 */
+/* 29 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -42377,7 +42641,7 @@ module.exports = function settle(resolve, reject, response) {
 
 
 /***/ }),
-/* 29 */
+/* 30 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -42405,7 +42669,7 @@ module.exports = function enhanceError(error, config, code, request, response) {
 
 
 /***/ }),
-/* 30 */
+/* 31 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -42478,7 +42742,7 @@ module.exports = function buildURL(url, params, paramsSerializer) {
 
 
 /***/ }),
-/* 31 */
+/* 32 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -42538,7 +42802,7 @@ module.exports = function parseHeaders(headers) {
 
 
 /***/ }),
-/* 32 */
+/* 33 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -42613,7 +42877,7 @@ module.exports = (
 
 
 /***/ }),
-/* 33 */
+/* 34 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -42656,7 +42920,7 @@ module.exports = btoa;
 
 
 /***/ }),
-/* 34 */
+/* 35 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -42716,7 +42980,7 @@ module.exports = (
 
 
 /***/ }),
-/* 35 */
+/* 36 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -42775,18 +43039,18 @@ module.exports = InterceptorManager;
 
 
 /***/ }),
-/* 36 */
+/* 37 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
 var utils = __webpack_require__(0);
-var transformData = __webpack_require__(37);
+var transformData = __webpack_require__(38);
 var isCancel = __webpack_require__(8);
 var defaults = __webpack_require__(2);
-var isAbsoluteURL = __webpack_require__(38);
-var combineURLs = __webpack_require__(39);
+var isAbsoluteURL = __webpack_require__(39);
+var combineURLs = __webpack_require__(40);
 
 /**
  * Throws a `Cancel` if cancellation has been requested.
@@ -42868,7 +43132,7 @@ module.exports = function dispatchRequest(config) {
 
 
 /***/ }),
-/* 37 */
+/* 38 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -42895,7 +43159,7 @@ module.exports = function transformData(data, headers, fns) {
 
 
 /***/ }),
-/* 38 */
+/* 39 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -42916,7 +43180,7 @@ module.exports = function isAbsoluteURL(url) {
 
 
 /***/ }),
-/* 39 */
+/* 40 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -42937,7 +43201,7 @@ module.exports = function combineURLs(baseURL, relativeURL) {
 
 
 /***/ }),
-/* 40 */
+/* 41 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -43001,7 +43265,7 @@ module.exports = CancelToken;
 
 
 /***/ }),
-/* 41 */
+/* 42 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -43035,13 +43299,13 @@ module.exports = function spread(callback) {
 
 
 /***/ }),
-/* 42 */
+/* 43 */
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin
 
 /***/ }),
-/* 43 */
+/* 44 */
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin

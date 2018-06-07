@@ -60,25 +60,25 @@
 /******/ 	__webpack_require__.p = "/";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 44);
+/******/ 	return __webpack_require__(__webpack_require__.s = 45);
 /******/ })
 /************************************************************************/
 /******/ ({
 
-/***/ 44:
+/***/ 45:
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(45);
+module.exports = __webpack_require__(46);
 
 
 /***/ }),
 
-/***/ 45:
+/***/ 46:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__canvas__ = __webpack_require__(46);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__canvas__ = __webpack_require__(47);
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -580,11 +580,11 @@ $(document).ready(function () {
 
 /***/ }),
 
-/***/ 46:
+/***/ 47:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__shapes__ = __webpack_require__(47);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__shapes__ = __webpack_require__(48);
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -607,7 +607,6 @@ var Canvas = function () {
     this.type = "svg";
     //this.draw = SVG(divId).size(width,height);
     this.draw = SVG(divId).viewbox(0, 0, width, height).attr({ width: width, height: height });
-    this.zoom = 1;
 
     this.actions = [];
     this.actionIndex = 0;
@@ -638,9 +637,14 @@ var Canvas = function () {
 
     var canvas = this;
 
+    this.draw.on('zoom', function (ev) {
+      $('#zoom').val(canvas.draw.zoom() * 2);
+    });
+
     $("#" + divId).mousedown(function (e) {
       if (e.target.nodeName == "svg") {
         canvas.manageOption(canvas);
+        canvas.unselect();
       }
     });
 
@@ -661,9 +665,7 @@ var Canvas = function () {
     this.startDraggable = function () {
       //à revoir pour les groupes svg
       if (this.type != "defs") {
-        this.draggable(function (x, y) {
-          return { x: x < canvas.draw.viewbox().width && x > 0, y: y < canvas.draw.viewbox().height && y > 0 };
-        }).on('beforedrag', function (e) {
+        this.draggable().on('beforedrag', function (e) {
           this.drag_start = [this.x(), this.y()];
         }).on('dragend', function (e) {
           if (this.drag_start[0] != this.x() || this.drag_start[1] != this.y()) {
@@ -711,7 +713,7 @@ var Canvas = function () {
         switch (options[option]) {
           case "width":
             if (isCanvas) {
-              optionCanvas.viewbox(0, 0, $("#widthVal").val() / selfCanvas.zoom, $("#heightVal").val() / selfCanvas.zoom);
+              optionCanvas.viewbox(0, 0, $("#widthVal").val(), $("#heightVal").val());
               optionCanvas.width($('#' + options[option] + "Val").val());
             } else {
               canvas.optionShape.width($('#' + options[option] + "Val").val());
@@ -747,11 +749,7 @@ var Canvas = function () {
             canvas.optionShape.stroke($('#colorStrokeVal')[0].value);
             break;
           case "colorFill":
-            if (isCanvas) {
-              optionCanvas.style('fill', $('#colorFillVal')[0].value);
-            } else {
-              canvas.optionShape.fill($('#colorFillVal')[0].value);
-            }
+            canvas.optionShape.fill($('#colorFillVal')[0].value);
             break;
           case "strokeWidthDiv":
             canvas.optionShape.attr('stroke-width', $('#' + options[option] + "Val").val());
@@ -767,13 +765,6 @@ var Canvas = function () {
   }
 
   _createClass(Canvas, [{
-    key: 'updateZoom',
-    value: function updateZoom() {
-      this.zoom = ($('#zoom').val() + 1) / 100; //trouver une echelle plus maligne
-      this.draw.viewbox(0, 0, this.draw.width() / this.zoom, this.draw.height() / this.zoom);
-      console.log(this.draw.viewbox().zoom);
-    }
-  }, {
     key: 'manageOption',
     value: function manageOption(object) {
       this.optionShape = object;
@@ -927,6 +918,7 @@ var Canvas = function () {
     key: 'mouseMove',
     value: function mouseMove(e) {
       e.preventDefault();
+
       var relativePosX = e.pageX - $('#svgEditor').children().first().offset().left;
       var relativePosY = e.pageY - $('#svgEditor').children().first().offset().top;
       var box = this.draw.viewbox();
@@ -1033,7 +1025,7 @@ var Canvas = function () {
 
 /***/ }),
 
-/***/ 47:
+/***/ 48:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
