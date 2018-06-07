@@ -69,6 +69,7 @@
                 <span class="dropdown-item"><input type="checkbox" id="visibility"><label for="visibility">publicly visible</label></span>
               </div>
             </li>
+            <a id="save" href="#" class="btn btn-lg btn-outline-warning">Save</a>
           </ul>
 
           <ul class="navbar-nav mx-auto">
@@ -79,7 +80,6 @@
 
           <!-- Right Side Of Navbar -->
           <ul class="navbar-nav ml-auto">
-            <a id="save" href="#" class="btn btn-lg btn-outline-danger">Save</a>
             <!-- Authentication Links -->
             @guest
             <li><a id="login" class="nav-link" href="#">{{ __('Login') }}</a></li>
@@ -171,9 +171,7 @@
         </a>
 
         <input type="number" id="strokeWidth" min=0 value=1>
-        <span class="slider-text">+</span>
-        <input id="zoom" type="range" orient="vertical" min=0 max=100 value=30 />
-        <span class="slider-text">-</span>
+
 
         <!-- Hidden color picker, don't remove those lines -->
         <input type="color" id="fillColor" class="invisible">

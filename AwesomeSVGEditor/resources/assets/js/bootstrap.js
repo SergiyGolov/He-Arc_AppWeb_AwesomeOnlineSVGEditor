@@ -7,6 +7,7 @@ let SVG = require('svg.js');
 require('svg.draggable.js');
 require('svg.select.js');
 require('svg.resize.js');
+require('svg.panzoom.js');
 
 /**
  * We'll load jQuery and the Bootstrap jQuery plugin which provides support
@@ -100,6 +101,8 @@ $(document).ready(function() {
   // Grab any text in the attribute 'data-copy' and pass it to the
   // copy function
   $('.js-copy').click(function() {
+    
+    $('#link-display').select();
     var text = $(this).attr('data-copy');
     var el = $(this);
     copyToClipboard(text, el);

@@ -4,8 +4,8 @@ let options = ['x','y','width','height','x1','y1','x2','y2','colorFill','colorSt
 let optionsType ={
   'svg':['width','height'],
   'rect':['x','y','width','height','strokeWidthDiv','colorFill','colorStroke'],
-  'ellipse':['x','y','colorFill','strokeWidthDiv','colorStroke'],
-  'polyline':['colorStroke','strokeWidthDiv',],
+  'ellipse':['x','y','width','height','colorFill','strokeWidthDiv','colorStroke'],
+  'polyline':['colorStroke','strokeWidthDiv','x','y','width','height'],
   'line':['x1','y1','x2','y2','strokeWidthDiv','colorStroke']
 }
 
@@ -16,7 +16,7 @@ export default class Canvas
     this.type="svg";
     //this.draw = SVG(divId).size(width,height);
     this.draw = SVG(divId).viewbox(0,0,width,height).attr({width:width,height:height});
-    this.zoom=1;
+
 
     this.actions=[];
     this.actionIndex=0;
@@ -48,9 +48,14 @@ export default class Canvas
 
     let canvas = this;
 
+    this.draw.on('zoom', function(ev) {
+      $('#zoom').val(canvas.draw.zoom()*2);
+    });
+
     $( "#"+divId ).mousedown(function(e) {
       if(e.target.nodeName=="svg" ) {
         canvas.manageOption(canvas);
+        canvas.unselect();
       }
     });
 
@@ -70,9 +75,7 @@ export default class Canvas
 
     this.startDraggable=function(){ //à revoir pour les groupes svg
       if(this.type!="defs") {
-        this.draggable(function(x, y) {
-          return { x: x < canvas.draw.viewbox().width && x>0, y: y < canvas.draw.viewbox().height && y>0 }
-        }).on('beforedrag', function(e){
+        this.draggable().on('beforedrag', function(e){
           this.drag_start=[this.x(),this.y()];
         }).on('dragend', function(e){
           if(this.drag_start[0] != this.x() || this.drag_start[1] != this.y()){
@@ -120,7 +123,7 @@ export default class Canvas
         {
           case "width":
           if(isCanvas){
-            optionCanvas.viewbox(0,0,$("#widthVal").val()/selfCanvas.zoom,$("#heightVal").val()/selfCanvas.zoom);
+            optionCanvas.viewbox(0,0,$("#widthVal").val(),$("#heightVal").val());
             optionCanvas.width($('#'+options[option]+"Val").val());
           } else {
             canvas.optionShape.width($('#'+options[option]+"Val").val());
@@ -156,11 +159,7 @@ export default class Canvas
           canvas.optionShape.stroke($('#colorStrokeVal')[0].value);
           break;
           case "colorFill":
-          if(isCanvas) {
-            optionCanvas.style('fill',$('#colorFillVal')[0].value);
-          }else{
           canvas.optionShape.fill($('#colorFillVal')[0].value);
-          }
           break;
           case "strokeWidthDiv":
           canvas.optionShape.attr('stroke-width',$('#'+options[option]+"Val").val());
@@ -171,12 +170,6 @@ export default class Canvas
     this.manageOption(this);
   }
 
-  updateZoom()
-  {
-    this.zoom=($('#zoom').val()+1)/100; //trouver une echelle plus maligne
-    this.draw.viewbox(0,0,this.draw.width()/this.zoom,this.draw.height()/this.zoom);
-    console.log(this.draw.viewbox().zoom);
-  }
 
   manageOption(object)
   {
@@ -234,6 +227,8 @@ export default class Canvas
 
   undo()
   {
+    this.unselect();
+    this.manageOption(this);
     if(this.actionIndex>0) {
       this.actionIndex--;
       switch(this.actions[this.actionIndex][0])
@@ -267,6 +262,7 @@ export default class Canvas
         case this.modesEnum.rectangle:
         case this.modesEnum.circle:
         this.actions[this.actionIndex][1].shape.show()
+        this.manageOption(  this.actions[this.actionIndex][1].shape);
         break;
         case this.modesEnum.erase:
         this.actions[this.actionIndex][1].hide();
@@ -335,6 +331,7 @@ export default class Canvas
   mouseMove(e)
   {
     e.preventDefault();
+
     let relativePosX=e.pageX-$('#svgEditor').children().first().offset().left;
     let relativePosY=e.pageY-$('#svgEditor').children().first().offset().top;
     let box = this.draw.viewbox();
@@ -343,6 +340,7 @@ export default class Canvas
     relativePosY /= zoom;
     if(this.shape!=null && this.mode > this.modesEnum.erase) {
       this.shape.mouseMove(e);
+
     } else {
       this.mouseX=relativePosX;
       this.mouseY=relativePosY;
