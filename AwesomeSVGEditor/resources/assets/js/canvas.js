@@ -4,8 +4,8 @@ let options = ['x','y','width','height','x1','y1','x2','y2','colorFill','colorSt
 let optionsType ={
   'svg':['width','height'],
   'rect':['x','y','width','height','strokeWidthDiv','colorFill','colorStroke'],
-  'ellipse':['x','y','colorFill','strokeWidthDiv','colorStroke'],
-  'polyline':['colorStroke','strokeWidthDiv',],
+  'ellipse':['x','y','width','height','colorFill','strokeWidthDiv','colorStroke'],
+  'polyline':['colorStroke','strokeWidthDiv','x','y','width','height'],
   'line':['x1','y1','x2','y2','strokeWidthDiv','colorStroke']
 }
 
@@ -16,8 +16,6 @@ export default class Canvas
     this.type="svg";
     //this.draw = SVG(divId).size(width,height);
     this.draw = SVG(divId).viewbox(0,0,width,height).attr({width:width,height:height});
-
-
 
 
     this.actions=[];
@@ -229,6 +227,8 @@ export default class Canvas
 
   undo()
   {
+    this.unselect();
+    this.manageOption(this);
     if(this.actionIndex>0) {
       this.actionIndex--;
       switch(this.actions[this.actionIndex][0])
@@ -262,6 +262,7 @@ export default class Canvas
         case this.modesEnum.rectangle:
         case this.modesEnum.circle:
         this.actions[this.actionIndex][1].shape.show()
+        this.manageOption(  this.actions[this.actionIndex][1].shape);
         break;
         case this.modesEnum.erase:
         this.actions[this.actionIndex][1].hide();

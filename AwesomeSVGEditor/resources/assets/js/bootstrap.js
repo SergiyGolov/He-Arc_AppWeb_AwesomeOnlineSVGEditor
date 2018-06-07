@@ -101,6 +101,8 @@ $(document).ready(function() {
   // Grab any text in the attribute 'data-copy' and pass it to the
   // copy function
   $('.js-copy').click(function() {
+    
+    $('#link-display').select();
     var text = $(this).attr('data-copy');
     var el = $(this);
     copyToClipboard(text, el);

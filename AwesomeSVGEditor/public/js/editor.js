@@ -191,9 +191,61 @@ var EventManager = function () {
   }
 
   _createClass(EventManager, [{
+    key: 'showHelp',
+    value: function showHelp() {
+      $('#strokeWidth').popover('show');
+      $('#pointer').popover('show');
+      $('#pen').popover('show');
+      $('#line').popover('show');
+      $('#rectangle').popover('show');
+      $('#ellipse').popover('show');
+      $('#erase').popover('show');
+      $('#fill-color, #color-mode').popover('show');
+    }
+  }, {
+    key: 'hideHelp',
+    value: function hideHelp() {
+      $('#strokeWidth').popover('hide');
+      $('#pointer').popover('hide');
+      $('#pen').popover('hide');
+      $('#line').popover('hide');
+      $('#rectangle').popover('hide');
+      $('#ellipse').popover('hide');
+      $('#erase').popover('hide');
+      $('#fill-color, #color-mode').popover('hide');
+    }
+  }, {
     key: '_connect',
     value: function _connect() {
       var canvas = this.canvas;
+
+      $(document).keydown(function (e) {
+        if (e.keyCode == 83 && e.ctrlKey) {
+          e.preventDefault();
+          window.eventmanager.save();
+        } else if (e.keyCode == 49) {
+          $('#pointer').click();
+        } else if (e.keyCode == 50) {
+          $('#pen').click();
+        } else if (e.keyCode == 51) {
+          $('#line').click();
+        } else if (e.keyCode == 52) {
+          $('#rectangle').click();
+        } else if (e.keyCode == 53) {
+          $('#ellipse').click();
+        } else if (e.keyCode == 54) {
+          $('#erase').click();
+        } else if (e.keyCode == 112 && e.ctrlKey) {
+          window.eventmanager.showHelp();
+        }
+      });
+
+      $(document).keyup(function (e) {
+        if (e.keyCode == 112 && e.ctrlKey) {
+          window.eventmanager.hideHelp();
+        }
+      });
+
       //Paint mode
       $('#pointer').on('click', function () {
         $('#tools a').removeClass("active");
@@ -296,14 +348,6 @@ var EventManager = function () {
         $('#modal-import').modal('toggle');
         window.eventmanager.import = "discardopen";
         $("#fileinput").trigger('click');
-      });
-
-      $('#shareCopy').click(function () {
-        $('#share').select();
-        $(this).attr('data-copy', $('#share').val());
-        var text = $(this).attr('data-copy');
-        var el = $(this);
-        copyToClipboard(text, el);
       });
 
       $('#shareLink').click(function (e) {
@@ -574,8 +618,14 @@ $(document).ready(function () {
   }
 
   $('#strokeWidth').popover({ trigger: 'hover', content: "Stroke width in pixels" });
-
-  $('#zoom').popover({ trigger: 'hover', content: "Zoom level" });
+  $('#pointer').popover({ trigger: 'hover', content: "[1] Pointer tool: select shape to move/resize" });
+  $('#pen').popover({ trigger: 'hover', content: "[2] Free draw tool" });
+  $('#line').popover({ trigger: 'hover', content: "[3] Line draw tool" });
+  $('#rectangle').popover({ trigger: 'hover', content: "[4] Rectangle draw tool, press shift while drawing to draw a square" });
+  $('#ellipse').popover({ trigger: 'hover', content: "[5] Ellipse draw tool, press shift while drawing to draw a circle" });
+  $('#erase').popover({ trigger: 'hover', content: "[6] Erase tool: click on a shape to erase it" });
+  $('#fill-color, #color-mode').popover({ trigger: 'hover', content: "Select shape fill color" });
+  $('#stroke-color').popover({ trigger: 'hover', content: "Select shape stroke color" });
 });
 
 /***/ }),
@@ -595,8 +645,8 @@ var options = ['x', 'y', 'width', 'height', 'x1', 'y1', 'x2', 'y2', 'colorFill',
 var optionsType = {
   'svg': ['width', 'height'],
   'rect': ['x', 'y', 'width', 'height', 'strokeWidthDiv', 'colorFill', 'colorStroke'],
-  'ellipse': ['x', 'y', 'colorFill', 'strokeWidthDiv', 'colorStroke'],
-  'polyline': ['colorStroke', 'strokeWidthDiv'],
+  'ellipse': ['x', 'y', 'width', 'height', 'colorFill', 'strokeWidthDiv', 'colorStroke'],
+  'polyline': ['colorStroke', 'strokeWidthDiv', 'x', 'y', 'width', 'height'],
   'line': ['x1', 'y1', 'x2', 'y2', 'strokeWidthDiv', 'colorStroke']
 };
 
@@ -819,6 +869,8 @@ var Canvas = function () {
   }, {
     key: 'undo',
     value: function undo() {
+      this.unselect();
+      this.manageOption(this);
       if (this.actionIndex > 0) {
         this.actionIndex--;
         switch (this.actions[this.actionIndex][0]) {
@@ -850,6 +902,7 @@ var Canvas = function () {
           case this.modesEnum.rectangle:
           case this.modesEnum.circle:
             this.actions[this.actionIndex][1].shape.show();
+            this.manageOption(this.actions[this.actionIndex][1].shape);
             break;
           case this.modesEnum.erase:
             this.actions[this.actionIndex][1].hide();
