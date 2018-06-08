@@ -232,7 +232,7 @@
             </div>
           </div>
           @endif
-          @if(Auth::check() && !isset($canvas))
+          @if(Auth::check() && !isset($canvas) || !Auth::check())
           <div id="div-notshare">
             <strong>Save your work</strong>
             <p class="card-text">You have to share your work before generating a share link.</p>
