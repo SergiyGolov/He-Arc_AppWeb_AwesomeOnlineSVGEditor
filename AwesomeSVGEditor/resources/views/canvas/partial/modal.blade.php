@@ -249,7 +249,7 @@
             <strong>Save your work</strong>
             <p class="card-text">You have to share your work before generating a share link.</p>
           </div>
-          @endisset
+          @endif
         </li>
       </ul>
     </div>
