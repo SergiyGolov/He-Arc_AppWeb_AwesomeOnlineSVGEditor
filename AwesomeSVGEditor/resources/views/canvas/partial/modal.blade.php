@@ -194,22 +194,35 @@
       </div>
       <ul class="list-group list-group-flush">
         <li class="list-group-item">
-          @isset($canvas)
-          <div id="div-share" class="{{ $canvas->share==''?'':'d-none' }}">
+          @if(isset($canvas)||Auth::check())
+          <?php
+          $classShare='d-none';
+          $classUnshare='d-none';
+          $url='';
+          if(isset($canvas)){
+            if($canvas->share==''){
+              $classShare='';
+            }else {
+              $classUnshare='';
+            }
+            $url=URL::to("/canvas/{$canvas->share}");
+          }
+          ?>
+          <div id="div-share" class="{{ $classShare }}">
             <a id="share-btn" role="button" class="btn btn-outline-primary float-right" href="#">Generate share link</a>
             <strong>Share this canvas</strong>
             <p class="card-text">Generate a share link to your show your work</p>
           </div>
-          <div id="div-unshare" class="{{ $canvas->share!=''?'':'d-none' }}">
+          <div id="div-unshare" class="{{ $classUnshare }}">
             <a id="unshare-btn" role="button" class="btn btn-outline-primary float-right" href="#">Remove share link</a>
             <strong>Unshare this canvas</strong>
             <div>
               <label for="card-text">Your share link :</label>
               <div class="contact">
                 <div class="input-group mb-3">
-                  <input id="link-display" type="text" class="form-control" readonly aria-label="Share link" aria-describedby="basic-addon2" value="{{ URL::to("/canvas/{$canvas->share}") }}">
+                  <input id="link-display" type="text" class="form-control" readonly aria-label="Share link" aria-describedby="basic-addon2" value="{{ $url }}">
                   <div class="input-group-append">
-                    <button id="link-copy" type="button" class="btn btn-outline-default btn-copy js-tooltip js-copy" data-toggle="tooltip" data-placement="bottom" data-copy="{{ URL::to("/canvas/{$canvas->share}") }}" title="Copy to clipboard">
+                    <button id="link-copy" type="button" class="btn btn-outline-default btn-copy js-tooltip js-copy" data-toggle="tooltip" data-placement="bottom" data-copy="{{ $url }}" title="Copy to clipboard">
                       <!-- icon from google's material design library -->
                       <svg class="icon" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" width="24" height="24" viewBox="0 0 24 24"><path d="M17,9H7V7H17M17,13H7V11H17M14,17H7V15H14M12,3A1,1 0 0,1 13,4A1,1 0 0,1 12,5A1,1 0 0,1 11,4A1,1 0 0,1 12,3M19,3H14.82C14.4,1.84 13.3,1 12,1C10.7,1 9.6,1.84 9.18,3H5A2,2 0 0,0 3,5V19A2,2 0 0,0 5,21H19A2,2 0 0,0 21,19V5A2,2 0 0,0 19,3Z" /></svg>
                     </button>
@@ -218,12 +231,40 @@
               </div>
             </div>
           </div>
-          @else
-          <strong>Save your work</strong>
-          <p class="card-text">You have to share your work before generating a share link.</p>
+          @endif
+          @if(Auth::check() && !isset($canvas))
+          <div id="div-notshare">
+            <strong>Save your work</strong>
+            <p class="card-text">You have to share your work before generating a share link.</p>
+          </div>
           @endisset
         </li>
       </ul>
+    </div>
+  </div>
+</div>
+<!-- Button trigger modal -->
+<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalLong">
+  Aide
+</button>
+
+<!-- Modal -->
+<div class="modal fade" id="exampleModalLong" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLongTitle">Help</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        ...
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary">Save changes</button>
+      </div>
     </div>
   </div>
 </div>

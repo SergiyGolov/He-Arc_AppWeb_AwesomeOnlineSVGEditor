@@ -71,7 +71,7 @@
 
 
 var bind = __webpack_require__(5);
-var isBuffer = __webpack_require__(25);
+var isBuffer = __webpack_require__(24);
 
 /*global toString:true*/
 
@@ -10752,7 +10752,7 @@ return jQuery;
 /* WEBPACK VAR INJECTION */(function(process) {
 
 var utils = __webpack_require__(0);
-var normalizeHeaderName = __webpack_require__(28);
+var normalizeHeaderName = __webpack_require__(27);
 
 var DEFAULT_CONTENT_TYPE = {
   'Content-Type': 'application/x-www-form-urlencoded'
@@ -10846,7 +10846,7 @@ utils.forEach(['post', 'put', 'patch'], function forEachMethodWithData(method) {
 
 module.exports = defaults;
 
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(27)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(26)))
 
 /***/ }),
 /* 3 */
@@ -13430,12 +13430,12 @@ module.exports = function bind(fn, thisArg) {
 
 
 var utils = __webpack_require__(0);
-var settle = __webpack_require__(29);
-var buildURL = __webpack_require__(31);
-var parseHeaders = __webpack_require__(32);
-var isURLSameOrigin = __webpack_require__(33);
+var settle = __webpack_require__(28);
+var buildURL = __webpack_require__(30);
+var parseHeaders = __webpack_require__(31);
+var isURLSameOrigin = __webpack_require__(32);
 var createError = __webpack_require__(7);
-var btoa = (typeof window !== 'undefined' && window.btoa && window.btoa.bind(window)) || __webpack_require__(34);
+var btoa = (typeof window !== 'undefined' && window.btoa && window.btoa.bind(window)) || __webpack_require__(33);
 
 module.exports = function xhrAdapter(config) {
   return new Promise(function dispatchXhrRequest(resolve, reject) {
@@ -13532,7 +13532,7 @@ module.exports = function xhrAdapter(config) {
     // This is only done if running in a standard browser environment.
     // Specifically not if we're in a web worker, or react-native.
     if (utils.isStandardBrowserEnv()) {
-      var cookies = __webpack_require__(35);
+      var cookies = __webpack_require__(34);
 
       // Add xsrf header
       var xsrfValue = (config.withCredentials || isURLSameOrigin(config.url)) && config.xsrfCookieName ?
@@ -13616,7 +13616,7 @@ module.exports = function xhrAdapter(config) {
 "use strict";
 
 
-var enhanceError = __webpack_require__(30);
+var enhanceError = __webpack_require__(29);
 
 /**
  * Create an Error with the specified message, config, error code, request and response.
@@ -13677,8 +13677,8 @@ module.exports = Cancel;
 /***/ (function(module, exports, __webpack_require__) {
 
 __webpack_require__(11);
-__webpack_require__(43);
-module.exports = __webpack_require__(44);
+__webpack_require__(42);
+module.exports = __webpack_require__(43);
 
 
 /***/ }),
@@ -13723,7 +13723,7 @@ var SVG = __webpack_require__(17);
 __webpack_require__(18);
 __webpack_require__(19);
 __webpack_require__(20);
-__webpack_require__(21);
+//require('svg.panzoom.js');
 
 /**
  * We'll load jQuery and the Bootstrap jQuery plugin which provides support
@@ -13733,7 +13733,7 @@ __webpack_require__(21);
 
 try {
   window.$ = window.jQuery = __webpack_require__(1);
-  __webpack_require__(22);
+  __webpack_require__(21);
 } catch (e) {}
 
 /**
@@ -13742,7 +13742,7 @@ try {
  * CSRF token as a header based on the value of the "XSRF" token cookie.
  */
 
-window.axios = __webpack_require__(23);
+window.axios = __webpack_require__(22);
 window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 
 /**
@@ -13816,7 +13816,7 @@ $(document).ready(function () {
   // Grab any text in the attribute 'data-copy' and pass it to the
   // copy function
   $('.js-copy').click(function () {
-
+    console.log("Test");
     $('#link-display').select();
     var text = $(this).attr('data-copy');
     var el = $(this);
@@ -38072,225 +38072,6 @@ SVG.Element.prototype.selectize.defaults = {
 
 /***/ }),
 /* 21 */
-/***/ (function(module, exports) {
-
-/*!
-* svg.panzoom.js - A plugin for svg.js that enables panzoom for viewport elements
-* @version 1.1.1
-* https://github.com/svgdotjs/svg.panzoom.js#readme
-*
-* @copyright Ulrich-Matthias Schäfer
-* @license MIT
-*/;
-;(function() {
-"use strict";
-
-var normalizeEvent = function(ev) {
-  if(!ev.touches) {
-    ev.touches = [{clientX: ev.clientX, clientY: ev.clientY}]
-  }
-
-  return ev.touches
-}
-
-SVG.extend(SVG.Doc, SVG.Nested, {
-
-  panZoom: function(options) {
-    this.off('.panZoom')
-
-    // when called with false, disable panZoom
-    if(options === false) return this
-
-    options = options || {}
-    var zoomFactor = options.zoomFactor || 0.03
-    var zoomMin = options.zoomMin || Number.MIN_VALUE
-    var zoomMax = options.zoomMax || Number.MAX_VALUE
-
-    var lastP, lastTouches, zoomInProgress = false
-
-    var wheelZoom = function(ev) {
-      ev.preventDefault()
-
-      // touchpads can give ev.deltaY == 0, which skews the lvl calculation
-      if(ev.deltaY == 0) return
-
-      var lvl = this.zoom() - zoomFactor * ev.deltaY/Math.abs(ev.deltaY)
-        , p = this.point(ev.clientX, ev.clientY)
-
-      if(lvl > zoomMax)
-        lvl = zoomMax
-
-      if(lvl < zoomMin)
-        lvl = zoomMin
-
-      this.zoom(lvl, p)
-    }
-
-    var pinchZoomStart = function(ev) {
-      lastTouches = normalizeEvent(ev)
-
-      if(lastTouches.length < 2) return
-      ev.preventDefault()
-
-      if(this.fire('pinchZoomStart', {event: ev}).event().defaultPrevented)
-        return
-
-      this.off('touchstart.panZoom', pinchZoomStart)
-
-      zoomInProgress = true
-      SVG.on(document, 'touchmove.panZoom', pinchZoom, this, {passive:false})
-      SVG.on(document, 'touchend.panZoom', pinchZoomStop, this, {passive:false})
-    }
-
-    var pinchZoomStop = function(ev) {
-      ev.preventDefault()
-      zoomInProgress = false
-
-      this.fire('pinchZoomEnd', {event: ev})
-
-      SVG.off(document,'touchmove.panZoom', pinchZoom)
-      SVG.off(document,'touchend.panZoom', pinchZoomStop)
-      this.on('touchstart.panZoom', pinchZoomStart)
-    }
-
-    var pinchZoom = function(ev) {
-      ev.preventDefault()
-
-      var currentTouches = normalizeEvent(ev)
-        , zoom = this.zoom()
-
-      // Distance Formula
-      var lastDelta = Math.sqrt(
-        Math.pow(lastTouches[0].clientX - lastTouches[1].clientX, 2) +
-        Math.pow(lastTouches[0].clientY - lastTouches[1].clientY, 2)
-      )
-
-      var currentDelta = Math.sqrt(
-        Math.pow(currentTouches[0].clientX - currentTouches[1].clientX, 2) +
-        Math.pow(currentTouches[0].clientY - currentTouches[1].clientY, 2)
-      )
-
-      var zoomAmount = lastDelta/currentDelta
-
-      if((zoom < zoomMin && zoomAmount > 1) || (zoom > zoomMax && zoomAmount < 1))
-        zoomAmount = 1
-
-      var currentFocus = {
-        x: currentTouches[0].clientX + 0.5 * (currentTouches[1].clientX - currentTouches[0].clientX),
-        y: currentTouches[0].clientY + 0.5 * (currentTouches[1].clientY - currentTouches[0].clientY)
-      }
-
-      var lastFocus = {
-        x: lastTouches[0].clientX + 0.5 * (lastTouches[1].clientX - lastTouches[0].clientX),
-        y: lastTouches[0].clientY + 0.5 * (lastTouches[1].clientY - lastTouches[0].clientY)
-      }
-
-      var p = this.point(currentFocus.x, currentFocus.y)
-      var focusP = this.point(2*currentFocus.x-lastFocus.x, 2*currentFocus.y-lastFocus.y)
-      var box = new SVG.Box(this.viewbox()).transform(
-        new SVG.Matrix()
-          .translate(p.x, p.y)
-          .scale(zoomAmount, 0, 0)
-          .translate(-focusP.x, -focusP.y)
-      )
-
-      this.viewbox(box)
-
-      lastTouches = currentTouches
-
-      this.fire('zoom', {box: box, focus: focusP})
-    }
-
-    var panStart = function(ev) {
-      ev.preventDefault()
-
-      this.off('mousedown.panZoom', panStart)
-
-      lastTouches = normalizeEvent(ev)
-
-      if(zoomInProgress) return
-
-      this.fire('panStart', {event: ev})
-
-      lastP = {x: lastTouches[0].clientX, y: lastTouches[0].clientY }
-
-      SVG.on(document, 'mousemove.panZoom', panning, this)
-      SVG.on(document, 'mouseup.panZoom', panStop, this)
-    }
-
-    var panStop = function(ev) {
-      ev.preventDefault()
-
-      this.fire('panEnd', {event: ev})
-
-      SVG.off(document,'mousemove.panZoom', panning)
-      SVG.off(document,'mouseup.panZoom', panStop)
-      this.on('mousedown.panZoom', panStart)
-    }
-
-    var panning = function(ev) {
-      ev.preventDefault()
-
-      var currentTouches = normalizeEvent(ev)
-
-      var currentP = {x: currentTouches[0].clientX, y: currentTouches[0].clientY }
-        , p1 = this.point(currentP.x, currentP.y)
-        , p2 = this.point(lastP.x, lastP.y)
-        , deltaP = [p2.x - p1.x, p2.y - p1.y]
-        , box = new SVG.Box(this.viewbox()).transform(new SVG.Matrix().translate(deltaP[0], deltaP[1]))
-
-      this.viewbox(box)
-      lastP = currentP
-    }
-
-    this.on('wheel.panZoom', wheelZoom)
-    this.on('touchstart.panZoom', pinchZoomStart, this, {passive:false})
-    this.on('mousedown.panZoom', panStart, this)
-
-    return this
-
-  },
-
-  zoom: function(level, point) {
-    var style = window.getComputedStyle(this.node)
-      , width = parseFloat(style.getPropertyValue('width'))
-      , height = parseFloat(style.getPropertyValue('height'))
-      , v = this.viewbox()
-      , zoomX = width / v.width
-      , zoomY = height / v.height
-      , zoom = Math.min(zoomX, zoomY)
-
-    if(level == null) {
-      return zoom
-    }
-
-    var zoomAmount = zoom / level
-    if(zoomAmount === Infinity) zoomAmount = Number.MIN_VALUE
-
-    point = point || new SVG.Point(width/2 / zoomX + v.x, height/2 / zoomY + v.y)
-
-    var box = new SVG.Box(v)
-      .transform(new SVG.Matrix()
-        .scale(zoomAmount, point.x, point.y)
-      )
-
-    if(this.fire('zoom', {box: box, focus: point}).event().defaultPrevented)
-      return this
-
-    return this.viewbox(box)
-  }
-})
-
-SVG.extend(SVG.FX, {
-  zoom: function(level, point) {
-    return this.add('zoom', [new SVG.Number(level)].concat(point || []))
-  }
-})
-}());
-
-
-/***/ }),
-/* 22 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /*!
@@ -42223,13 +42004,13 @@ SVG.extend(SVG.FX, {
 
 
 /***/ }),
-/* 23 */
+/* 22 */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(24);
+module.exports = __webpack_require__(23);
 
 /***/ }),
-/* 24 */
+/* 23 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -42237,7 +42018,7 @@ module.exports = __webpack_require__(24);
 
 var utils = __webpack_require__(0);
 var bind = __webpack_require__(5);
-var Axios = __webpack_require__(26);
+var Axios = __webpack_require__(25);
 var defaults = __webpack_require__(2);
 
 /**
@@ -42272,14 +42053,14 @@ axios.create = function create(instanceConfig) {
 
 // Expose Cancel & CancelToken
 axios.Cancel = __webpack_require__(9);
-axios.CancelToken = __webpack_require__(41);
+axios.CancelToken = __webpack_require__(40);
 axios.isCancel = __webpack_require__(8);
 
 // Expose all/spread
 axios.all = function all(promises) {
   return Promise.all(promises);
 };
-axios.spread = __webpack_require__(42);
+axios.spread = __webpack_require__(41);
 
 module.exports = axios;
 
@@ -42288,7 +42069,7 @@ module.exports.default = axios;
 
 
 /***/ }),
-/* 25 */
+/* 24 */
 /***/ (function(module, exports) {
 
 /*!
@@ -42315,7 +42096,7 @@ function isSlowBuffer (obj) {
 
 
 /***/ }),
-/* 26 */
+/* 25 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -42323,8 +42104,8 @@ function isSlowBuffer (obj) {
 
 var defaults = __webpack_require__(2);
 var utils = __webpack_require__(0);
-var InterceptorManager = __webpack_require__(36);
-var dispatchRequest = __webpack_require__(37);
+var InterceptorManager = __webpack_require__(35);
+var dispatchRequest = __webpack_require__(36);
 
 /**
  * Create a new instance of Axios
@@ -42401,7 +42182,7 @@ module.exports = Axios;
 
 
 /***/ }),
-/* 27 */
+/* 26 */
 /***/ (function(module, exports) {
 
 // shim for using process in browser
@@ -42591,7 +42372,7 @@ process.umask = function() { return 0; };
 
 
 /***/ }),
-/* 28 */
+/* 27 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -42610,7 +42391,7 @@ module.exports = function normalizeHeaderName(headers, normalizedName) {
 
 
 /***/ }),
-/* 29 */
+/* 28 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -42643,7 +42424,7 @@ module.exports = function settle(resolve, reject, response) {
 
 
 /***/ }),
-/* 30 */
+/* 29 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -42671,7 +42452,7 @@ module.exports = function enhanceError(error, config, code, request, response) {
 
 
 /***/ }),
-/* 31 */
+/* 30 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -42744,7 +42525,7 @@ module.exports = function buildURL(url, params, paramsSerializer) {
 
 
 /***/ }),
-/* 32 */
+/* 31 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -42804,7 +42585,7 @@ module.exports = function parseHeaders(headers) {
 
 
 /***/ }),
-/* 33 */
+/* 32 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -42879,7 +42660,7 @@ module.exports = (
 
 
 /***/ }),
-/* 34 */
+/* 33 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -42922,7 +42703,7 @@ module.exports = btoa;
 
 
 /***/ }),
-/* 35 */
+/* 34 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -42982,7 +42763,7 @@ module.exports = (
 
 
 /***/ }),
-/* 36 */
+/* 35 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -43041,18 +42822,18 @@ module.exports = InterceptorManager;
 
 
 /***/ }),
-/* 37 */
+/* 36 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
 var utils = __webpack_require__(0);
-var transformData = __webpack_require__(38);
+var transformData = __webpack_require__(37);
 var isCancel = __webpack_require__(8);
 var defaults = __webpack_require__(2);
-var isAbsoluteURL = __webpack_require__(39);
-var combineURLs = __webpack_require__(40);
+var isAbsoluteURL = __webpack_require__(38);
+var combineURLs = __webpack_require__(39);
 
 /**
  * Throws a `Cancel` if cancellation has been requested.
@@ -43134,7 +42915,7 @@ module.exports = function dispatchRequest(config) {
 
 
 /***/ }),
-/* 38 */
+/* 37 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -43161,7 +42942,7 @@ module.exports = function transformData(data, headers, fns) {
 
 
 /***/ }),
-/* 39 */
+/* 38 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -43182,7 +42963,7 @@ module.exports = function isAbsoluteURL(url) {
 
 
 /***/ }),
-/* 40 */
+/* 39 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -43203,7 +42984,7 @@ module.exports = function combineURLs(baseURL, relativeURL) {
 
 
 /***/ }),
-/* 41 */
+/* 40 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -43267,7 +43048,7 @@ module.exports = CancelToken;
 
 
 /***/ }),
-/* 42 */
+/* 41 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -43301,13 +43082,13 @@ module.exports = function spread(callback) {
 
 
 /***/ }),
-/* 43 */
+/* 42 */
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin
 
 /***/ }),
-/* 44 */
+/* 43 */
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin

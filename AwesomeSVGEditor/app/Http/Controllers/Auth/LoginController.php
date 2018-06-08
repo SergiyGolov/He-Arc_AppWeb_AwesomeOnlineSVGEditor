@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers\Auth;
 
+use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\URL;
+use Illuminate\Support\Facades\Session;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 
 class LoginController extends Controller
@@ -42,20 +44,8 @@ class LoginController extends Controller
      * The user has been authenticated.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  mixed  $user
      * @return mixed
      */
-    protected function authenticated(\Illuminate\Http\Request $request, $user)
-    {
-        if ($request->ajax()){
-            return response()->json([
-                'auth' => auth()->check(),
-                'user' => $user,
-                'intended' => URL::previous(),
-            ]);
-        }
-    }
-
     protected function sendLoginResponse(Request $request)
     {
         $this->clearLoginAttempts($request);
@@ -63,12 +53,12 @@ class LoginController extends Controller
             // If request from AJAX
             return response()->json([
                 'auth' => auth()->check(),
-                'user' => $user,
                 'intended' => URL::previous(),
+                '_token' => Session::token(),
             ]);
+
         } else {
             // Normal POST do redirect
-            $request->session()->regenerate();
             return $this->authenticated($request, $this->guard()->user())
                 ?: redirect()->intended($this->redirectPath());
         }

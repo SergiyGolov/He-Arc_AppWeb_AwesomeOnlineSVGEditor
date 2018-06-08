@@ -138,7 +138,7 @@ class CanvasController extends Controller
     $canvas->name       = Input::get('name');
     $canvas->code       = Input::get('code');
     $canvas->visibility = Input::get('visibility');
-    return View::make('canvas.editor', ['canvas' => $canvas, 'url' => '']);
+    return View::make('canvas.editor', ['canvas' => $canvas]);
   }
 
   /**

@@ -60,25 +60,25 @@
 /******/ 	__webpack_require__.p = "/";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 45);
+/******/ 	return __webpack_require__(__webpack_require__.s = 44);
 /******/ })
 /************************************************************************/
 /******/ ({
 
-/***/ 45:
+/***/ 44:
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(46);
+module.exports = __webpack_require__(45);
 
 
 /***/ }),
 
-/***/ 46:
+/***/ 45:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__canvas__ = __webpack_require__(47);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__canvas__ = __webpack_require__(46);
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -130,6 +130,8 @@ var EventManager = function () {
                 $('#id').val(msg.id);
                 $('#svg-link').attr('href', '/canvas/' + msg.id + '/svg');
                 $('#png-link').attr('href', '/canvas/' + msg.id + '/png');
+                $('#div-notshare').addClass('d-none');
+                $('#div-share').removeClass('d-none');
                 // $('#share').val(msg.share);
                 // $('#share').val(window.location.origin+"/shared/"+$('#share').val());
               }
@@ -191,61 +193,9 @@ var EventManager = function () {
   }
 
   _createClass(EventManager, [{
-    key: 'showHelp',
-    value: function showHelp() {
-      $('#strokeWidth').popover('show');
-      $('#pointer').popover('show');
-      $('#pen').popover('show');
-      $('#line').popover('show');
-      $('#rectangle').popover('show');
-      $('#ellipse').popover('show');
-      $('#erase').popover('show');
-      $('#fill-color, #color-mode').popover('show');
-    }
-  }, {
-    key: 'hideHelp',
-    value: function hideHelp() {
-      $('#strokeWidth').popover('hide');
-      $('#pointer').popover('hide');
-      $('#pen').popover('hide');
-      $('#line').popover('hide');
-      $('#rectangle').popover('hide');
-      $('#ellipse').popover('hide');
-      $('#erase').popover('hide');
-      $('#fill-color, #color-mode').popover('hide');
-    }
-  }, {
     key: '_connect',
     value: function _connect() {
       var canvas = this.canvas;
-
-      $(document).keydown(function (e) {
-        if (e.keyCode == 83 && e.ctrlKey) {
-          e.preventDefault();
-          window.eventmanager.save();
-        } else if (e.keyCode == 49) {
-          $('#pointer').click();
-        } else if (e.keyCode == 50) {
-          $('#pen').click();
-        } else if (e.keyCode == 51) {
-          $('#line').click();
-        } else if (e.keyCode == 52) {
-          $('#rectangle').click();
-        } else if (e.keyCode == 53) {
-          $('#ellipse').click();
-        } else if (e.keyCode == 54) {
-          $('#erase').click();
-        } else if (e.keyCode == 112 && e.ctrlKey) {
-          window.eventmanager.showHelp();
-        }
-      });
-
-      $(document).keyup(function (e) {
-        if (e.keyCode == 112 && e.ctrlKey) {
-          window.eventmanager.hideHelp();
-        }
-      });
-
       //Paint mode
       $('#pointer').on('click', function () {
         $('#tools a').removeClass("active");
@@ -348,6 +298,14 @@ var EventManager = function () {
         $('#modal-import').modal('toggle');
         window.eventmanager.import = "discardopen";
         $("#fileinput").trigger('click');
+      });
+
+      $('#shareCopy').click(function () {
+        $('#share').select();
+        $(this).attr('data-copy', $('#share').val());
+        var text = $(this).attr('data-copy');
+        var el = $(this);
+        copyToClipboard(text, el);
       });
 
       $('#shareLink').click(function (e) {
@@ -528,8 +486,11 @@ var EventManager = function () {
         $.ajax({
           type: "post",
           url: '/login',
+          responseType: 'json',
           data: { email: email, password: password, _token: _token },
           success: function success(msg) {
+            console.log("connected");
+            console.log(msg);
             authReload();
           },
           error: function error(msg) {
@@ -549,6 +510,7 @@ var EventManager = function () {
         $.ajax({
           type: "post",
           url: '/register',
+          responseType: 'json',
           data: { email: email, name: name, password: password, password_confirmation: password_confirmation, _token: _token },
           success: function success(msg) {
             authReload();
@@ -622,23 +584,17 @@ $(document).ready(function () {
   }
 
   $('#strokeWidth').popover({ trigger: 'hover', content: "Stroke width in pixels" });
-  $('#pointer').popover({ trigger: 'hover', content: "[1] Pointer tool: select shape to move/resize" });
-  $('#pen').popover({ trigger: 'hover', content: "[2] Free draw tool" });
-  $('#line').popover({ trigger: 'hover', content: "[3] Line draw tool" });
-  $('#rectangle').popover({ trigger: 'hover', content: "[4] Rectangle draw tool, press shift while drawing to draw a square" });
-  $('#ellipse').popover({ trigger: 'hover', content: "[5] Ellipse draw tool, press shift while drawing to draw a circle" });
-  $('#erase').popover({ trigger: 'hover', content: "[6] Erase tool: click on a shape to erase it" });
-  $('#fill-color, #color-mode').popover({ trigger: 'hover', content: "Select shape fill color" });
-  $('#stroke-color').popover({ trigger: 'hover', content: "Select shape stroke color" });
+
+  $('#zoom').popover({ trigger: 'hover', content: "Zoom level" });
 });
 
 /***/ }),
 
-/***/ 47:
+/***/ 46:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__shapes__ = __webpack_require__(48);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__shapes__ = __webpack_require__(47);
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -1082,7 +1038,7 @@ var Canvas = function () {
 
 /***/ }),
 
-/***/ 48:
+/***/ 47:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";

@@ -7,7 +7,7 @@ let SVG = require('svg.js');
 require('svg.draggable.js');
 require('svg.select.js');
 require('svg.resize.js');
-require('svg.panzoom.js');
+//require('svg.panzoom.js');
 
 /**
  * We'll load jQuery and the Bootstrap jQuery plugin which provides support
@@ -69,17 +69,17 @@ if (token) {
 // ------------------------------------------------------------------------------
 
 function copyToClipboard(text, el) {
-  var copyTest = document.queryCommandSupported('copy');
-  var elOriginalText = el.attr('data-original-title');
+  let copyTest = document.queryCommandSupported('copy');
+  let elOriginalText = el.attr('data-original-title');
 
   if (copyTest === true) {
-    var copyTextArea = document.createElement("textarea");
+    let copyTextArea = document.createElement("textarea");
     copyTextArea.value = text;
     document.body.appendChild(copyTextArea);
     copyTextArea.select();
     try {
-      var successful = document.execCommand('copy');
-      var msg = successful ? 'Copied!' : 'Whoops, not copied!';
+      let successful = document.execCommand('copy');
+      let msg = successful ? 'Copied!' : 'Whoops, not copied!';
       el.attr('data-original-title', msg).tooltip('show');
     } catch (err) {
       console.log('Oops, unable to copy');
@@ -101,10 +101,10 @@ $(document).ready(function() {
   // Grab any text in the attribute 'data-copy' and pass it to the
   // copy function
   $('.js-copy').click(function() {
-    
+    console.log("Test")
     $('#link-display').select();
-    var text = $(this).attr('data-copy');
-    var el = $(this);
+    let text = $(this).attr('data-copy');
+    let el = $(this);
     copyToClipboard(text, el);
   });
 });

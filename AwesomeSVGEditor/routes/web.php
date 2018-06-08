@@ -19,7 +19,6 @@ Route::get('/home', 'HomeController@index')->name('home');
 //Authentification
 Auth::routes();
 
-
 //Canvas edit section
 Route::resource('canvas', 'CanvasController');//->middleware('auth.basic');
 
