@@ -200,7 +200,9 @@
           $classUnshare='d-none';
           $url='';
           if(isset($canvas)){
-            if($canvas->share==''){
+            if(!isset($canvas->id)){
+              //Rien
+            }else if($canvas->share==''){
               $classShare='';
             }else {
               $classUnshare='';
@@ -232,7 +234,17 @@
             </div>
           </div>
           @endif
-          @if(Auth::check() && !isset($canvas) || !Auth::check())
+          <?php
+          $display = false;
+          if(!Auth::check() || !isset($canvas)){
+            $display = true;
+          }else if(isset($canvas)){
+            if(!isset($canvas->id)){
+              $display = true;
+            }
+          }
+           ?>
+          @if($display)
           <div id="div-notshare">
             <strong>Save your work</strong>
             <p class="card-text">You have to share your work before generating a share link.</p>
