@@ -559,6 +559,7 @@ $(document).ready(function(){
   //Paramètres de taille par défault:
   let width=$('#canvas').width()-10;
   let height=$('#canvas').height()-10;
+
   if($('#code').val()!="")
   {
     width=existingSVG.attr('width');
@@ -566,7 +567,6 @@ $(document).ready(function(){
   }
 
   let id = existingSVG.attr('id') || 'svgEditor';
-
 
   window.canvas = new Canvas(id,width,height);
   window.eventmanager = new EventManager(window.canvas);
@@ -585,6 +585,4 @@ $(document).ready(function(){
   $('#erase').popover({ trigger: 'hover',content: "[6]/[Delete] Erase tool: click on a shape to erase it" });
   $('#fill-color, #color-mode').popover({ trigger: 'hover',content: "Select shape fill color" });
   $('#stroke-color').popover({ trigger: 'hover',content: "Select shape stroke color" });
-
-
 });

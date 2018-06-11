@@ -638,6 +638,7 @@ $(document).ready(function () {
   //Paramètres de taille par défault:
   var width = $('#canvas').width() - 10;
   var height = $('#canvas').height() - 10;
+
   if ($('#code').val() != "") {
     width = existingSVG.attr('width');
     height = existingSVG.attr('height');
