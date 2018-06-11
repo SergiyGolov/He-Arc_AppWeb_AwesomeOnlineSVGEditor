@@ -69,7 +69,13 @@
                 <span class="dropdown-item"><input type="checkbox" id="visibility"><label for="visibility">publicly visible</label></span>
               </div>
             </li>
-            <a id="save" href="#" class="btn btn-lg btn-outline-warning">Save</a>
+
+            <li class="nav-item">
+              <a id="help" role="button" href="#" data-toggle="modal" data-target="#helpModal" class="nav-link">help</a>
+            </li>
+            <li class="nav-item">
+              <a id="save" href="#" class="nav-link btn btn-lg btn-outline-warning">Save</a>
+            </li>
           </ul>
 
           <ul class="navbar-nav mx-auto">
@@ -251,12 +257,12 @@
           </div>
           <div id="forward">
             <div class="aspect-ratio">
-              <button id="moveForward">Move<br/>forward</buttton>
+              <button id="moveForward" class="btn btn-outline-warning">Move<br/>forward</buttton>
             </div>
           </div>
           <div id="backward">
             <div class="aspect-ratio">
-              <button id="moveBackward">Move<br/>backward</buttton>
+              <button id="moveBackward" class="btn btn-outline-warning">Move<br/>backward</buttton>
             </div>
           </div>
           <div>

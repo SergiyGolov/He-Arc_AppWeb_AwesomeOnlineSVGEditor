@@ -1,160 +1,168 @@
 /*
- * TODO coller ce code dans editor.scss à définir
- * Balise de css pour le développement, à déplacer lors de la mise en production
- * Si on le met directement dans le scss, nécessite de lancer npm run prod après chaque modif pour regénérer le css à partir du scss
- */
+* TODO coller ce code dans editor.scss à définir
+* Balise de css pour le développement, à déplacer lors de la mise en production
+* Si on le met directement dans le scss, nécessite de lancer npm run prod après chaque modif pour regénérer le css à partir du scss
+*/
 
- // Variables
- @import "variables";
- @import '~svg.select.js/dist/svg.select.min';
+// Variables
+@import "variables";
+@import '~svg.select.js/dist/svg.select.min';
 
- .expand {
-   height: 100%;
- }
+.expand {
+  height: 100%;
+}
 
- #app {
-     display: grid;
-     grid-template-columns: 1fr;
-     grid-template-rows: min-content 1fr;
- }
+#app {
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-template-rows: min-content 1fr;
+}
 
- #editor {
-   display: grid;
-   grid-template-columns: 50px 1fr 200px;
-   grid-template-rows: 1fr;
- }
+#editor {
+  display: grid;
+  grid-template-columns: 50px 1fr 200px;
+  grid-template-rows: 1fr;
+}
 
- #background-color {
-   fill: $color-bg;
- }
+#background-color {
+  fill: $color-bg;
+}
 
- #tools {
-    display: flex;
-    flex-direction: column;
-    background-color: $color-side;
+#tools {
+  display: flex;
+  flex-direction: column;
+  background-color: $color-side;
 
-    a {
-      padding: 1em 1em;
-      height: 50px;
+  a {
+    padding: 1em 1em;
+    height: 50px;
+  }
+  #erase {
+    padding: 0.9em;
+  }
+  #color-picker{
+    margin: 0 -10px;
+    height: 75px;
+  }
+}
+
+#canvas {
+  background-color: $color-bg;
+}
+
+.height-null{
+  height: 0px;
+}
+
+#options {
+  color:white;
+  background-color: $color-side;
+  padding: 5px;
+
+  .height-null {
+    display:flex;
+    flex-flow: row wrap;
+    color: white;
+    input {
+      width: 100%;
     }
-    #erase {
-      padding: 0.9em;
-    }
-    #color-picker{
-      margin: 0 -10px;
-      height: 75px;
-    }
- }
+  }
 
- #canvas {
-   background-color: $color-bg;
- }
+  #option-select {
+    padding-left: 5px;
+    text-transform:capitalize;
+  }
 
- .height-null{
-   height: 0px;
- }
+  button {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+  }
+}
 
- #options {
-   color:white;
-   background-color: $color-side;
-   padding: 5px;
+#options .height-null > div{
+  width: 50%;
+  padding-top: 50%;
+  height: 0px;
+  position: relative;
+}
 
-   .height-null {
-     display:flex;
-     flex-flow: row wrap;
-     color: white;
-     input {
-       width: 100%;
-     }
-   }
+.aspect-ratio {
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  margin: 5px;
+  padding: 5px;
+  background-color: $color-bg;
+  border-radius: 3px;
+}
 
-   #option-select {
-     padding-left: 5px;
-   }
- }
+a svg .fill{
+  fill: #ecf0f1;
+}
 
- #options .height-null > div{
-   width: 50%;
-   padding-top: 50%;
-   height: 0px;
-   position: relative;
- }
+a svg:hover .fill{
+  fill: white;
+}
 
- .aspect-ratio {
-   position: absolute;
-   top: 0;
-   left: 0;
-   bottom: 0;
-   right: 0;
-   margin: 5px;
-   padding: 5px;
-   background-color: $color-bg;
-   border-radius: 3px;
- }
+a svg .stroke{
+  stroke: #ecf0f1;
+}
 
- a svg .fill{
-   fill: #ecf0f1;
- }
+a svg:hover .stroke{
+  stroke: white;
+}
 
- a svg:hover .fill{
-   fill: white;
- }
+a.active svg .fill{
+  fill: $color-orange;
+}
 
- a svg .stroke{
-   stroke: #ecf0f1;
- }
+a.active svg .stroke{
+  stroke: $color-orange;
+}
 
- a svg:hover .stroke{
-   stroke: white;
- }
+#svgEditor{
+  width:100%;
+  height:100%;
+  display: flex;
+  svg {
+    background-color: white;
+    margin: auto;
+  }
+}
 
- a.active svg .fill{
-   fill: $color-orange;
- }
+#strokeWidth{
+  width:50px;
+}
 
- a.active svg .stroke{
-   stroke: $color-orange;
- }
+.hidden-data {
+  display: none;
+  visibility: hidden;
+}
 
- #svgEditor{
-   width:100%;
-   height:100%;
-   display: flex;
-   svg {
-     background-color: white;
-     margin: auto;
-   }
- }
+#fileinput{
+  display:none;
+}
 
- #strokeWidth{
-   width:50px;
- }
+#share{
+  width:100%;
+}
 
- .hidden-data {
-   display: none;
-   visibility: hidden;
- }
+.tab-content {
+  margin-top: 20px;
+}
 
- #fileinput{
-   display:none;
- }
-
- #share{
-   width:100%;
- }
-
- .tab-content {
-     margin-top: 20px;
- }
-
- input[type=range][orient=vertical]
+input[type=range][orient=vertical]
 {
-    writing-mode: bt-lr; /* IE */
-    -webkit-appearance: slider-vertical; /* WebKit */
-    width: 8px;
-    height: 175px;
-    margin-left:15px;
-    margin-top:5px;
+  writing-mode: bt-lr; /* IE */
+  -webkit-appearance: slider-vertical; /* WebKit */
+  width: 8px;
+  height: 175px;
+  margin-left:15px;
+  margin-top:5px;
 }
 
 .slider-text{
@@ -171,8 +179,4 @@ input{
   &::-webkit-inner-spin-button{
     opacity:1;
   }
-}
-
-#option-select{
-   text-transform:capitalize;
 }
