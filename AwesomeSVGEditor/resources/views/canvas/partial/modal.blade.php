@@ -247,7 +247,7 @@
           @if($display)
           <div id="div-notshare">
             <strong>Save your work</strong>
-            <p class="card-text">You have to share your work before generating a share link.</p>
+            <p class="card-text">You have to save your work before generating a share link.</p>
           </div>
           @endif
         </li>
@@ -256,16 +256,16 @@
   </div>
 </div>
 <!-- Button trigger modal -->
-<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalLong">
-  Aide
+<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#helpModal">
+  Help
 </button>
 
 <!-- Modal -->
-<div class="modal fade" id="exampleModalLong" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
+<div class="modal fade" id="helpModal" tabindex="-1" role="dialog" aria-labelledby="helpModalTitle" aria-hidden="true">
   <div class="modal-dialog modal-lg" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLongTitle">Help</h5>
+        <h5 class="modal-title" id="helpModalTitle">Help</h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
@@ -274,21 +274,36 @@
         <h4>Interface</h4>
         <p>The interface is composed of 4 sections which are the followings:</p>
         <ul>
-          <li><a href="#menu-bar">Menu bar</a></li>
-          <li><a href="#drawing-tools">Drawing tools</a></li>
-          <li><a href="#editor">Editor</a></li>
-          <li><a href="#shapes">Shapes option</a></li>
+          <li><a href="#helpMenu-bar">Menu bar</a></li>
+          <li><a href="#helpDrawing-tools">Drawing tools</a></li>
+          <li><a href="#helpEditor">Editor</a></li>
+          <li><a href="#helpShapes">Shapes options</a></li>
+          <li><a href="#helpShortcuts">Keyboard shortcuts</a></li>
         </ul>
-        <h4 name="menu-bar">Menu bar</h4>
+        <h4 id="helpMenu-bar">Menu bar</h4>
         <h5>File</h5>
+        <ul>
+          <li><strong>Export as: </strong> you can export the canvas as an png or svg file</li>
+          <li><strong>Import svg: </strong> you can import an svg file from your local filesystem with 3 options:</li>
+          <ul>
+            <li><strong>Open in a new tab: </strong> opens a new tab with the freshly imported svg canvas</li>
+            <li><strong>Save changes & Open here: </strong> saves the canvas on current page and remplace it with imported svg canvas</li>
+            <li><strong>Discard changes & Open here: </strong> you will lose the canvas on the current page and the imported svg canvas will replace it</li>
+          </ul>
+          <li><strong>Get share link: </strong> You can generate a share link which allows to view your canvas, without making it publicly accessible to everyone</li>
+        </ul>
         <h5>Edit</h5>
-        <h4 name="drawing-tools">Drawing tools</h4>
+        <li><strong>Edit canvas name: </strong> allows to change the canvas name</li>
+        <li><strong>Publicly visible: </strong> if checked, everyone can see your canvas on the "Explore" page</li>
+        <h4 id="helpDrawing-tools">Drawing tools</h4>
         <p>This section is located on the left of the page and offer all the options for drawing.</p>
         <div>
             <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
             viewBox="0 0 512 512" xml:space="preserve">
             <polygon class="fill" points="429.742,319.31 82.489,0 82.258,471.744 187.633,370.918 249.523,512 346.083,469.642 284.193,328.56"/>
             </svg>
+            Pointer tool: select shape to move/resize
+            <br/>
             <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
             viewBox="0 0 493.638 493.638" xml:space="preserve">
             <polygon class="fill" fill="#020202" points="427.092,118.538 99.89,445.738 90.239,436.086 417.439,108.885 358.708,50.154
@@ -297,19 +312,27 @@
             c0,0,27.29-33.513,43.054-43.053S502.692,62.074,492.627,85.523z"/>
             <polygon class="fill" fill="#020202" points="110.059,468.088 0.127,493.638 25.413,383.447"/>
             </svg>
+            Free draw tool
+              <br/>
             <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
             viewBox="0 0 511.998 511.998" xml:space="preserve">
             <line class="stroke" fill="none" stroke="#000" stroke-width="70" stroke-opacity="null" fill-opacity="null" x1="0" y1="0"
             x2="511.998" y2="511.998" stroke-linejoin="null" stroke-linecap="null" stroke-dasharray="none"></line>
           </svg>
+          Line draw tool
+            <br/>
             <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
             viewBox="0 0 64 48" xml:space="preserve">
             <rect class="fill" width="64" height="48"/>
             </svg>
+            Rectangle draw tool, press shift while drawing to draw a square
+              <br/>
             <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
             viewBox="0 0 512 300" xml:space="preserve">
-            <ellipse class="fill" fill="none" stroke="none" cx="256" cy="150" rx="256" ry="150"></ellipse>
+            <ellipse class="fill" fill="#000000" stroke="none" cx="256" cy="150" rx="256" ry="150"></ellipse>
             </svg>
+            Ellipse draw tool, press shift while drawing to draw a circle
+              <br/>
             <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
             viewBox="0 0 900.5 900.5" style="enable-background:new 0 0 900.5 900.5;" xml:space="preserve">
               <g>
@@ -320,6 +343,8 @@
                 c0-11.046-8.954-20-20-20H618.825v-12.5V91.911z M543.825,112.799h-187.15v-8.389v-12.5V75h187.15v16.911v12.5V112.799z"/>
               </g>
             </svg>
+            Erase tool: click on a shape to erase it
+              <br/>
             <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
               viewBox="0 0 96 96" xml:space="preserve">
               <rect class="fill-color" fill="#f00" width="64" height="64"/>
@@ -327,13 +352,42 @@
                 <rect class="stroke-color" stroke="#fff" stroke-width="1" fill="#0f0" x="32" y="32" width="64" height="64"/>
                 <rect fill="#fff" stroke-width="1" x="52" y="52" width="24" height="24"/>
               </g>
-              <use xlink:href="#fill-color"/>
-            </svg>
-        </div>
-        <h5>File</h5>
-        <h4 name="editor">Editor</h4>
-        <h4 name="shapes">Shapes section</h4>
+              </svg>
+              Select shape fill (filled back square) /stroke (front square with borders) color
+              <br/>
+              <img src="{{ URL::to('/') }}/img/strokeWidth.png" alt="Stroke width"/>
+              Select the stroke width in pixels
 
+        </div>
+        <h4 id="helpEditor">Editor</h4>
+        Central white area of the page, it is here that you can draw your canvas
+        <h4 id="helpShapes">Shapes section</h4>
+        It's the area on the right side of the page, when you click on a shape/background this area will contain actual information on the selected shape, and you can modify these settings (which one is avalaible depends on the selected shape type) :
+        <ul>
+          <li><strong>Width:</strong> Shape's width</li>
+          <li><strong>Height:</strong> Shape's height</li>
+          <li><strong>X:</strong> Shape's x position</li>
+          <li><strong>Y:</strong> Shape's y position</li>
+          <li><strong>Stroke (px):</strong> shape's stroke width in pixels</li>
+          <li><strong>Stroke:</strong> Shape's stroke color</li>
+          <li><strong>Fill:</strong> Shape's fill color</li>
+          <li><strong>X1:</strong> A line's starting x position</li>
+          <li><strong>Y1:</strong> A line's starting y position</li>
+          <li><strong>X2:</strong> A line's ending x position</li>
+          <li><strong>Y2:</strong> A line's ending y position</li>
+        </ul>
+        <h4 id="helpShortcuts">Keyboard shortcuts</h4>
+        <ul>
+          <li><strong>F1: </strong>Show this help menu</li>
+          <li><strong>Ctrl+F1: </strong>Show help popover on the drawing tools</li>
+          <li><strong>Ctrl+S: </strong>Save canvas</li>
+          <li><strong>1: </strong>Select pointer tool</li>
+          <li><strong>2: </strong>Select free draw tool</li>
+          <li><strong>3: </strong>Select line tool</li>
+          <li><strong>4: </strong>Select rectangle tool</li>
+          <li><strong>5: </strong>Select ovale tool</li>
+          <li><strong>6/Delete: </strong>Select delete tool</li>
+        </ul>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>

@@ -55,7 +55,7 @@ class EventManager
             }
           },
           error: function(msg){
-            toastr.error('Canvas error while saving');
+            toastr.error('Canvas error while saving, are you logged in?');
           }
         });
       }else{
@@ -150,10 +150,13 @@ class EventManager
         $('#rectangle').click();
       }else if(e.keyCode == 53 ){
         $('#ellipse').click();
-      }else if(e.keyCode == 54 ){
+      }else if(e.keyCode == 54 || e.keyCode == 46){
         $('#erase').click();
       }else if(e.keyCode==112 && e.ctrlKey){
         window.eventmanager.showHelp();
+      }else if(e.keyCode==112){
+        e.preventDefault();
+        $('#helpModal').modal('toggle');
       }
     });
 
@@ -356,7 +359,7 @@ class EventManager
 
                   $('#app').find("*").addBack().off(); //magouille pour deconnecter tous les événements
 
-                  window.canvas = new Canvas(id,1000,600);
+                  window.canvas = new Canvas(id,$('#svgEditor svg').attr('width'),$('#svgEditor svg').attr('height'));
 
                   window.eventmanager = new EventManager(window.canvas);
                   $("#fileinput").val("");
@@ -369,10 +372,10 @@ class EventManager
                   $('#id').val(-1);
 
                   $('#svgEditor').html(importedSvg);
-
+                  let existingSVG = $('#svgEditor svg');
                   $('#app').find("*").addBack().off(); //magouille pour deconnecter tous les événements
 
-                  window.canvas = new Canvas(id,1000,600);
+                  window.canvas = new Canvas(id,$('#svgEditor svg').attr('width'),$('#svgEditor svg').attr('height'));
 
                   window.eventmanager = new EventManager(window.canvas);
                   $("#fileinput").val("");
@@ -431,7 +434,17 @@ class EventManager
     });
 
     //Save button
-    $('#save').on('click',this.save);
+    $('#save').on('click',function(){
+      if($('#login').length)
+      {
+        toastr.error('You need to be logged in to save your canvas');
+        $('#login').click();
+      }
+      else
+      {
+        window.eventmanager.save();
+      }
+    });
 
     //Loggin button
     let authReload = function(){
@@ -542,10 +555,20 @@ $(document).ready(function(){
 
   $('#svgEditor').html($('#code').val());
   let existingSVG = $('#svgEditor svg');
-  let id = existingSVG.attr('id') || 'svgEditor';
 
   //Paramètres de taille par défault:
-  window.canvas = new Canvas(id,1000,600);
+  let width=$('#svgEditor').width()-10;
+  let height=$('#svgEditor').height()-10;
+  if($('#code').val()!="")
+  {
+    width=existingSVG.attr('width');
+    height=existingSVG.attr('height');
+  }
+
+  let id = existingSVG.attr('id') || 'svgEditor';
+
+
+  window.canvas = new Canvas(id,width,height);
   window.eventmanager = new EventManager(window.canvas);
 
   let name = $('#name-canvas').val();
@@ -559,8 +582,9 @@ $(document).ready(function(){
   $('#line').popover({ trigger: 'hover',content: "[3] Line draw tool" });
   $('#rectangle').popover({ trigger: 'hover',content: "[4] Rectangle draw tool, press shift while drawing to draw a square" });
   $('#ellipse').popover({ trigger: 'hover',content: "[5] Ellipse draw tool, press shift while drawing to draw a circle" });
-  $('#erase').popover({ trigger: 'hover',content: "[6] Erase tool: click on a shape to erase it" });
+  $('#erase').popover({ trigger: 'hover',content: "[6]/[Delete] Erase tool: click on a shape to erase it" });
   $('#fill-color, #color-mode').popover({ trigger: 'hover',content: "Select shape fill color" });
   $('#stroke-color').popover({ trigger: 'hover',content: "Select shape stroke color" });
-  $('#zoom').popover({ trigger: 'hover',content: "Zoom level" })
+
+
 });

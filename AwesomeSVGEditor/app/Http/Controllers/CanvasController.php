@@ -161,7 +161,7 @@ class CanvasController extends Controller
   */
   public function sanitiseAjax(Request $request)
   {
-    if(Request::ajax()){
+    if($request->ajax()){
 
       $sanitizedSVG = CanvasController::sanitise(Input::get('code'));
 

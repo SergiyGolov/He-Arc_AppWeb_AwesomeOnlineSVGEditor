@@ -174,8 +174,8 @@
 
 
         <!-- Hidden color picker, don't remove those lines -->
-        <input type="color" id="fillColor" class="invisible">
-        <input type="color" id="strokeColor" class="invisible">
+        <input type="color" value="#ff0000" id="fillColor" class="invisible">
+        <input type="color" value="#00ff00" id="strokeColor" class="invisible">
       </div>
       <div id="canvas">
         <div id="svgEditor"></div>

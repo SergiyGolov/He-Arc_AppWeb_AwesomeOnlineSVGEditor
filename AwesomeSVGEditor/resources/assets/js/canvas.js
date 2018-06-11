@@ -34,8 +34,8 @@ export default class Canvas
     this.shape = null;
     this.optionShape=null;
 
-    this.fillColor='#000';
-    this.strokeColor='#000';
+    this.fillColor='#f00';
+    this.strokeColor='#0f0';
     this.strokeWidth=1;
 
     this.mouseX=0;

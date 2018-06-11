@@ -140,7 +140,7 @@ var EventManager = function () {
             }
           },
           error: function error(msg) {
-            toastr.error('Canvas error while saving');
+            toastr.error('Canvas error while saving, are you logged in?');
           }
         });
       } else {
@@ -235,10 +235,13 @@ var EventManager = function () {
           $('#rectangle').click();
         } else if (e.keyCode == 53) {
           $('#ellipse').click();
-        } else if (e.keyCode == 54) {
+        } else if (e.keyCode == 54 || e.keyCode == 46) {
           $('#erase').click();
         } else if (e.keyCode == 112 && e.ctrlKey) {
           window.eventmanager.showHelp();
+        } else if (e.keyCode == 112) {
+          e.preventDefault();
+          $('#helpModal').modal('toggle');
         }
       });
 
@@ -437,7 +440,7 @@ var EventManager = function () {
 
                       $('#app').find("*").addBack().off(); //magouille pour deconnecter tous les événements
 
-                      window.canvas = new __WEBPACK_IMPORTED_MODULE_0__canvas__["a" /* default */](id, 1000, 600);
+                      window.canvas = new __WEBPACK_IMPORTED_MODULE_0__canvas__["a" /* default */](id, $('#svgEditor svg').attr('width'), $('#svgEditor svg').attr('height'));
 
                       window.eventmanager = new EventManager(window.canvas);
                       $("#fileinput").val("");
@@ -450,10 +453,10 @@ var EventManager = function () {
                       $('#id').val(-1);
 
                       $('#svgEditor').html(importedSvg);
-
+                      var _existingSVG = $('#svgEditor svg');
                       $('#app').find("*").addBack().off(); //magouille pour deconnecter tous les événements
 
-                      window.canvas = new __WEBPACK_IMPORTED_MODULE_0__canvas__["a" /* default */](id, 1000, 600);
+                      window.canvas = new __WEBPACK_IMPORTED_MODULE_0__canvas__["a" /* default */](id, $('#svgEditor svg').attr('width'), $('#svgEditor svg').attr('height'));
 
                       window.eventmanager = new EventManager(window.canvas);
                       $("#fileinput").val("");
@@ -510,7 +513,14 @@ var EventManager = function () {
       });
 
       //Save button
-      $('#save').on('click', this.save);
+      $('#save').on('click', function () {
+        if ($('#login').length) {
+          toastr.error('You need to be logged in to save your canvas');
+          $('#login').click();
+        } else {
+          window.eventmanager.save();
+        }
+      });
 
       //Loggin button
       var authReload = function authReload() {
@@ -624,10 +634,18 @@ $(document).ready(function () {
 
   $('#svgEditor').html($('#code').val());
   var existingSVG = $('#svgEditor svg');
-  var id = existingSVG.attr('id') || 'svgEditor';
 
   //Paramètres de taille par défault:
-  window.canvas = new __WEBPACK_IMPORTED_MODULE_0__canvas__["a" /* default */](id, 1000, 600);
+  var width = $('#svgEditor').width() - 10;
+  var height = $('#svgEditor').height() - 10;
+  if ($('#code').val() != "") {
+    width = existingSVG.attr('width');
+    height = existingSVG.attr('height');
+  }
+
+  var id = existingSVG.attr('id') || 'svgEditor';
+
+  window.canvas = new __WEBPACK_IMPORTED_MODULE_0__canvas__["a" /* default */](id, width, height);
   window.eventmanager = new EventManager(window.canvas);
 
   var name = $('#name-canvas').val();
@@ -641,10 +659,9 @@ $(document).ready(function () {
   $('#line').popover({ trigger: 'hover', content: "[3] Line draw tool" });
   $('#rectangle').popover({ trigger: 'hover', content: "[4] Rectangle draw tool, press shift while drawing to draw a square" });
   $('#ellipse').popover({ trigger: 'hover', content: "[5] Ellipse draw tool, press shift while drawing to draw a circle" });
-  $('#erase').popover({ trigger: 'hover', content: "[6] Erase tool: click on a shape to erase it" });
+  $('#erase').popover({ trigger: 'hover', content: "[6]/[Delete] Erase tool: click on a shape to erase it" });
   $('#fill-color, #color-mode').popover({ trigger: 'hover', content: "Select shape fill color" });
   $('#stroke-color').popover({ trigger: 'hover', content: "Select shape stroke color" });
-  $('#zoom').popover({ trigger: 'hover', content: "Zoom level" });
 });
 
 /***/ }),
@@ -693,8 +710,8 @@ var Canvas = function () {
     this.shape = null;
     this.optionShape = null;
 
-    this.fillColor = '#000';
-    this.strokeColor = '#000';
+    this.fillColor = '#f00';
+    this.strokeColor = '#0f0';
     this.strokeWidth = 1;
 
     this.mouseX = 0;
