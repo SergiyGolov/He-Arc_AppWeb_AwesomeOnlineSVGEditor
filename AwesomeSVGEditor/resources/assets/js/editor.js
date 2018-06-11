@@ -139,7 +139,7 @@ class EventManager
     $(document).keydown(function(e) {
       if(e.keyCode == 83 && e.ctrlKey){
         e.preventDefault();
-        window.eventmanager.save();
+        $('#save').click();
       }else if(e.keyCode == 49 ){
         $('#pointer').click();
       }else if(e.keyCode == 50 ){
