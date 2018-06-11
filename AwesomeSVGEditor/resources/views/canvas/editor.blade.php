@@ -10,8 +10,11 @@
 
   <title>{{ config('app.name', 'Laravel') }}</title>
 
+<<<<<<< HEAD
 
 
+=======
+>>>>>>> d6caecc2adc734a1dbac99e51239619edc507cbc
   <!-- Fonts -->
   <link rel="dns-prefetch" href="https://fonts.gstatic.com">
   <link href="https://fonts.googleapis.com/css?family=Raleway:300,400,600" rel="stylesheet" type="text/css">
@@ -19,11 +22,19 @@
   <!-- Styles -->
   <link href="{{ asset('css/app.css') }}" rel="stylesheet">
   <link href="{{ asset('css/editor.css') }}" rel="stylesheet">
+<<<<<<< HEAD
 
   <!-- Scripts -->
   <script src="{{ asset('js/app.js') }}" defer></script>
   <script src="{{ asset('js/editor.js') }}" defer></script>
 
+=======
+  
+  <!-- Scripts -->
+  <script src="{{ asset('js/app.js') }}" defer></script>
+  <script src="{{ asset('js/editor.js') }}" defer></script>
+
+>>>>>>> d6caecc2adc734a1dbac99e51239619edc507cbc
 </head>
 <body class="expand">
   <div id="app" class="expand">
