@@ -465,8 +465,8 @@ class EventManager
       e.preventDefault();
       e.stopPropagation();
 
-      let email = $('#login-form #email').val();
-      let password = $('#login-form #password').val();
+      let email = $('#login-form #email-login').val();
+      let password = $('#login-form #password-login').val();
       let _token = $('#login-form input[name=_token]').val();
 
       $.ajax({

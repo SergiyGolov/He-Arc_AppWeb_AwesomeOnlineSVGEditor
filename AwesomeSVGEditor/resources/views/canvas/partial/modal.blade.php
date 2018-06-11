@@ -84,9 +84,9 @@
             <form id="login-form">
               @csrf
               <div class="form-group row">
-                <label for="email" class="col-sm-4 col-form-label text-md-right">{{ __('E-Mail Address') }}</label>
+                <label for="email-login" class="col-sm-4 col-form-label text-md-right">{{ __('E-Mail Address') }}</label>
                 <div class="col-md-6">
-                  <input id="email" type="email" class="form-control{{ $errors->has('email') ? ' is-invalid' : '' }}" name="email" value="{{ old('email') }}" required autofocus>
+                  <input id="email-login" type="email" class="form-control{{ $errors->has('email') ? ' is-invalid' : '' }}" name="email-login" value="{{ old('email') }}" required autofocus>
                   @if ($errors->has('email'))
                   <span class="invalid-feedback">
                     <strong>{{ $errors->first('email') }}</strong>
@@ -95,9 +95,9 @@
                 </div>
               </div>
               <div class="form-group row">
-                <label for="password" class="col-md-4 col-form-label text-md-right">{{ __('Password') }}</label>
+                <label for="password-login" class="col-md-4 col-form-label text-md-right">{{ __('Password') }}</label>
                 <div class="col-md-6">
-                  <input id="password" type="password" class="form-control{{ $errors->has('password') ? ' is-invalid' : '' }}" name="password" required>
+                  <input id="password-login" type="password" class="form-control{{ $errors->has('password') ? ' is-invalid' : '' }}" name="password-login" required>
                   @if ($errors->has('password'))
                   <span class="invalid-feedback">
                     <strong>{{ $errors->first('password') }}</strong>
@@ -293,8 +293,11 @@
           <li><strong>Get share link: </strong> You can generate a share link which allows to view your canvas, without making it publicly accessible to everyone</li>
         </ul>
         <h5>Edit</h5>
-        <li><strong>Edit canvas name: </strong> allows to change the canvas name</li>
-        <li><strong>Publicly visible: </strong> if checked, everyone can see your canvas on the "Explore" page</li>
+        <ul>
+          <li><strong>Edit canvas name: </strong> allows to change the canvas name</li>
+          <li><strong>Publicly visible: </strong> if checked, everyone can see your canvas on the "Explore" page</li>
+        </ul>
+        <hr>
         <h4 id="helpDrawing-tools">Drawing tools</h4>
         <p>This section is located on the left of the page and offer all the options for drawing.</p>
         <div>
@@ -357,10 +360,11 @@
               <br/>
               <img src="{{ URL::to('/') }}/img/strokeWidth.png" alt="Stroke width"/>
               Select the stroke width in pixels
-
         </div>
+        <hr>
         <h4 id="helpEditor">Editor</h4>
         Central white area of the page, it is here that you can draw your canvas
+        <hr>
         <h4 id="helpShapes">Shapes section</h4>
         It's the area on the right side of the page, when you click on a shape/background this area will contain actual information on the selected shape, and you can modify these settings (which one is avalaible depends on the selected shape type) :
         <ul>
@@ -378,17 +382,18 @@
           <li><strong>X2:</strong> A line's ending x position</li>
           <li><strong>Y2:</strong> A line's ending y position</li>
         </ul>
+        <hr>
         <h4 id="helpShortcuts">Keyboard shortcuts</h4>
         <ul>
-          <li><strong>F1: </strong>Show this help menu</li>
-          <li><strong>Ctrl+F1: </strong>Show help popover on the drawing tools</li>
-          <li><strong>Ctrl+S: </strong>Save canvas</li>
-          <li><strong>1: </strong>Select pointer tool</li>
-          <li><strong>2: </strong>Select free draw tool</li>
-          <li><strong>3: </strong>Select line tool</li>
-          <li><strong>4: </strong>Select rectangle tool</li>
-          <li><strong>5: </strong>Select ovale tool</li>
-          <li><strong>6/Delete: </strong>Select delete tool</li>
+          <li><kbd>F1</kbd> Show this help menu</li>
+          <li><kbd>Ctrl+F1</kbd> Show help popover on the drawing tools</li>
+          <li><kbd>Ctrl+S</kbd> Save canvas</li>
+          <li><kbd>1</kbd> Select pointer tool</li>
+          <li><kbd>2</kbd> Select free draw tool</li>
+          <li><kbd>3</kbd> Select line tool</li>
+          <li><kbd>4</kbd> Select rectangle tool</li>
+          <li><kbd>5</kbd> Select ovale tool</li>
+          <li><kbd>6</kbd> ou <kbd> Delete</kbd> Select delete tool</li>
         </ul>
       </div>
       <div class="modal-footer">
