@@ -10,9 +10,7 @@
 
   <title>{{ config('app.name', 'Laravel') }}</title>
 
-  <!-- Scripts -->
-  <script src="{{ asset('js/app.js') }}" defer></script>
-  <script src="{{ asset('js/editor.js') }}" defer></script>
+
 
   <!-- Fonts -->
   <link rel="dns-prefetch" href="https://fonts.gstatic.com">
@@ -21,9 +19,11 @@
   <!-- Styles -->
   <link href="{{ asset('css/app.css') }}" rel="stylesheet">
   <link href="{{ asset('css/editor.css') }}" rel="stylesheet">
-  <style>
 
-  </style>
+  <!-- Scripts -->
+  <script src="{{ asset('js/app.js') }}" defer></script>
+  <script src="{{ asset('js/editor.js') }}" defer></script>
+
 </head>
 <body class="expand">
   <div id="app" class="expand">
@@ -66,12 +66,12 @@
                 <a class="dropdown-item" href="" id="title-edit">
                   Edit canvas name
                 </a>
-                <span class="dropdown-item"><input type="checkbox" id="visibility"><label for="visibility">publicly visible</label></span>
+                <span class="dropdown-item"><input type="checkbox" id="visibility" class="form-check-input"><label for="visibility">publicly visible</label></span>
               </div>
             </li>
 
             <li class="nav-item">
-              <a id="help" role="button" href="#" data-toggle="modal" data-target="#helpModal" class="nav-link">help</a>
+              <a id="help" role="button" href="#" data-toggle="modal" data-target="#helpModal" class="nav-link">Help</a>
             </li>
             <li class="nav-item">
               <a id="save" href="#" class="nav-link btn btn-lg btn-outline-warning">Save</a>

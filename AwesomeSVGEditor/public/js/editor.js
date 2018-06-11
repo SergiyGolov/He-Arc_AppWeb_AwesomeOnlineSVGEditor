@@ -636,8 +636,13 @@ $(document).ready(function () {
   var existingSVG = $('#svgEditor svg');
 
   //Paramètres de taille par défault:
-  var width = $('#canvas').width() - 10;
-  var height = $('#canvas').height() - 10;
+  var width = $('#svgEditor').width() - 10;
+  var height = $('#svgEditor').height() - 10;
+
+  //Si il y a eu un bug:
+  if (width < 0) width = 900;
+  if (height < 0) height = 600;
+
   if ($('#code').val() != "") {
     width = existingSVG.attr('width');
     height = existingSVG.attr('height');
