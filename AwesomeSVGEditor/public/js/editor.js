@@ -338,15 +338,25 @@ var EventManager = function () {
       //Modal events
       $("#import-new").click(function (e) {
         $('#modal-import').modal('toggle');
-        window.eventmanager.import = "new";
-        $("#fileinput").trigger('click');
-        window.newTab = window.open('/canvas/create', '_blank');
+        if ($('#login').length) {
+          toastr.error('You need to be logged in to use this function');
+          $('#login').click();
+        } else {
+          window.eventmanager.import = "new";
+          $("#fileinput").trigger('click');
+          window.newTab = window.open('/canvas/create', '_blank');
+        }
       });
 
       $("#import-saveopen").click(function (e) {
         $('#modal-import').modal('toggle');
-        window.eventmanager.import = "saveopen";
-        $("#fileinput").trigger('click');
+        if ($('#login').length) {
+          toastr.error('You need to be logged in to use this function');
+          $('#login').click();
+        } else {
+          window.eventmanager.import = "saveopen";
+          $("#fileinput").trigger('click');
+        }
       });
 
       $("#import-discardopen").click(function (e) {
