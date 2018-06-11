@@ -371,6 +371,8 @@
           <li><strong>Stroke (px):</strong> shape's stroke width in pixels</li>
           <li><strong>Stroke:</strong> Shape's stroke color</li>
           <li><strong>Fill:</strong> Shape's fill color</li>
+          <li><strong>Move forward:</strong> Move forward the shape (it will eventually be in front of all the other shapes)</li>
+          <li><strong>Move backward:</strong> Move backward the shaper (it will eventually be behind all the other shapes)</li>
           <li><strong>X1:</strong> A line's starting x position</li>
           <li><strong>Y1:</strong> A line's starting y position</li>
           <li><strong>X2:</strong> A line's ending x position</li>

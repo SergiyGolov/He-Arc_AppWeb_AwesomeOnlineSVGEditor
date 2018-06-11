@@ -1,12 +1,12 @@
 import {Rectangle, Line, Pen, Circle} from './shapes';
 
-let options = ['x','y','width','height','x1','y1','x2','y2','colorFill','colorStroke','strokeWidthDiv'];
+let options = ['x','y','width','height','x1','y1','x2','y2','colorFill','colorStroke','strokeWidthDiv','backward','forward'];
 let optionsType ={
   'svg':['width','height'],
-  'rect':['x','y','width','height','strokeWidthDiv','colorFill','colorStroke'],
-  'ellipse':['x','y','width','height','colorFill','strokeWidthDiv','colorStroke'],
-  'polyline':['colorStroke','strokeWidthDiv','x','y','width','height'],
-  'line':['x1','y1','x2','y2','strokeWidthDiv','colorStroke']
+  'rect':['x','y','width','height','strokeWidthDiv','colorFill','colorStroke','backward','forward'],
+  'ellipse':['x','y','width','height','colorFill','strokeWidthDiv','colorStroke','backward','forward'],
+  'polyline':['colorStroke','strokeWidthDiv','x','y','width','height','backward','forward'],
+  'line':['x1','y1','x2','y2','strokeWidthDiv','colorStroke','backward','forward']
 }
 
 export default class Canvas
@@ -163,6 +163,18 @@ export default class Canvas
           break;
           case "strokeWidthDiv":
           canvas.optionShape.attr('stroke-width',$('#'+options[option]+"Val").val());
+          break;
+        }
+      });
+
+      $('#'+options[option]).on('click',function() {
+        switch(options[option])
+        {
+          case "forward":
+          canvas.optionShape.forward();
+          break;
+          case "backward":
+          canvas.optionShape.backward();
           break;
         }
       });

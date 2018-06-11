@@ -249,6 +249,16 @@
               <input type="color" id="colorFillVal"/>
             </div>
           </div>
+          <div id="forward">
+            <div class="aspect-ratio">
+              <button id="moveForward">Move<br/>forward</buttton>
+            </div>
+          </div>
+          <div id="backward">
+            <div class="aspect-ratio">
+              <button id="moveBackward">Move<br/>backward</buttton>
+            </div>
+          </div>
           <div>
           </div>
         </div>
