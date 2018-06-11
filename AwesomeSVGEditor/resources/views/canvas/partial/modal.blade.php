@@ -393,7 +393,7 @@
           <li><kbd>3</kbd> Select line tool</li>
           <li><kbd>4</kbd> Select rectangle tool</li>
           <li><kbd>5</kbd> Select ovale tool</li>
-          <li><kbd>6</kbd> ou <kbd> Delete</kbd> Select delete tool</li>
+          <li><kbd>6</kbd> or <kbd> Delete</kbd> Select delete tool</li>
         </ul>
       </div>
       <div class="modal-footer">

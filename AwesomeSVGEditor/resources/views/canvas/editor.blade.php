@@ -251,12 +251,12 @@
           </div>
           <div id="forward">
             <div class="aspect-ratio">
-              <button id="moveForward">Move<br/>forward</buttton>
+              <button id="moveForward"class="btn btn-secondary btn-sm">Move<br/>forward</buttton>
             </div>
           </div>
           <div id="backward">
             <div class="aspect-ratio">
-              <button id="moveBackward">Move<br/>backward</buttton>
+              <button id="moveBackward" class="btn btn-secondary btn-sm">Move<br/>backward</buttton>
             </div>
           </div>
           <div>

@@ -1,1 +1,247 @@
-.svg_select_points_lt{cursor:nw-resize}.svg_select_points_rt{cursor:ne-resize}.svg_select_points_rb{cursor:se-resize}.svg_select_points_lb{cursor:sw-resize}.svg_select_points_t{cursor:n-resize}.svg_select_points_r{cursor:e-resize}.svg_select_points_b{cursor:s-resize}.svg_select_points_l{cursor:w-resize}.svg_select_points_rot{stroke-width:1;stroke:#000;fill:#f9ffed}.svg_select_points_point{cursor:move}.svg_select_boundingRect{stroke-width:1;fill:gray;stroke-dasharray:10 10;stroke:#000;stroke-opacity:.8;fill-opacity:.1;pointer-events:none}.expand{height:100%}#app{display:grid;grid-template-columns:1fr;grid-template-rows:-webkit-min-content 1fr;grid-template-rows:min-content 1fr}#editor{display:grid;grid-template-columns:50px 1fr 200px;grid-template-rows:1fr}#background-color{fill:#474749}#tools{display:-webkit-box;display:-ms-flexbox;display:flex;-webkit-box-orient:vertical;-webkit-box-direction:normal;-ms-flex-direction:column;flex-direction:column;background-color:#24292e}#tools a{padding:1em;height:50px}#tools #erase{padding:.9em}#tools #color-picker{margin:0 -10px;height:75px}#canvas{background-color:#474749}.height-null{height:0}#options{color:#fff;background-color:#24292e;padding:5px}#options .height-null{display:-webkit-box;display:-ms-flexbox;display:flex;-webkit-box-orient:horizontal;-webkit-box-direction:normal;-ms-flex-flow:row wrap;flex-flow:row wrap;color:#fff}#options .height-null input{width:100%}#options #option-select{padding-left:5px}#options .height-null>div{width:50%;padding-top:50%;height:0;position:relative}.aspect-ratio{position:absolute;top:0;left:0;bottom:0;right:0;margin:5px;padding:5px;background-color:#474749;border-radius:3px}a svg .fill{fill:#ecf0f1}a svg:hover .fill{fill:#fff}a svg .stroke{stroke:#ecf0f1}a svg:hover .stroke{stroke:#fff}a.active svg .fill{fill:#ffa200}a.active svg .stroke{stroke:#ffa200}#svgEditor{width:100%;height:100%;display:-webkit-box;display:-ms-flexbox;display:flex}#svgEditor svg{background-color:#fff;margin:auto}#strokeWidth{width:50px}.hidden-data{display:none;visibility:hidden}#fileinput{display:none}#share{width:100%}.tab-content{margin-top:20px}input[type=range][orient=vertical]{-webkit-writing-mode:bt-lr;-ms-writing-mode:bt-lr;writing-mode:bt-lr;-webkit-appearance:slider-vertical;width:8px;height:175px;margin-left:15px;margin-top:5px}.slider-text{color:#fff;margin-left:15px}.modal-body svg{width:50px;height:50px}input::-webkit-inner-spin-button{opacity:1}#option-select{text-transform:capitalize}
+@charset "UTF-8";
+
+/*
+ * TODO coller ce code dans editor.scss à définir
+ * Balise de css pour le développement, à déplacer lors de la mise en production
+ * Si on le met directement dans le scss, nécessite de lancer npm run prod après chaque modif pour regénérer le css à partir du scss
+ */
+
+.svg_select_points_lt {
+  cursor: nw-resize;
+}
+
+.svg_select_points_rt {
+  cursor: ne-resize;
+}
+
+.svg_select_points_rb {
+  cursor: se-resize;
+}
+
+.svg_select_points_lb {
+  cursor: sw-resize;
+}
+
+.svg_select_points_t {
+  cursor: n-resize;
+}
+
+.svg_select_points_r {
+  cursor: e-resize;
+}
+
+.svg_select_points_b {
+  cursor: s-resize;
+}
+
+.svg_select_points_l {
+  cursor: w-resize;
+}
+
+.svg_select_points_rot {
+  stroke-width: 1;
+  stroke: #000;
+  fill: #f9ffed;
+}
+
+.svg_select_points_point {
+  cursor: move;
+}
+
+.svg_select_boundingRect {
+  stroke-width: 1;
+  fill: gray;
+  stroke-dasharray: 10 10;
+  stroke: #000;
+  stroke-opacity: .8;
+  fill-opacity: .1;
+  pointer-events: none;
+}
+
+.expand {
+  height: 100%;
+}
+
+#app {
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-template-rows: -webkit-min-content 1fr;
+  grid-template-rows: min-content 1fr;
+}
+
+#editor {
+  display: grid;
+  grid-template-columns: 50px 1fr 200px;
+  grid-template-rows: 1fr;
+}
+
+#background-color {
+  fill: #474749;
+}
+
+#tools {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  background-color: #24292E;
+}
+
+#tools a {
+  padding: 1em 1em;
+  height: 50px;
+}
+
+#tools #erase {
+  padding: 0.9em;
+}
+
+#tools #color-picker {
+  margin: 0 -10px;
+  height: 75px;
+}
+
+#canvas {
+  background-color: #474749;
+}
+
+.height-null {
+  height: 0px;
+}
+
+#options {
+  color: white;
+  background-color: #24292E;
+  padding: 5px;
+}
+
+#options .height-null {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: normal;
+      -ms-flex-flow: row wrap;
+          flex-flow: row wrap;
+  color: white;
+}
+
+#options .height-null input {
+  width: 100%;
+}
+
+#options #option-select {
+  padding-left: 5px;
+}
+
+#options .height-null > div {
+  width: 50%;
+  padding-top: 50%;
+  height: 0px;
+  position: relative;
+}
+
+.aspect-ratio {
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  margin: 5px;
+  padding: 5px;
+  background-color: #474749;
+  border-radius: 3px;
+}
+
+a svg .fill {
+  fill: #ecf0f1;
+}
+
+a svg:hover .fill {
+  fill: white;
+}
+
+a svg .stroke {
+  stroke: #ecf0f1;
+}
+
+a svg:hover .stroke {
+  stroke: white;
+}
+
+a.active svg .fill {
+  fill: #ffa200;
+}
+
+a.active svg .stroke {
+  stroke: #ffa200;
+}
+
+#svgEditor {
+  width: 100%;
+  height: 100%;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+}
+
+#svgEditor svg {
+  background-color: white;
+  margin: auto;
+}
+
+#strokeWidth {
+  width: 50px;
+}
+
+.hidden-data {
+  display: none;
+  visibility: hidden;
+}
+
+#fileinput {
+  display: none;
+}
+
+#share {
+  width: 100%;
+}
+
+.tab-content {
+  margin-top: 20px;
+}
+
+input[type=range][orient=vertical] {
+  -webkit-writing-mode: bt-lr;
+      -ms-writing-mode: bt-lr;
+          writing-mode: bt-lr;
+  /* IE */
+  -webkit-appearance: slider-vertical;
+  /* WebKit */
+  width: 8px;
+  height: 175px;
+  margin-left: 15px;
+  margin-top: 5px;
+}
+
+.slider-text {
+  color: white;
+  margin-left: 15px;
+}
+
+.modal-body svg {
+  width: 50px;
+  height: 50px;
+}
+
+input::-webkit-inner-spin-button {
+  opacity: 1;
+}
+
+#option-select {
+  text-transform: capitalize;
+}
+
