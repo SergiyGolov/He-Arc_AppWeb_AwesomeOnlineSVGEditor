@@ -199,15 +199,15 @@
           $classShare='d-none';
           $classUnshare='d-none';
           $url='';
-          if(isset($canvas)){
-            if(!isset($canvas->id)){
-              //Rien
-            }else if($canvas->share==''){
-              $classShare='';
-            }else {
-              $classUnshare='';
-            }
-            $url=URL::to("/canvas/{$canvas->share}");
+          if (isset($canvas)) {
+              if (!isset($canvas->id)) {
+                  //Rien
+              } elseif ($canvas->share=='') {
+                  $classShare='';
+              } else {
+                  $classUnshare='';
+              }
+              $url=URL::to("/canvas/{$canvas->share}");
           }
           ?>
           <div id="div-share" class="{{ $classShare }}">
@@ -236,12 +236,12 @@
           @endif
           <?php
           $display = false;
-          if(!Auth::check() || !isset($canvas)){
-            $display = true;
-          }else if(isset($canvas)){
-            if(!isset($canvas->id)){
+          if (!Auth::check() || !isset($canvas)) {
               $display = true;
-            }
+          } elseif (isset($canvas)) {
+              if (!isset($canvas->id)) {
+                  $display = true;
+              }
           }
            ?>
           @if($display)

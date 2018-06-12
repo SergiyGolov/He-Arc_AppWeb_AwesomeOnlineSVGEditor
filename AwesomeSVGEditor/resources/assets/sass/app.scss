@@ -1,10 +1,7 @@
-
 // Fonts
 @import url("https://fonts.googleapis.com/css?family=Raleway:300,400,600");
-
 // Variables
 @import "variables";
-
 // Bootstrap
 @import '~bootstrap/scss/bootstrap';
 @import "~toastr/toastr.scss";
@@ -22,29 +19,29 @@
 }
 
 .card svg {
-  width:100%;
-  height:auto;
+  width: 100%;
+  height: auto;
 }
 
-.navbar a{
+.navbar a {
   color: white;
 }
 
-#navbar-title{
-  color:white;
+#navbar-title {
+  color: white;
 }
 
-.dropdown-item{
-  color:white;
+.dropdown-item {
+  color: white;
   background-color: $color-bg;
 }
 
-.dropdown-menu{
+.dropdown-menu {
   background-color: $color-bg;
 }
 
-.whitetext{
-  color:white;
+.whitetext {
+  color: white;
 }
 
 .navbar-laravel {
@@ -67,40 +64,40 @@
 }
 
 .svg-file {
-    background-image: url('/assets/svg/svg-file.svg');
-    width: 50px;
-    height: 50px;
-    background-size: contain;
-    background-repeat: no-repeat;
-    background-position: 50%;
-    background-size: 85%;
+  background-image: url("/assets/svg/svg-file.svg");
+  width: 50px;
+  height: 50px;
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: 50%;
+  background-size: 85%;
 }
 
 .png-file {
-    background-image: url('/assets/svg/png-file.svg');
-    width: 50px;
-    height: 50px;
-    background-size: contain;
-    background-repeat: no-repeat;
-    background-position: 50%;
-    background-size: 85%;
+  background-image: url("/assets/svg/png-file.svg");
+  width: 50px;
+  height: 50px;
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: 50%;
+  background-size: 85%;
 }
 
 #app {
   overflow: hidden;
 }
 
-.single-title{
+.single-title {
   padding-top: 7px;
   padding-bottom: 0;
 }
 
-.form-checkbox{
+.form-checkbox {
   float: left;
   margin-left: -20px;
   margin-top: 5px;
 }
 
-.card-checkbox{
-  padding-left:20px;
+.card-checkbox {
+  padding-left: 20px;
 }

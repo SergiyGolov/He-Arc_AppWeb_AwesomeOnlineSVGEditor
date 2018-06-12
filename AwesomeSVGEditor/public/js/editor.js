@@ -95,9 +95,9 @@ var EventManager = function () {
     this.save = function () {
       canvas.unselect();
       canvas.draw.defs().remove();
-      $('#svgEditor svg').removeAttr('xmlns:svgjs'); //Suppression d'un attribut qui est dupliqué
+      $('#svgEditor svg').removeAttr('xmlns:svgjs'); //Delete an duplicated attribute
       var detached = $('#svgEditor').find(':hidden').detach();
-      $('#code').val($('#svgEditor').html()); // TODO ne pas passer par l'élément DOM
+      $('#code').val($('#svgEditor').html());
       $('#svgEditor svg').append(detached);
 
       var name = $('#name-canvas').val();
@@ -121,8 +121,16 @@ var EventManager = function () {
           type: "post",
           url: '/canvas',
           responseType: 'json',
-          xhrFields: { withCredentials: true },
-          data: { name: name, code: code, id: id, _token: _token, visibility: visibility },
+          xhrFields: {
+            withCredentials: true
+          },
+          data: {
+            name: name,
+            code: code,
+            id: id,
+            _token: _token,
+            visibility: visibility
+          },
           success: function success(msg) {
             if (msg.status == 'success') {
               toastr.success('Canvas saved successfully!');
@@ -132,8 +140,6 @@ var EventManager = function () {
                 $('#png-link').attr('href', '/canvas/' + msg.id + '/png');
                 $('#div-notshare').addClass('d-none');
                 $('#div-share').removeClass('d-none');
-                // $('#share').val(msg.share);
-                // $('#share').val(window.location.origin+"/shared/"+$('#share').val());
               }
             } else {
               toastr.error('Canvas error while saving');
@@ -148,8 +154,16 @@ var EventManager = function () {
           type: "put",
           url: '/canvas/' + id,
           responseType: 'json',
-          xhrFields: { withCredentials: true },
-          data: { name: name, code: code, id: id, _token: _token, visibility: visibility },
+          xhrFields: {
+            withCredentials: true
+          },
+          data: {
+            name: name,
+            code: code,
+            id: id,
+            _token: _token,
+            visibility: visibility
+          },
           success: function success(msg) {
             if (msg.status == 'success') {
               toastr.success('Canvas updated successfully!');
@@ -174,8 +188,16 @@ var EventManager = function () {
         type: "post",
         url: '/canvas',
         responseType: 'json',
-        xhrFields: { withCredentials: true },
-        data: { name: name, code: code, id: id, _token: _token, visibility: visibility },
+        xhrFields: {
+          withCredentials: true
+        },
+        data: {
+          name: name,
+          code: code,
+          id: id,
+          _token: _token,
+          visibility: visibility
+        },
         success: function success(msg) {
           if (msg.status == 'success') {
             toastr.success('Canvas imported successfully!');
@@ -286,11 +308,9 @@ var EventManager = function () {
         $('#color-mode').attr("xlink:href", "#");
       });
       $('#fill-color, #color-mode').on("dblclick", function () {
-        //TODO Show color picker
         $('#fillColor').trigger("click");
       });
       $('#stroke-color').on("dblclick", function () {
-        //TODO Show color picker
         $('#strokeColor').trigger("click");
       });
 
@@ -330,7 +350,6 @@ var EventManager = function () {
 
       $("#export").click(function (e) {
         e.preventDefault();
-        //TODO Export sans sauvegarde
         window.eventmanager.save();
         $('#modal-export').modal('toggle');
       });
@@ -385,7 +404,9 @@ var EventManager = function () {
           type: 'post',
           url: '/canvas/' + id + '/share',
           responseType: 'json',
-          data: { _token: _token },
+          data: {
+            _token: _token
+          },
           success: function success(msg) {
             if (msg.status == 'OK') {
               $('#div-unshare').removeClass('d-none');
@@ -409,7 +430,9 @@ var EventManager = function () {
           type: 'post',
           url: '/canvas/' + id + '/unshare',
           responseType: 'json',
-          data: { _token: _token },
+          data: {
+            _token: _token
+          },
           success: function success(msg) {
             if (msg.status == 'OK') {
               $('#div-share').removeClass('d-none');
@@ -438,7 +461,10 @@ var EventManager = function () {
             $.ajax({
               type: "post",
               url: '/canvas/sanitise',
-              data: { code: importedSvg, _token: _token },
+              data: {
+                code: importedSvg,
+                _token: _token
+              },
               success: function success(msg) {
                 if (msg.status == 'success') {
                   var existingSVG = $('#svgEditor svg');
@@ -448,7 +474,7 @@ var EventManager = function () {
                     case "discardopen":
                       $('#svgEditor').html(importedSvg);
 
-                      $('#app').find("*").addBack().off(); //magouille pour deconnecter tous les événements
+                      $('#app').find("*").addBack().off();
 
                       window.canvas = new __WEBPACK_IMPORTED_MODULE_0__canvas__["a" /* default */](id, $('#svgEditor svg').attr('width'), $('#svgEditor svg').attr('height'));
 
@@ -464,7 +490,7 @@ var EventManager = function () {
 
                       $('#svgEditor').html(importedSvg);
                       var _existingSVG = $('#svgEditor svg');
-                      $('#app').find("*").addBack().off(); //magouille pour deconnecter tous les événements
+                      $('#app').find("*").addBack().off();
 
                       window.canvas = new __WEBPACK_IMPORTED_MODULE_0__canvas__["a" /* default */](id, $('#svgEditor svg').attr('width'), $('#svgEditor svg').attr('height'));
 
@@ -535,15 +561,11 @@ var EventManager = function () {
       //Loggin button
       var authReload = function authReload() {
         console.log("reload !!!");
-        $('#svgEditor svg').removeAttr('xmlns:svgjs'); //Suppression d'un attribut qui est dupliqué
+        $('#svgEditor svg').removeAttr('xmlns:svgjs'); //Delete duplicated attribute
         var detached = $('#svgEditor').find(':hidden').detach();
-        $('#code').val($('#svgEditor').html()); // TODO ne pas passer par l'élément DOM
+        $('#code').val($('#svgEditor').html());
 
         $('#svgEditor svg').append(detached);
-        //let action = $('#form-update').attr('action');
-        //action = action.substring(0,action.lastIndexOf("/"));
-        //action = action.substring(0,action.lastIndexOf("/")+1)+"reload";
-        //$('#form-update').attr('action', action);
         $('#form-update').submit();
       };
 
@@ -559,7 +581,11 @@ var EventManager = function () {
           type: "post",
           url: '/login',
           responseType: 'json',
-          data: { email: email, password: password, _token: _token },
+          data: {
+            email: email,
+            password: password,
+            _token: _token
+          },
           success: function success(msg) {
             console.log("connected");
             console.log(msg);
@@ -583,7 +609,13 @@ var EventManager = function () {
           type: "post",
           url: '/register',
           responseType: 'json',
-          data: { email: email, name: name, password: password, password_confirmation: password_confirmation, _token: _token },
+          data: {
+            email: email,
+            name: name,
+            password: password,
+            password_confirmation: password_confirmation,
+            _token: _token
+          },
           success: function success(msg) {
             authReload();
           },
@@ -606,29 +638,37 @@ var EventManager = function () {
             e.stopPropagation();
 
             if (dataTransfer.files.length == 1) {
-              window.newTab = window.open('/canvas/create', '_blank');
-              var reader = new FileReader();
-              reader.readAsText(dataTransfer.files[0]);
-              reader.onload = function (e) {
-                var importedSvg = e.target.result;
-                var _token = $('input[name=_token]').val();
+              if ($('#login').length) {
+                toastr.error('You need to be logged in to save your canvas');
+                $('#login').click();
+              } else {
+                window.newTab = window.open('/canvas/create', '_blank');
+                var reader = new FileReader();
+                reader.readAsText(dataTransfer.files[0]);
+                reader.onload = function (e) {
+                  var importedSvg = e.target.result;
+                  var _token = $('input[name=_token]').val();
 
-                $.ajax({
-                  type: "post",
-                  url: '/canvas/sanitize',
-                  data: { code: importedSvg, _token: _token },
-                  success: function success(msg) {
-                    if (msg.status == 'success') {
-                      window.eventmanager.saveNewTab(importedSvg);
-                    } else {
+                  $.ajax({
+                    type: "post",
+                    url: '/canvas/sanitise',
+                    data: {
+                      code: importedSvg,
+                      _token: _token
+                    },
+                    success: function success(msg) {
+                      if (msg.status == 'success') {
+                        window.eventmanager.saveNewTab(importedSvg);
+                      } else {
+                        toastr.error('Your imported .svg file is not valid');
+                      }
+                    },
+                    error: function error(msg) {
                       toastr.error('Your imported .svg file is not valid');
                     }
-                  },
-                  error: function error(msg) {
-                    toastr.error('Your imported .svg file is not valid');
-                  }
-                });
-              };
+                  });
+                };
+              }
             }
           }
         }
@@ -645,11 +685,11 @@ $(document).ready(function () {
   $('#svgEditor').html($('#code').val());
   var existingSVG = $('#svgEditor svg');
 
-  //Paramètres de taille par défault:
+  //Automatically scale canvas size to window
   var width = $('#svgEditor').width() - 10;
   var height = $('#svgEditor').height() - 10;
 
-  //Si il y a eu un bug:
+  //If it bugged:
   if (width < 0) width = 900;
   if (height < 0) height = 600;
 
@@ -668,15 +708,42 @@ $(document).ready(function () {
     $('#modal-title').modal('toggle');
   }
 
-  $('#strokeWidth').popover({ trigger: 'hover', content: "Stroke width in pixels" });
-  $('#pointer').popover({ trigger: 'hover', content: "[1] Pointer tool: select shape to move/resize" });
-  $('#pen').popover({ trigger: 'hover', content: "[2] Free draw tool" });
-  $('#line').popover({ trigger: 'hover', content: "[3] Line draw tool" });
-  $('#rectangle').popover({ trigger: 'hover', content: "[4] Rectangle draw tool, press shift while drawing to draw a square" });
-  $('#ellipse').popover({ trigger: 'hover', content: "[5] Ellipse draw tool, press shift while drawing to draw a circle" });
-  $('#erase').popover({ trigger: 'hover', content: "[6]/[Delete] Erase tool: click on a shape to erase it" });
-  $('#fill-color, #color-mode').popover({ trigger: 'hover', content: "Select shape fill color" });
-  $('#stroke-color').popover({ trigger: 'hover', content: "Select shape stroke color" });
+  $('#strokeWidth').popover({
+    trigger: 'hover',
+    content: "Stroke width in pixels"
+  });
+  $('#pointer').popover({
+    trigger: 'hover',
+    content: "[1] Pointer tool: select shape to move/resize"
+  });
+  $('#pen').popover({
+    trigger: 'hover',
+    content: "[2] Free draw tool"
+  });
+  $('#line').popover({
+    trigger: 'hover',
+    content: "[3] Line draw tool"
+  });
+  $('#rectangle').popover({
+    trigger: 'hover',
+    content: "[4] Rectangle draw tool, press shift while drawing to draw a square"
+  });
+  $('#ellipse').popover({
+    trigger: 'hover',
+    content: "[5] Ellipse draw tool, press shift while drawing to draw a circle"
+  });
+  $('#erase').popover({
+    trigger: 'hover',
+    content: "[6]/[Delete] Erase tool: click on a shape to erase it"
+  });
+  $('#fill-color, #color-mode').popover({
+    trigger: 'hover',
+    content: "Select shape fill color"
+  });
+  $('#stroke-color').popover({
+    trigger: 'hover',
+    content: "Select shape stroke color"
+  });
 });
 
 /***/ }),
@@ -706,8 +773,11 @@ var Canvas = function () {
     _classCallCheck(this, Canvas);
 
     this.type = "svg";
-    //this.draw = SVG(divId).size(width,height);
-    this.draw = SVG(divId).viewbox(0, 0, width, height).attr({ width: width, height: height });
+
+    this.draw = SVG(divId).viewbox(0, 0, width, height).attr({
+      width: width,
+      height: height
+    });
 
     this.actions = [];
     this.actionIndex = 0;
@@ -764,7 +834,6 @@ var Canvas = function () {
     };
 
     this.startDraggable = function () {
-      //à revoir pour les groupes svg
       if (this.type != "defs") {
         this.draggable().on('beforedrag', function (e) {
           this.drag_start = [this.x(), this.y()];
@@ -775,6 +844,8 @@ var Canvas = function () {
             canvas.actions.splice(canvas.actionIndex, canvas.actions.length - canvas.actionIndex + 1);
             canvas.manageOption(this);
           }
+        }).on('resizedone', function (e) {
+          canvas.manageOption(this);
         });
         this.mousedown(canvas.elementClick.bind(canvas));
       }
@@ -800,7 +871,7 @@ var Canvas = function () {
       }
     });
 
-    //Init des connections
+    //Init connections for the right menu
 
     var _loop = function _loop(option) {
       $('#' + options[option]).on('change', function () {
@@ -1159,7 +1230,9 @@ var Rectangle = function () {
     this.type = "rect";
     this.action;
     this.canvas = canvas;
-    this.shape = this.canvas.draw.rect(width, height).stroke({ width: this.canvas.strokeWidth });
+    this.shape = this.canvas.draw.rect(width, height).stroke({
+      width: this.canvas.strokeWidth
+    });
     this.shape.move(posX, posY);
     this.shape.fill(this.canvas.fillColor);
     this.shape.stroke(this.canvas.strokeColor);
@@ -1179,22 +1252,22 @@ var Rectangle = function () {
       relativePosX /= zoom;
       relativePosY /= zoom;
       if (this.canvas.shiftKey) {
-        if (Math.min(this.initialX, relativePosX) == this.initialX && Math.min(this.initialY, relativePosY) == this.initialY) // cadran bas droite
+        if (Math.min(this.initialX, relativePosX) == this.initialX && Math.min(this.initialY, relativePosY) == this.initialY) // down-right
           {
             this.shape.move(this.initialX, this.initialY);
             this.shape.width(Math.min(relativePosX - this.initialX, relativePosY - this.initialY));
             this.shape.height(Math.min(relativePosX - this.initialX, relativePosY - this.initialY));
-          } else if (Math.min(this.initialX, relativePosX) == this.initialX && Math.min(this.initialY, relativePosY) == relativePosY) // cadran haut droite
+          } else if (Math.min(this.initialX, relativePosX) == this.initialX && Math.min(this.initialY, relativePosY) == relativePosY) // up-right
           {
             this.shape.move(this.initialX, relativePosY);
             this.shape.width(Math.min(relativePosX - this.initialX, this.initialY - relativePosY));
             this.shape.height(Math.min(relativePosX - this.initialX, this.initialY - relativePosY));
-          } else if (Math.min(this.initialX, relativePosX) == relativePosX && Math.min(this.initialY, relativePosY) == this.initialY) // cadran bas gauche
+          } else if (Math.min(this.initialX, relativePosX) == relativePosX && Math.min(this.initialY, relativePosY) == this.initialY) // down-left
           {
             this.shape.move(relativePosX, this.initialY);
             this.shape.width(Math.min(this.initialX - relativePosX, relativePosY - this.initialY));
             this.shape.height(Math.min(this.initialX - relativePosX, relativePosY - this.initialY));
-          } else // cadran haut gauche
+          } else // up-left
           {
             this.shape.move(relativePosX, relativePosY);
             this.shape.width(Math.min(this.initialX - relativePosX, this.initialY - relativePosY));
@@ -1229,7 +1302,9 @@ var Circle = function () {
 
     this.type = "ellipse";
     this.canvas = canvas;
-    this.shape = this.canvas.draw.ellipse(rx, ry).stroke({ width: this.canvas.strokeWidth });
+    this.shape = this.canvas.draw.ellipse(rx, ry).stroke({
+      width: this.canvas.strokeWidth
+    });
     this.shape.move(posX, posY);
     this.shape.stroke(this.canvas.strokeColor);
     this.shape.fill(this.canvas.fillColor);
@@ -1268,7 +1343,9 @@ var Line = function () {
 
     this.type = "line";
     this.canvas = canvas;
-    this.shape = this.canvas.draw.line(posX, posY, posX2, posY2).stroke({ width: this.canvas.strokeWidth });
+    this.shape = this.canvas.draw.line(posX, posY, posX2, posY2).stroke({
+      width: this.canvas.strokeWidth
+    });
     this.shape.stroke(this.canvas.strokeColor);
     this.shape.mousedown(this.canvas.elementClick.bind(this.canvas));
   }
@@ -1294,7 +1371,9 @@ var Pen = function () {
     this.type = "polyline";
     this.canvas = canvas;
     this.data = [[posX, posY], [posX2, posY2]];
-    this.shape = this.canvas.draw.polyline(this.data).fill('none').stroke({ width: this.canvas.strokeWidth });
+    this.shape = this.canvas.draw.polyline(this.data).fill('none').stroke({
+      width: this.canvas.strokeWidth
+    });
     this.shape.stroke(this.canvas.strokeColor);
     this.shape.mousedown(this.canvas.elementClick.bind(this.canvas));
   }

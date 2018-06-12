@@ -91,7 +91,7 @@
 }
 
 #tools a {
-  padding: 1em 1em;
+  padding: 1em;
   height: 50px;
 }
 
@@ -109,7 +109,7 @@
 }
 
 .height-null {
-  height: 0px;
+  height: 0;
 }
 
 #options {
@@ -148,7 +148,7 @@
 #options .height-null > div {
   width: 50%;
   padding-top: 50%;
-  height: 0px;
+  height: 0;
   position: relative;
 }
 

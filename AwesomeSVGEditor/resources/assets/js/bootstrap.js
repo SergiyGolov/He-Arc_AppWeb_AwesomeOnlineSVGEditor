@@ -1,4 +1,3 @@
-
 window._ = require('lodash');
 window.Popper = require('popper.js').default;
 window.toastr = require('toastr');
@@ -15,10 +14,13 @@ require('svg.resize.js');
  * code may be modified to fit the specific needs of your application.
  */
 
-try {
-    window.$ = window.jQuery = require('jquery');
-    require('bootstrap');
-} catch (e) {}
+try
+{
+  window.$ = window.jQuery = require('jquery');
+  require('bootstrap');
+}
+catch (e)
+{}
 
 /**
  * We'll load the axios HTTP library which allows us to easily issue requests
@@ -37,10 +39,13 @@ window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 
 let token = document.head.querySelector('meta[name="csrf-token"]');
 
-if (token) {
-    window.axios.defaults.headers.common['X-CSRF-TOKEN'] = token.content;
-} else {
-    console.error('CSRF token not found: https://laravel.com/docs/csrf#csrf-x-csrf-token');
+if (token)
+{
+  window.axios.defaults.headers.common['X-CSRF-TOKEN'] = token.content;
+}
+else
+{
+  console.error('CSRF token not found: https://laravel.com/docs/csrf#csrf-x-csrf-token');
 }
 
 
@@ -68,31 +73,39 @@ if (token) {
 // Attempts to display status in Bootstrap tooltip
 // ------------------------------------------------------------------------------
 
-function copyToClipboard(text, el) {
+function copyToClipboard(text, el)
+{
   let copyTest = document.queryCommandSupported('copy');
   let elOriginalText = el.attr('data-original-title');
 
-  if (copyTest === true) {
+  if (copyTest === true)
+  {
     let copyTextArea = document.createElement("textarea");
     copyTextArea.value = text;
     document.body.appendChild(copyTextArea);
     copyTextArea.select();
-    try {
+    try
+    {
       let successful = document.execCommand('copy');
       let msg = successful ? 'Copied!' : 'Whoops, not copied!';
       el.attr('data-original-title', msg).tooltip('show');
-    } catch (err) {
+    }
+    catch (err)
+    {
       console.log('Oops, unable to copy');
     }
     document.body.removeChild(copyTextArea);
     el.attr('data-original-title', elOriginalText);
-  } else {
+  }
+  else
+  {
     // Fallback if browser doesn't support .execCommand('copy')
     window.prompt("Copy to clipboard: Ctrl+C or Command+C, Enter", text);
   }
 }
 
-$(document).ready(function() {
+$(document).ready(function()
+{
   // Tooltips
   // Requires Bootstrap 3 for functionality
   $('.js-tooltip').tooltip();
@@ -100,7 +113,8 @@ $(document).ready(function() {
   // Copy to clipboard
   // Grab any text in the attribute 'data-copy' and pass it to the
   // copy function
-  $('.js-copy').click(function() {
+  $('.js-copy').click(function()
+  {
     $('#link-display').select();
     let text = $(this).attr('data-copy');
     let el = $(this);

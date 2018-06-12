@@ -3,7 +3,6 @@
 * Balise de css pour le développement, à déplacer lors de la mise en production
 * Si on le met directement dans le scss, nécessite de lancer npm run prod après chaque modif pour regénérer le css à partir du scss
 */
-
 // Variables
 @import "variables";
 @import '~svg.select.js/dist/svg.select.min';
@@ -34,13 +33,15 @@
   background-color: $color-side;
 
   a {
-    padding: 1em 1em;
+    padding: 1em;
     height: 50px;
   }
+
   #erase {
     padding: 0.9em;
   }
-  #color-picker{
+
+  #color-picker {
     margin: 0 -10px;
     height: 75px;
   }
@@ -50,19 +51,20 @@
   background-color: $color-bg;
 }
 
-.height-null{
-  height: 0px;
+.height-null {
+  height: 0;
 }
 
 #options {
-  color:white;
+  color: white;
   background-color: $color-side;
   padding: 5px;
 
   .height-null {
-    display:flex;
+    display: flex;
     flex-flow: row wrap;
     color: white;
+
     input {
       width: 100%;
     }
@@ -70,7 +72,7 @@
 
   #option-select {
     padding-left: 5px;
-    text-transform:capitalize;
+    text-transform: capitalize;
   }
 
   button {
@@ -81,10 +83,10 @@
   }
 }
 
-#options .height-null > div{
+#options .height-null > div {
   width: 50%;
   padding-top: 50%;
-  height: 0px;
+  height: 0;
   position: relative;
 }
 
@@ -100,42 +102,43 @@
   border-radius: 3px;
 }
 
-a svg .fill{
+a svg .fill {
   fill: #ecf0f1;
 }
 
-a svg:hover .fill{
+a svg:hover .fill {
   fill: white;
 }
 
-a svg .stroke{
+a svg .stroke {
   stroke: #ecf0f1;
 }
 
-a svg:hover .stroke{
+a svg:hover .stroke {
   stroke: white;
 }
 
-a.active svg .fill{
+a.active svg .fill {
   fill: $color-orange;
 }
 
-a.active svg .stroke{
+a.active svg .stroke {
   stroke: $color-orange;
 }
 
-#svgEditor{
-  width:100%;
-  height:100%;
+#svgEditor {
+  width: 100%;
+  height: 100%;
   display: flex;
+
   svg {
     background-color: white;
     margin: auto;
   }
 }
 
-#strokeWidth{
-  width:50px;
+#strokeWidth {
+  width: 50px;
 }
 
 .hidden-data {
@@ -143,40 +146,41 @@ a.active svg .stroke{
   visibility: hidden;
 }
 
-#fileinput{
-  display:none;
+#fileinput {
+  display: none;
 }
 
-#share{
-  width:100%;
+#share {
+  width: 100%;
 }
 
 .tab-content {
   margin-top: 20px;
 }
 
-input[type=range][orient=vertical]
-{
-  writing-mode: bt-lr; /* IE */
-  -webkit-appearance: slider-vertical; /* WebKit */
+input[type=range][orient=vertical] {
+  writing-mode: bt-lr;
+  /* IE */
+  -webkit-appearance: slider-vertical;
+  /* WebKit */
   width: 8px;
   height: 175px;
-  margin-left:15px;
-  margin-top:5px;
+  margin-left: 15px;
+  margin-top: 5px;
 }
 
-.slider-text{
-  color:white;
-  margin-left:15px;
+.slider-text {
+  color: white;
+  margin-left: 15px;
 }
 
-.modal-body svg{
+.modal-body svg {
   width: 50px;
   height: 50px;
 }
 
-input{
-  &::-webkit-inner-spin-button{
-    opacity:1;
+input {
+  &::-webkit-inner-spin-button {
+    opacity: 1;
   }
 }
