@@ -26,3 +26,6 @@
 ## Auteurs
 - [Sergiy Goloviatinski](@sergiy.goloviat)
 - [Bastien Wermeille](@bastien.wermeill)
+
+## README "interne"
+- [README.md](https://forge.ing.he-arc.ch/gitlab/sergiy.goloviat/AWb-g2-AwesomeOnlineSVGEditor/blob/deploy/AwesomeSVGEditor/readme.md)
