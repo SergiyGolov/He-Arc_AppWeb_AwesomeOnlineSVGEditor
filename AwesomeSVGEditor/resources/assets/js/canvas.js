@@ -69,16 +69,15 @@ export default class Canvas {
       canvas.updateZoom();
     });
 
+    //Ces 3 fonctions doivent rester dans le constructeur car nous devons les binder avec l'élément à modifier en leur passant canvas
     this.stopDraggable = function() {
       this.draggable(false);
     };
-
     this.unselectAll = function() {
       if (this.type != 'defs' && this.type != 'g' && canvas.shape != this) {
         this.selectize(false);
       }
     }
-
     this.startDraggable = function() {
       if (this.type != "defs") {
         this.draggable().on('beforedrag', function(e) {

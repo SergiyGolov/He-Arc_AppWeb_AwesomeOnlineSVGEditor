@@ -4,128 +4,8 @@ import Canvas from './canvas';
 class EventManager {
   constructor(canvas) {
     this.canvas = canvas;
-    this.save = function() {
-      canvas.unselect();
-      canvas.draw.defs().remove();
-      $('#svgEditor svg').removeAttr('xmlns:svgjs'); //Delete an duplicated attribute
-      let detached = $('#svgEditor').find(':hidden').detach();
-      $('#code').val($('#svgEditor').html());
-      $('#svgEditor svg').append(detached);
-
-      let name = $('#name-canvas').val();
-      let code = $('#code').val();
-      let id = $('#id').val();
-      let visibility = $('#visibility').prop('checked') ? 1 : 0; // Convert true/false in integer
-
-      let _token = $('input[name=_token]').val();
-
-      if (!name) {
-        $('#modal-title').modal('toggle');
-        name = $('#name-canvas').val();
-        if (!name) {
-          return;
-        }
-      }
-      //new Canvas:
-      if (!id || id <= 0) {
-        $('#id').val(0);
-        $.ajax({
-          type: "post",
-          url: '/canvas',
-          responseType: 'json',
-          xhrFields: {
-            withCredentials: true
-          },
-          data: {
-            name: name,
-            code: code,
-            id: id,
-            _token: _token,
-            visibility: visibility
-          },
-          success: function(msg) {
-            if (msg.status == 'success') {
-              toastr.success('Canvas saved successfully!');
-              if ($('#id').val() == 0) {
-                $('#id').val(msg.id);
-                $('#svg-link').attr('href', '/canvas/' + msg.id + '/svg');
-                $('#png-link').attr('href', '/canvas/' + msg.id + '/png');
-                $('#div-notshare').addClass('d-none');
-                $('#div-share').removeClass('d-none');
-              }
-            } else {
-              toastr.error('Canvas error while saving');
-            }
-          },
-          error: function(msg) {
-            toastr.error('Canvas error while saving, are you logged in?');
-          }
-        });
-      } else {
-        $.ajax({
-          type: "put",
-          url: '/canvas/' + id,
-          responseType: 'json',
-          xhrFields: {
-            withCredentials: true
-          },
-          data: {
-            name: name,
-            code: code,
-            id: id,
-            _token: _token,
-            visibility: visibility
-          },
-          success: function(msg) {
-            if (msg.status == 'success') {
-              toastr.success('Canvas updated successfully!');
-            } else {
-              toastr.error('Canvas error while updating');
-            }
-          },
-          error: function(msg) {
-            toastr.error('Canvas error while updating');
-          }
-        });
-      }
-    }
-    this.saveNewTab = function(code) {
-      let name = "locally imported Canvas";
-      let id = 0;
-      let visibility = $('#visibility').prop('checked') ? 1 : 0; // Convert true/false in integer
-      let _token = $('input[name=_token]').val();
-
-      //new Canvas:
-      $.ajax({
-        type: "post",
-        url: '/canvas',
-        responseType: 'json',
-        xhrFields: {
-          withCredentials: true
-        },
-        data: {
-          name: name,
-          code: code,
-          id: id,
-          _token: _token,
-          visibility: visibility
-        },
-        success: function(msg) {
-          if (msg.status == 'success') {
-            toastr.success('Canvas imported successfully!');
-            window.newTab.location.href = "/canvas/" + msg.id + "/edit";
-          } else {
-            toastr.error('Canvas error while importing');
-          }
-        },
-        error: function(msg) {
-          toastr.error('Canvas error while importing');
-        }
-      });
-    }
     this._connect();
   }
-
 
   showHelp() {
     $('#strokeWidth').popover('show');
@@ -602,6 +482,127 @@ class EventManager {
         }
       }
     });
+  }
+
+  saveNewTab(code) {
+    let name = "locally imported Canvas";
+    let id = 0;
+    let visibility = $('#visibility').prop('checked') ? 1 : 0; // Convert true/false in integer
+    let _token = $('input[name=_token]').val();
+
+    //new Canvas:
+    $.ajax({
+      type: "post",
+      url: '/canvas',
+      responseType: 'json',
+      xhrFields: {
+        withCredentials: true
+      },
+      data: {
+        name: name,
+        code: code,
+        id: id,
+        _token: _token,
+        visibility: visibility
+      },
+      success: function(msg) {
+        if (msg.status == 'success') {
+          toastr.success('Canvas imported successfully!');
+          window.newTab.location.href = "/canvas/" + msg.id + "/edit";
+        } else {
+          toastr.error('Canvas error while importing');
+        }
+      },
+      error: function(msg) {
+        toastr.error('Canvas error while importing');
+      }
+    });
+  }
+
+  save() {
+    canvas.unselect();
+    canvas.draw.defs().remove();
+    $('#svgEditor svg').removeAttr('xmlns:svgjs'); //Delete an duplicated attribute
+    let detached = $('#svgEditor').find(':hidden').detach();
+    $('#code').val($('#svgEditor').html());
+    $('#svgEditor svg').append(detached);
+
+    let name = $('#name-canvas').val();
+    let code = $('#code').val();
+    let id = $('#id').val();
+    let visibility = $('#visibility').prop('checked') ? 1 : 0; // Convert true/false in integer
+
+    let _token = $('input[name=_token]').val();
+
+    if (!name) {
+      $('#modal-title').modal('toggle');
+      name = $('#name-canvas').val();
+      if (!name) {
+        return;
+      }
+    }
+    //new Canvas:
+    if (!id || id <= 0) {
+      $('#id').val(0);
+      $.ajax({
+        type: "post",
+        url: '/canvas',
+        responseType: 'json',
+        xhrFields: {
+          withCredentials: true
+        },
+        data: {
+          name: name,
+          code: code,
+          id: id,
+          _token: _token,
+          visibility: visibility
+        },
+        success: function(msg) {
+          if (msg.status == 'success') {
+            toastr.success('Canvas saved successfully!');
+            if ($('#id').val() == 0) {
+              $('#id').val(msg.id);
+              $('#svg-link').attr('href', '/canvas/' + msg.id + '/svg');
+              $('#png-link').attr('href', '/canvas/' + msg.id + '/png');
+              $('#div-notshare').addClass('d-none');
+              $('#div-share').removeClass('d-none');
+            }
+          } else {
+            toastr.error('Canvas error while saving');
+          }
+        },
+        error: function(msg) {
+          toastr.error('Canvas error while saving, are you logged in?');
+        }
+      });
+    } else {
+      $.ajax({
+        type: "put",
+        url: '/canvas/' + id,
+        responseType: 'json',
+        xhrFields: {
+          withCredentials: true
+        },
+        data: {
+          name: name,
+          code: code,
+          id: id,
+          _token: _token,
+          visibility: visibility
+        },
+        success: function(msg) {
+          if (msg.status == 'success') {
+            toastr.success('Canvas updated successfully!');
+          } else {
+            toastr.error('Canvas error while updating');
+          }
+        },
+        error: function(msg) {
+          toastr.error('Canvas error while updating');
+        }
+      });
+    }
   }
 }
 

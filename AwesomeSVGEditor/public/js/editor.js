@@ -92,125 +92,6 @@ var EventManager = function () {
     _classCallCheck(this, EventManager);
 
     this.canvas = canvas;
-    this.save = function () {
-      canvas.unselect();
-      canvas.draw.defs().remove();
-      $('#svgEditor svg').removeAttr('xmlns:svgjs'); //Delete an duplicated attribute
-      var detached = $('#svgEditor').find(':hidden').detach();
-      $('#code').val($('#svgEditor').html());
-      $('#svgEditor svg').append(detached);
-
-      var name = $('#name-canvas').val();
-      var code = $('#code').val();
-      var id = $('#id').val();
-      var visibility = $('#visibility').prop('checked') ? 1 : 0; // Convert true/false in integer
-
-      var _token = $('input[name=_token]').val();
-
-      if (!name) {
-        $('#modal-title').modal('toggle');
-        name = $('#name-canvas').val();
-        if (!name) {
-          return;
-        }
-      }
-      //new Canvas:
-      if (!id || id <= 0) {
-        $('#id').val(0);
-        $.ajax({
-          type: "post",
-          url: '/canvas',
-          responseType: 'json',
-          xhrFields: {
-            withCredentials: true
-          },
-          data: {
-            name: name,
-            code: code,
-            id: id,
-            _token: _token,
-            visibility: visibility
-          },
-          success: function success(msg) {
-            if (msg.status == 'success') {
-              toastr.success('Canvas saved successfully!');
-              if ($('#id').val() == 0) {
-                $('#id').val(msg.id);
-                $('#svg-link').attr('href', '/canvas/' + msg.id + '/svg');
-                $('#png-link').attr('href', '/canvas/' + msg.id + '/png');
-                $('#div-notshare').addClass('d-none');
-                $('#div-share').removeClass('d-none');
-              }
-            } else {
-              toastr.error('Canvas error while saving');
-            }
-          },
-          error: function error(msg) {
-            toastr.error('Canvas error while saving, are you logged in?');
-          }
-        });
-      } else {
-        $.ajax({
-          type: "put",
-          url: '/canvas/' + id,
-          responseType: 'json',
-          xhrFields: {
-            withCredentials: true
-          },
-          data: {
-            name: name,
-            code: code,
-            id: id,
-            _token: _token,
-            visibility: visibility
-          },
-          success: function success(msg) {
-            if (msg.status == 'success') {
-              toastr.success('Canvas updated successfully!');
-            } else {
-              toastr.error('Canvas error while updating');
-            }
-          },
-          error: function error(msg) {
-            toastr.error('Canvas error while updating');
-          }
-        });
-      }
-    };
-    this.saveNewTab = function (code) {
-      var name = "locally imported Canvas";
-      var id = 0;
-      var visibility = $('#visibility').prop('checked') ? 1 : 0; // Convert true/false in integer
-      var _token = $('input[name=_token]').val();
-
-      //new Canvas:
-      $.ajax({
-        type: "post",
-        url: '/canvas',
-        responseType: 'json',
-        xhrFields: {
-          withCredentials: true
-        },
-        data: {
-          name: name,
-          code: code,
-          id: id,
-          _token: _token,
-          visibility: visibility
-        },
-        success: function success(msg) {
-          if (msg.status == 'success') {
-            toastr.success('Canvas imported successfully!');
-            window.newTab.location.href = "/canvas/" + msg.id + "/edit";
-          } else {
-            toastr.error('Canvas error while importing');
-          }
-        },
-        error: function error(msg) {
-          toastr.error('Canvas error while importing');
-        }
-      });
-    };
     this._connect();
   }
 
@@ -691,6 +572,129 @@ var EventManager = function () {
         }
       });
     }
+  }, {
+    key: 'saveNewTab',
+    value: function saveNewTab(code) {
+      var name = "locally imported Canvas";
+      var id = 0;
+      var visibility = $('#visibility').prop('checked') ? 1 : 0; // Convert true/false in integer
+      var _token = $('input[name=_token]').val();
+
+      //new Canvas:
+      $.ajax({
+        type: "post",
+        url: '/canvas',
+        responseType: 'json',
+        xhrFields: {
+          withCredentials: true
+        },
+        data: {
+          name: name,
+          code: code,
+          id: id,
+          _token: _token,
+          visibility: visibility
+        },
+        success: function success(msg) {
+          if (msg.status == 'success') {
+            toastr.success('Canvas imported successfully!');
+            window.newTab.location.href = "/canvas/" + msg.id + "/edit";
+          } else {
+            toastr.error('Canvas error while importing');
+          }
+        },
+        error: function error(msg) {
+          toastr.error('Canvas error while importing');
+        }
+      });
+    }
+  }, {
+    key: 'save',
+    value: function save() {
+      canvas.unselect();
+      canvas.draw.defs().remove();
+      $('#svgEditor svg').removeAttr('xmlns:svgjs'); //Delete an duplicated attribute
+      var detached = $('#svgEditor').find(':hidden').detach();
+      $('#code').val($('#svgEditor').html());
+      $('#svgEditor svg').append(detached);
+
+      var name = $('#name-canvas').val();
+      var code = $('#code').val();
+      var id = $('#id').val();
+      var visibility = $('#visibility').prop('checked') ? 1 : 0; // Convert true/false in integer
+
+      var _token = $('input[name=_token]').val();
+
+      if (!name) {
+        $('#modal-title').modal('toggle');
+        name = $('#name-canvas').val();
+        if (!name) {
+          return;
+        }
+      }
+      //new Canvas:
+      if (!id || id <= 0) {
+        $('#id').val(0);
+        $.ajax({
+          type: "post",
+          url: '/canvas',
+          responseType: 'json',
+          xhrFields: {
+            withCredentials: true
+          },
+          data: {
+            name: name,
+            code: code,
+            id: id,
+            _token: _token,
+            visibility: visibility
+          },
+          success: function success(msg) {
+            if (msg.status == 'success') {
+              toastr.success('Canvas saved successfully!');
+              if ($('#id').val() == 0) {
+                $('#id').val(msg.id);
+                $('#svg-link').attr('href', '/canvas/' + msg.id + '/svg');
+                $('#png-link').attr('href', '/canvas/' + msg.id + '/png');
+                $('#div-notshare').addClass('d-none');
+                $('#div-share').removeClass('d-none');
+              }
+            } else {
+              toastr.error('Canvas error while saving');
+            }
+          },
+          error: function error(msg) {
+            toastr.error('Canvas error while saving, are you logged in?');
+          }
+        });
+      } else {
+        $.ajax({
+          type: "put",
+          url: '/canvas/' + id,
+          responseType: 'json',
+          xhrFields: {
+            withCredentials: true
+          },
+          data: {
+            name: name,
+            code: code,
+            id: id,
+            _token: _token,
+            visibility: visibility
+          },
+          success: function success(msg) {
+            if (msg.status == 'success') {
+              toastr.success('Canvas updated successfully!');
+            } else {
+              toastr.error('Canvas error while updating');
+            }
+          },
+          error: function error(msg) {
+            toastr.error('Canvas error while updating');
+          }
+        });
+      }
+    }
   }]);
 
   return EventManager;
@@ -840,16 +844,15 @@ var Canvas = function () {
       canvas.updateZoom();
     });
 
+    //Ces 3 fonctions doivent rester dans le constructeur car nous devons les binder avec l'élément à modifier en leur passant canvas
     this.stopDraggable = function () {
       this.draggable(false);
     };
-
     this.unselectAll = function () {
       if (this.type != 'defs' && this.type != 'g' && canvas.shape != this) {
         this.selectize(false);
       }
     };
-
     this.startDraggable = function () {
       if (this.type != "defs") {
         this.draggable().on('beforedrag', function (e) {
