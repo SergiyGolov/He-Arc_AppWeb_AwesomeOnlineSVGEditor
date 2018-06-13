@@ -391,14 +391,7 @@ class EventManager
       $("#fileinput").trigger('click');
     });
 
-    $('#shareCopy').click(function()
-    {
-      $('#share').select();
-      $(this).attr('data-copy', $('#share').val());
-      var text = $(this).attr('data-copy');
-      var el = $(this);
-      copyToClipboard(text, el);
-    });
+
 
     $('#shareLink').click(function(e)
     {

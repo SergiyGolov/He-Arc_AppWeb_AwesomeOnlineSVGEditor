@@ -207,7 +207,7 @@
               } else {
                   $classUnshare='';
               }
-              $url=URL::to("/canvas/{$canvas->share}");
+              $url=URL::to("/shared/{$canvas->share}");
           }
           ?>
           <div id="div-share" class="{{ $classShare }}">
@@ -222,7 +222,7 @@
               <label for="card-text">Your share link :</label>
               <div class="contact">
                 <div class="input-group mb-3">
-                  <input id="link-display" type="text" class="form-control" readonly aria-label="Share link" aria-describedby="basic-addon2" value="{{ $url }}">
+                  <input id="input-copy" type="text" class="form-control" readonly aria-label="Share link" aria-describedby="basic-addon2" value="{{ $url }}">
                   <div class="input-group-append">
                     <button id="link-copy" type="button" class="btn btn-outline-default btn-copy js-tooltip js-copy" data-toggle="tooltip" data-placement="bottom" data-copy="{{ $url }}" title="Copy to clipboard">
                       <!-- icon from google's material design library -->

@@ -406,14 +406,6 @@ var EventManager = function () {
         $("#fileinput").trigger('click');
       });
 
-      $('#shareCopy').click(function () {
-        $('#share').select();
-        $(this).attr('data-copy', $('#share').val());
-        var text = $(this).attr('data-copy');
-        var el = $(this);
-        copyToClipboard(text, el);
-      });
-
       $('#shareLink').click(function (e) {
         e.preventDefault();
         $('#modal-share').modal('toggle');

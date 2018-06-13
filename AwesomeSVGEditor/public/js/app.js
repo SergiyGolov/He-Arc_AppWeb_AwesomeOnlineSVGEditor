@@ -13717,6 +13717,7 @@ window._ = __webpack_require__(13);
 window.Popper = __webpack_require__(4).default;
 window.toastr = __webpack_require__(15);
 
+//Doesnt't require JQuery
 var SVG = __webpack_require__(17);
 __webpack_require__(18);
 __webpack_require__(19);
@@ -13781,14 +13782,31 @@ if (token) {
 // Attempts to display status in Bootstrap tooltip
 // ------------------------------------------------------------------------------
 
+function deselectAll() {
+  var element = document.activeElement;
+
+  if (element && /INPUT|TEXTAREA/i.test(element.tagName)) {
+    if ('selectionStart' in element) {
+      element.selectionEnd = element.selectionStart;
+    }
+    element.blur();
+  }
+
+  if (window.getSelection) {
+    // All browsers, except IE <=8
+    window.getSelection().removeAllRanges();
+  } else if (document.selection) {
+    // IE <=8
+    document.selection.empty();
+  }
+}
+
 function copyToClipboard(text, el) {
   var copyTest = document.queryCommandSupported('copy');
   var elOriginalText = el.attr('data-original-title');
 
   if (copyTest === true) {
-    var copyTextArea = document.createElement("textarea");
-    copyTextArea.value = text;
-    document.body.appendChild(copyTextArea);
+    var copyTextArea = document.getElementById('input-copy');
     copyTextArea.select();
     try {
       var successful = document.execCommand('copy');
@@ -13797,7 +13815,7 @@ function copyToClipboard(text, el) {
     } catch (err) {
       console.log('Oops, unable to copy');
     }
-    document.body.removeChild(copyTextArea);
+    deselectAll();
     el.attr('data-original-title', elOriginalText);
   } else {
     // Fallback if browser doesn't support .execCommand('copy')
@@ -13814,7 +13832,6 @@ $(document).ready(function () {
   // Grab any text in the attribute 'data-copy' and pass it to the
   // copy function
   $('.js-copy').click(function () {
-    $('#link-display').select();
     var text = $(this).attr('data-copy');
     var el = $(this);
     copyToClipboard(text, el);

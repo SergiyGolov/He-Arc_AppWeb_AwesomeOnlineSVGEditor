@@ -39,7 +39,7 @@
                   <label for="card-text">Your share link :</label>
                   <div class="contact">
                     <div class="input-group mb-3">
-                      <input type="text" class="form-control" disabled aria-label="Share link" aria-describedby="basic-addon2" value="{{ $url }}">
+                      <input id="input-copy" type="text" class="form-control" readonly aria-label="Share link" aria-describedby="basic-addon2" value="{{ $url }}">
                       <div class="input-group-append">
                         <button type="button" class="btn btn-outline-default btn-copy js-tooltip js-copy" data-toggle="tooltip" data-placement="bottom" data-copy="{{ $url }}" title="Copy to clipboard">
                           <!-- icon from google's material design library -->
@@ -109,7 +109,7 @@
     </div>
   </div>
 </div>
-<script>
+<script defer>
 document.addEventListener("DOMContentLoaded", function(event) {
   $('#remove').on('click',function(){
     $('#form-remove').submit();

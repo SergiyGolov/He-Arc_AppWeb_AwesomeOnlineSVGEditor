@@ -2,6 +2,7 @@ window._ = require('lodash');
 window.Popper = require('popper.js').default;
 window.toastr = require('toastr');
 
+//Doesnt't require JQuery
 let SVG = require('svg.js');
 require('svg.draggable.js');
 require('svg.select.js');
@@ -73,6 +74,23 @@ else
 // Attempts to display status in Bootstrap tooltip
 // ------------------------------------------------------------------------------
 
+function deselectAll() {
+  var element = document.activeElement;
+
+  if (element && /INPUT|TEXTAREA/i.test(element.tagName)) {
+    if ('selectionStart' in element) {
+      element.selectionEnd = element.selectionStart;
+    }
+    element.blur();
+  }
+
+  if (window.getSelection) { // All browsers, except IE <=8
+    window.getSelection().removeAllRanges();
+  } else if (document.selection) { // IE <=8
+    document.selection.empty();
+  }
+}
+
 function copyToClipboard(text, el)
 {
   let copyTest = document.queryCommandSupported('copy');
@@ -80,9 +98,7 @@ function copyToClipboard(text, el)
 
   if (copyTest === true)
   {
-    let copyTextArea = document.createElement("textarea");
-    copyTextArea.value = text;
-    document.body.appendChild(copyTextArea);
+    let copyTextArea = document.getElementById('input-copy');
     copyTextArea.select();
     try
     {
@@ -94,7 +110,7 @@ function copyToClipboard(text, el)
     {
       console.log('Oops, unable to copy');
     }
-    document.body.removeChild(copyTextArea);
+    deselectAll();
     el.attr('data-original-title', elOriginalText);
   }
   else
@@ -115,7 +131,6 @@ $(document).ready(function()
   // copy function
   $('.js-copy').click(function()
   {
-    $('#link-display').select();
     let text = $(this).attr('data-copy');
     let el = $(this);
     copyToClipboard(text, el);

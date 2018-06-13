@@ -10663,6 +10663,11 @@ button.toast-close-button {
   }
 }
 
+.hidden-data {
+  display: none;
+  visibility: hidden;
+}
+
 .card svg {
   width: 100%;
   height: auto;
