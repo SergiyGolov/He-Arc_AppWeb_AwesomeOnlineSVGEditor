@@ -72,6 +72,9 @@
               <a id="help" role="button" href="#" data-toggle="modal" data-target="#helpModal" class="nav-link">Help</a>
             </li>
             <li class="nav-item">
+              <a role="button" href="{{ route('canvas.index') }}" class="nav-link">Explore</a>
+            </li>
+            <li class="nav-item">
               <a id="save" href="#" class="nav-link btn btn-lg btn-outline-warning">Save</a>
             </li>
           </ul>
