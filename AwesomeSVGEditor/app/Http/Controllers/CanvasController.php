@@ -17,11 +17,22 @@ use enshrined\svgSanitize\Sanitizer;
 
 class CanvasController extends Controller
 {
+  /**
+   * Constructeur
+   *
+   * Controller permettant la gestion d'un canvas
+   */
   public function __construct()
   {
     //Nothing
   }
 
+  /**
+   * Permet de valider les droits d'accès à un canvas
+   *
+   * @param int $id
+   * @return \App\Canvas  $canvas
+   */
   private function validateAccessRights(int $id)
   {
     $canvas = Canvas::where('id', $id)->where(function ($query) {
@@ -34,7 +45,7 @@ class CanvasController extends Controller
   /**
   * Download the canvas in png format
   *
-  * @return PNG file
+  * @return \ PNG file
   */
   public function downloadPNG_Data()
   {
@@ -51,7 +62,8 @@ class CanvasController extends Controller
   /**
   * Download the canvas in png format
   *
-  * @return PNG file
+  * @param int $id
+  * @return \ PNG file
   */
   public function downloadPNG_ID(int $id)
   {
@@ -62,7 +74,8 @@ class CanvasController extends Controller
   /**
   * Download the canvas in png format for shared link
   *
-  * @return PNG file
+  * @param string $link
+  * @return \ PNG file
   */
   public function downloadPNG_Link(string $link)
   {
@@ -70,6 +83,12 @@ class CanvasController extends Controller
     return $this->downloadPNG($canvas);
   }
 
+  /**
+   * Generate a PNG file from an svg
+   *
+   * @param \App\Canvas  $canvas
+   * @return \ PNG file
+   */
   private function downloadPNG(Canvas $canvas)
   {
     if ($canvas != false) {
@@ -90,7 +109,8 @@ class CanvasController extends Controller
   /**
   * Download the canvas in svg format
   *
-  * @return SVG file
+  * @param int $id
+  * @return \ SVG file
   */
   public function downloadSVG_ID(int $id)
   {
@@ -99,9 +119,9 @@ class CanvasController extends Controller
   }
 
   /**
-  * Download the canvas in svg format
+  * Return an SVG File
   *
-  * @return SVG file
+  * @return \ SVG file
   */
   public function downloadSVG_Data()
   {
@@ -118,7 +138,8 @@ class CanvasController extends Controller
   /**
   * Download the canvas in svg format, for shared canvas
   *
-  * @return SVG file
+  * @param string $link
+  * @return \ SVG file
   */
   public function downloadSVG_Link(string $link)
   {
@@ -126,6 +147,12 @@ class CanvasController extends Controller
     return $this->downloadSVG($canvas);
   }
 
+  /**
+   * Return an svg
+   *
+   * @param \App\Canvas  $canvas
+   * @return \ SVG file
+   */
   private function downloadSVG(Canvas $canvas)
   {
     if ($canvas != false) {
@@ -260,7 +287,8 @@ class CanvasController extends Controller
   /**
   * Access to a shared canvas
   *
-  * @return view to this canvas
+  * @param string $code
+  * @return \Illuminate\Http\Response
   */
   public function shared(string $code)
   {
@@ -312,6 +340,11 @@ class CanvasController extends Controller
     }
   }
 
+  /**
+   * Generate a share link
+   *
+   * @return \ hash of a random group of bytes
+   */
   private static function generateShareLink()
   {
     $strong = true;
@@ -322,7 +355,8 @@ class CanvasController extends Controller
   /**
   * Show the form for editing the specified resource.
   *
-  * @param  \App\Canvas  $canvas
+  * @param  \App\Http\Request  $request
+  * @param  int $id
   * @return \Illuminate\Http\Response
   */
   public function unshare(Request $request, int $id)
@@ -360,7 +394,7 @@ class CanvasController extends Controller
   /**
   * Show the form for editing the specified resource.
   *
-  * @param  \App\Canvas  $canvas
+  * @param  int $id
   * @return \Illuminate\Http\Response
   */
   public function private(int $id)
@@ -379,7 +413,7 @@ class CanvasController extends Controller
   /**
   * Show the form for editing the specified resource.
   *
-  * @param  \App\Canvas  $canvas
+  * @param  int  $id
   * @return \Illuminate\Http\Response
   */
   public function public(int $id)
@@ -505,7 +539,7 @@ class CanvasController extends Controller
   /**
   * Remove the specified resource from storage.
   *
-  * @param  \App\Canvas  $canvas
+  * @param  int $id
   * @return \Illuminate\Http\Response
   */
   public function destroy(int $id)
