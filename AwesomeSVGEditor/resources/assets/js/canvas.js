@@ -24,7 +24,6 @@ export default class Canvas {
       height: height
     });
 
-
     this.actions = [];
     this.actionIndex = 0;
 

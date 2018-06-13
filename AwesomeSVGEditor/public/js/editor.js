@@ -121,14 +121,17 @@ var EventManager = function () {
           type: "post",
           url: '/canvas',
           responseType: 'json',
-          xhrFields: { withCredentials: true },
+          xhrFields: {
+            withCredentials: true
+          },
           data: {
             name: name,
             code: code,
             id: id,
             _token: _token,
             visibility: visibility
-          }, success: function success(msg) {
+          },
+          success: function success(msg) {
             if (msg.status == 'success') {
               toastr.success('Canvas saved successfully!');
               if ($('#id').val() == 0) {
@@ -426,7 +429,7 @@ var EventManager = function () {
               $('#div-unshare').removeClass('d-none');
               $('#div-share').addClass('d-none');
               $('#link-copy').attr('data-copy', msg.link);
-              $('#link-display').val(msg.link);
+              $('#input-copy').val(msg.link);
             } else {
               toastr.error('Error while getting share link');
             }

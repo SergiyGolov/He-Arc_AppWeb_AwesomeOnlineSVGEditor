@@ -276,6 +276,7 @@
           <li><a href="#helpShapes">Shapes options</a></li>
           <li><a href="#helpShortcuts">Keyboard shortcuts</a></li>
         </ul>
+        <hr>
         <h4 id="helpMenu-bar">Menu bar</h4>
         <h5>File</h5>
         <ul>
