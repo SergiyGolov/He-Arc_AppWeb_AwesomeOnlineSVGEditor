@@ -121,17 +121,14 @@ var EventManager = function () {
           type: "post",
           url: '/canvas',
           responseType: 'json',
-          xhrFields: {
-            withCredentials: true
-          },
+          xhrFields: { withCredentials: true },
           data: {
             name: name,
             code: code,
             id: id,
             _token: _token,
             visibility: visibility
-          },
-          success: function success(msg) {
+          }, success: function success(msg) {
             if (msg.status == 'success') {
               toastr.success('Canvas saved successfully!');
               if ($('#id').val() == 0) {
@@ -350,8 +347,33 @@ var EventManager = function () {
 
       $("#export").click(function (e) {
         e.preventDefault();
-        window.eventmanager.save();
+        var url = $('#png-link').attr('href');
+        $('#svgEditor svg').removeAttr('xmlns:svgjs');
+        $('#png-link').attr('href', url.slice(0, url.lastIndexOf("/") + 1) + btoa($('#svgEditor').html()));
+        $('#svg-link').attr('href', url.slice(0, url.lastIndexOf("/") + 1) + btoa($('#svgEditor').html()));
         $('#modal-export').modal('toggle');
+      });
+
+      // Sends to the server.. The server can respond with binary data to download
+      $.download = function (url, key, data) {
+        // Build a form
+        var form = $('<form></form>').attr('action', url).attr('method', 'post');
+        // Add the one key/value
+        form.append($("<input></input>").attr('type', 'hidden').attr('name', key).attr('value', data));
+        //send request
+        form.appendTo('body').submit().remove();
+      };
+
+      $('#png-link').on('click', function (e) {
+        e.preventDefault();
+        // Takes a URL, param name, and data string
+        $.download("/png", 'code', $('#svgEditor').html());
+      });
+
+      $('#svg-link').on('click', function (e) {
+        e.preventDefault();
+        // Takes a URL, param name, and data string
+        $.download("/svgd", 'code', $('#svgEditor').html());
       });
 
       //Modal events

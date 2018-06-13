@@ -54,8 +54,8 @@
         <p>Export your image as :</p>
       </div>
       <div class="modal-footer">
-        <a id="png-link" href="/canvas/{{ isset($canvas)?$canvas->id:'' }}/png" role="button" class="btn btn-primary png-file" download></a>
-        <a id="svg-link" href="/canvas/{{ isset($canvas)?$canvas->id:'' }}/svg" role="button" class="btn btn-dark svg-file" download></a>
+        <a id="png-link" href="/{{ isset($canvas)?$canvas->id.'/png':'png/' }}" role="button" class="btn btn-primary png-file"></a>
+        <a id="svg-link" href="/{{ isset($canvas)?$canvas->id.'/svg':'svg/' }}" role="button" class="btn btn-dark svg-file"></a>
       </div>
     </div>
   </div>

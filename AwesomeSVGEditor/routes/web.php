@@ -14,15 +14,16 @@
 //Home
 Route::get('/', 'HomeController@index');
 Route::get('/home', 'HomeController@index')->name('home');
-//Route::get('/profile', 'HomeController@show')->middleware('auth.basic'); // Nécessite une authentification
 
 //Authentification
 Auth::routes();
 
 //Canvas edit section
-Route::resource('canvas', 'CanvasController');//->middleware('auth.basic');
+Route::resource('canvas', 'CanvasController');
 
 Route::post('/reload', 'CanvasController@reload')->name('reload'); //Route supplémentaire pour ne rien perdre après une authentification
+Route::post('/svgd', 'CanvasController@downloadSVG_Data'); //Download svg disconnected
+Route::post('/png', 'CanvasController@downloadPNG_Data'); //Download png disconnected
 Route::post('/canvas/sanitise','CanvasController@sanitiseAjax'); //Sanitise un svg
 Route::get('/canvas/{id}/png', 'CanvasController@downloadPNG_ID');
 Route::get('/canvas/{id}/svg', 'CanvasController@downloadSVG_ID');
