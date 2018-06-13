@@ -160,21 +160,25 @@ var EventManager = function () {
         $(this).addClass("active");
         canvas.startMoving();
       });
+
       $('#line').on('click', function () {
         $('#tools a').removeClass("active");
         $(this).addClass("active");
         canvas.dynAddLine();
       });
+
       $('#pen').on('click', function () {
         $('#tools a').removeClass("active");
         $(this).addClass("active");
         canvas.dynAddPolyLine();
       });
+
       $('#rectangle').on('click', function () {
         $('#tools a').removeClass("active");
         $(this).addClass("active");
         canvas.dynAddRectangle();
       });
+
       $('#ellipse').on('click', function () {
         $('#tools a').removeClass("active");
         $(this).addClass("active");
@@ -200,6 +204,7 @@ var EventManager = function () {
         $('.fill-color').attr("fill", color);
         canvas.setFillColor(color);
       });
+
       $('#strokeColor').on('change', function () {
         var color = $('#strokeColor')[0].value;
         $('.stroke-color').attr("fill", color);
@@ -424,6 +429,16 @@ var EventManager = function () {
       $('#title-edit').click(function (e) {
         e.preventDefault();
         $('#modal-title').modal('toggle');
+      });
+
+      $('#menuRedo').click(function (e) {
+        e.preventDefault();
+        window.canvas.redo();
+      });
+
+      $('#menuUndo').click(function (e) {
+        e.preventDefault();
+        window.canvas.undo();
       });
 
       $("label[for='visibility']").on('click', function (e) {

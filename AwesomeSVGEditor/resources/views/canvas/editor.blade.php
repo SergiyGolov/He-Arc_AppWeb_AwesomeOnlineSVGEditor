@@ -61,6 +61,12 @@
                 Edit <span class="caret"></span>
               </a>
               <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                <a class="dropdown-item" href="" id="menuUndo">
+                  Undo
+                </a>
+                <a class="dropdown-item" href="" id="menuRedo">
+                  Redo
+                </a>
                 <a class="dropdown-item" href="" id="title-edit">
                   Edit canvas name
                 </a>
