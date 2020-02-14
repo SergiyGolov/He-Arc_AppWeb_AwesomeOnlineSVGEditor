@@ -2,7 +2,10 @@
 
 namespace App\Http\Controllers\Auth;
 
+use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\URL;
+use Illuminate\Support\Facades\Session;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 
 class LoginController extends Controller
@@ -35,5 +38,29 @@ class LoginController extends Controller
     public function __construct()
     {
         $this->middleware('guest')->except('logout');
+    }
+
+    /**
+     * The user has been authenticated.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return mixed
+     */
+    protected function sendLoginResponse(Request $request)
+    {
+        $this->clearLoginAttempts($request);
+        if($request->ajax()){
+            // If request from AJAX
+            return response()->json([
+                'auth' => auth()->check(),
+                'intended' => URL::previous(),
+                '_token' => Session::token(),
+            ]);
+
+        } else {
+            // Normal POST do redirect
+            return $this->authenticated($request, $this->guard()->user())
+                ?: redirect()->intended($this->redirectPath());
+        }
     }
 }

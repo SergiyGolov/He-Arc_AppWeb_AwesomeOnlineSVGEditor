@@ -6,7 +6,6 @@
         <div class="col-md-8">
             <div class="card">
                 <div class="card-header">Canvas</div>
-
                 <div class="card-body">
                   @foreach ($listcanvas as $canvas)
                       @if ($loop->parent->first)

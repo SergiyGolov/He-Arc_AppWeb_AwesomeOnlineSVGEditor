@@ -11,17 +11,21 @@
     },
     "devDependencies": {
         "axios": "^0.18",
-        "bootstrap": "^4.1.0",
-        "cross-env": "^5.1.4",
+        "bootstrap": "^4.1.1",
+        "cross-env": "^5.1.6",
         "jquery": "^3.2",
         "laravel-mix": "^2.0",
-        "lodash": "^4.17.4",
+        "lodash": "^4.17.10",
         "popper.js": "^1.14.3",
         "toastr": "^2.1.4",
         "vue": "^2.5.7"
     },
     "dependencies": {
         "mix": "0.0.1",
-        "svg.js": "^2.6.4"
+        "svg.draggable.js": "^2.2.1",
+        "svg.js": "^2.6.5",
+        "svg.panzoom.js": "^1.2.0",
+        "svg.resize.js": "^1.4.1",
+        "svg.select.js": "^2.1.2"
     }
 }

@@ -7,10 +7,39 @@ npm install
 php artisan migrate
 npm run prod
 ```
+<span style="color:red">Attention, nécessite l'installation de <em>IMAGICK</em></span>
+Pour installer Imagick:
+```
+apt-get install php-imagick
+apt-get install imagemagick libmagickwand-dev
+service apache2 restart
+```
 
 Pour lancer le serveur:
 ```
 php artisan serve
+```
+
+Commande utile pour l'édition des fichiers sass:
+```
+npm run watch
+```
+
+# Déploiement
+Deux scripts de déploiements sont disponibles, pour la production:
+```bash
+./prod.sh
+```
+
+et pour le développement:
+```bash
+./dev.sh
+```
+
+# Tests
+Pour lancer les tests:
+```bash
+./vendor/bin/phpunit
 ```
 
 ## Old content

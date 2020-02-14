@@ -1,21 +1,108 @@
-
 // Fonts
 @import url("https://fonts.googleapis.com/css?family=Raleway:300,400,600");
-
 // Variables
 @import "variables";
-
 // Bootstrap
 @import '~bootstrap/scss/bootstrap';
 @import "~toastr/toastr.scss";
 
+.card-columns {
+  @include media-breakpoint-only(sm) {
+    column-count: 2;
+  }
+  @include media-breakpoint-only(md) {
+    column-count: 3;
+  }
+  @include media-breakpoint-only(xl) {
+    column-count: 4;
+  }
+}
+
+.hidden-data {
+  display: none;
+  visibility: hidden;
+}
+
+.card svg {
+  width: 100%;
+  height: auto;
+}
+
+.navbar a {
+  color: white;
+}
+
+#navbar-title {
+  color: white;
+}
+
+.dropdown-item {
+  color: white;
+  background-color: $color-bg;
+}
+
+.dropdown-menu {
+  background-color: $color-bg;
+}
+
+.whitetext {
+  color: white;
+}
 
 .navbar-laravel {
-  background-color: #fff;
+  background-color: $color-side;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.04);
 }
 
 .centered {
   display: flex;
-  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  background-color: white;
+  padding: 50px 0;
+}
+
+.centered img {
+  width: 75%;
+  height: 75%;
+  margin: 1.3em;
+}
+
+.svg-file {
+  background-image: url("/assets/svg/svg-file.svg");
+  width: 50px;
+  height: 50px;
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: 50%;
+  background-size: 85%;
+}
+
+.png-file {
+  background-image: url("/assets/svg/png-file.svg");
+  width: 50px;
+  height: 50px;
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: 50%;
+  background-size: 85%;
+}
+
+#app {
+  overflow: hidden;
+}
+
+.single-title {
+  padding-top: 7px;
+  padding-bottom: 0;
+}
+
+.form-checkbox {
+  float: left;
+  margin-left: -20px;
+  margin-top: 5px;
+}
+
+.card-checkbox {
+  padding-left: 20px;
 }
